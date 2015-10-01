@@ -1,0 +1,34 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+html, body {
+  font-family:"Oswald", sans-serif;
+  color: black;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  height: 100%;
+}
+
+.main {
+  height: 100vh;
+  width: 100%;
+  background: green;
+  display: flex;
+}
+
+#tabbedPaneContainer {
+  background: #F5F5F5;
+  height: 100%;
+  width: 20%;
+  min-width: 300px;
+  float: left;
+}
+
+#simulationContainer {
+  background: #262B30;
+  height: 100%;
+  flex: 1;
+  color: white;
+}
