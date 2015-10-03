@@ -31,3 +31,9 @@ html, body {
   flex: 1;
   color: white;
 }
+
+
+/*Tab editor styles*/
+project-Settings {
+  color: red;
+}
