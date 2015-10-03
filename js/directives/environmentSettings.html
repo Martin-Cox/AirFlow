@@ -1,1 +1,12 @@
-<p> ENVIRONMENT SETTINGS </p>
+<div class="editorSection" ng-controller="EnvironmentSettingsController">
+  <form novalidate class="editorForm">
+  	<p class="sectionHeader">Environment Settings</p>
+    <div class="editorProperty">
+    	<p>Property 1: </p>
+    	<input type="text" ng-model="settings.project_name"/>
+    </div>
+    <div class="editorProperty">
+    	<p>Property 2: </p>
+    	<input type="text" ng-model="settings.author"/>
+    </div>
+</div>

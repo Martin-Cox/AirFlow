@@ -34,6 +34,32 @@ html, body {
 
 
 /*Tab editor styles*/
-project-Settings {
-  color: red;
+#tabbedPaneContainer .editorSection {
+ border-bottom: 1px solid black;
+}
+
+#tabbedPaneContainer .sectionHeader {
+  width: 100%;
+  font-size: 120%;
+  text-align: center;
+  padding: 5px 0 5px 0;
+}
+
+#tabbedPaneContainer .editorProperty {
+  width: 100%;
+}
+
+#tabbedPaneContainer .editorProperty p {
+  text-align: right;
+  width: 35%;
+  float: left;
+  padding: 0 5% 0 0;
+}
+
+#tabbedPaneContainer .editorProperty input {
+  width: 55%;
+}
+
+.editorForm input.ng-dirty::after {
+  content: "*";
 }

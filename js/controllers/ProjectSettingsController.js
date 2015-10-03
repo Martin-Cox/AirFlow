@@ -1,12 +1,12 @@
 app.controller('ProjectSettingsController', ['$scope', function($scope) {
 	$scope.master = {};
 
-	  $scope.update = function(user) {
-	    $scope.master = angular.copy(user);
+	  $scope.update = function(settings) {
+	    $scope.master = angular.copy(settings);
 	  };
 
 	  $scope.reset = function() {
-	    $scope.user = angular.copy($scope.master);
+	    $scope.settings = angular.copy($scope.master);
 	  };
 
 	  $scope.reset();

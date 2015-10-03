@@ -1,12 +1,29 @@
-<div ng-controller="ProjectSettingsController">
-  <form novalidate class="simple-form">
-    Name: <input type="text" ng-model="user.name" /><br />
-    E-mail: <input type="email" ng-model="user.email" /><br />
-    Gender: <input type="radio" ng-model="user.gender" value="male" />male
-    <input type="radio" ng-model="user.gender" value="female" />female<br />
+<div class="editorSection" ng-controller="ProjectSettingsController">
+  <form novalidate class="editorForm">
+  	<p class="sectionHeader">Project Settings</p>
+    <div class="editorProperty">
+    	<p>Project Name: </p>
+    	<input type="text" ng-model="settings.project_name"/>
+    </div>
+    <div class="editorProperty">
+    	<p>Author: </p>
+    	<input type="text" ng-model="settings.author"/>
+    </div>
+    <div class="editorProperty">
+    	<p>Version: </p>
+    	<input type="number" ng-model="settings.version"/>
+    </div>
+
+
+
+
+
+    Gender: <input type="radio" ng-model="settings.gender" value="male" />male
+    <input type="radio" ng-model="settings.gender" value="female" />female<br />
+
     <input type="button" ng-click="reset()" value="Reset" />
     <input type="submit" ng-click="update(user)" value="Save" />
   </form>
-  <pre>user = {{user | json}}</pre>
+  <pre>user = {{settings | json}}</pre>
   <pre>master = {{master | json}}</pre>
 </div>
