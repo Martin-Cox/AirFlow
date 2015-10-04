@@ -3,7 +3,7 @@
   	<p class="sectionHeader">Project Settings</p>
     <div class="editorProperty">
     	<p>Project Name: </p>
-    	<input type="text" ng-model="settings.project_name"/>
+    	<input type="text" ng-model="settings.projectName"/>
     </div>
     <div class="editorProperty">
     	<p>Author: </p>
@@ -13,7 +13,14 @@
     	<p>Version: </p>
     	<input type="number" ng-model="settings.version"/>
     </div>
-
+    <div class="editorProperty">
+      <p>Date created: </p>
+      <input type="date" ng-readonly="true" ng-model="settings.dateCreated"/>
+    </div>
+        <div class="editorProperty">
+      <p>Date modified: </p>
+      <input class="123" type="date" ng-readonly="true" ng-model="settings.dateModified"/>
+    </div>
 
 
 
