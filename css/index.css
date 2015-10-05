@@ -64,7 +64,7 @@ html, body {
 }
 
 .editorForm input.ng-dirty::after {
-  /*Not working*/
+  /*Not working on input text boxes, seems to do something on gender radio select*/
   content: "*";
 }
 
