@@ -1,0 +1,52 @@
+{
+	"presets": [
+		{
+			"name": "Standard Room",
+			"values": [
+				{
+					"dust": "35",
+					"humidity": "20",
+					"temperature": "21", 
+					"draghtiness": "Low",
+					"freeSpace": "Medium"
+				}
+			]
+		},
+		{
+			"name": "Enclosed Room",
+			"values": [
+				{
+					"dust": "35",
+					"humidity": "20",
+					"temperature": "23", 
+					"draghtiness": "Low",
+					"freeSpace": "Low"
+				}
+			]
+		},
+		{
+			"name": "Open plan office",
+			"values": [
+				{
+					"dust": "55",
+					"humidity": "25",
+					"temperature": "21", 
+					"draghtiness": "Medium",
+					"freeSpace": "High"
+				}
+			]
+		},
+	],
+	"ranges": [
+		{
+			"dustMin": "0",
+			"dustMax": "100",
+			"humidityMin": "0",
+			"humidityMax": "100",
+			"temperatureMin": "-10", 
+			"temperatureMax": "50", 
+			"draghtiness": ["Low", "Medium", "High"],
+			"freeSpace": ["Low", "Medium", "High"],
+		}
+	]
+}
