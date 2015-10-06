@@ -1,4 +1,5 @@
-var camera, scene, renderer, cube, width, height;
+var camera, scene, renderer, width, height;
+var cubes = [];
 
 init();
 animate();
@@ -17,15 +18,23 @@ function init() {
 	scene = new THREE.Scene;
 
 
+	for (var i=0; i < 3; i++) {
+		var cubeGeometry = new THREE.CubeGeometry(100, 100, 100);
 
-	var cubeGeometry = new THREE.CubeGeometry(100, 100, 100);
-	var cubeMaterial = new THREE.MeshLambertMaterial({ color: 0x1ec876 });
-	cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+		var cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xD9216A });
 
-	cube.rotation.y = Math.PI * 45 / 180;
+		var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 
-	scene.add(cube);
+		cube.position.set(i*150, 0, 0);
 
+		cube.rotation.y = Math.PI * 45 / 180;
+
+		cube.castShadow = true;
+
+		scene.add(cube);
+
+		cubes.push(cube);
+	}
 
 
 	camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
@@ -33,7 +42,7 @@ function init() {
 	camera.position.y = 160;
 	camera.position.z = 400;
 
-	camera.lookAt(cube.position);
+	camera.lookAt(cubes[1].position);
 
 	scene.add(camera);
 
@@ -55,8 +64,10 @@ function animate() {
 
 	requestAnimationFrame(animate);
 
-	cube.rotation.x += 0.01;
-	cube.rotation.y += 0.01;
+	for (var i=0; i < 3; i++) {
+		cubes[i].rotation.x += 0.01;
+		cubes[i].rotation.y += 0.01;
+	}
 
 	renderer.render(scene, camera);
 }
