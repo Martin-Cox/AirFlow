@@ -1,11 +1,14 @@
-var camera, scene, renderer, cube;
+var camera, scene, renderer, cube, width, height;
 
 init();
 animate();
 
 function init() {
 
-	var width = document.getElementById('simulationContainer').offsetWidth, height = document.getElementById('simulationContainer').offsetHeight - 50; 		//REMOVE "-50" from HEIGHT AFTER REMOVE "Main Simulation goes here text"
+	window.addEventListener( 'resize', onWindowResize, false);
+
+	width = document.getElementById('simulationContainer').offsetWidth;
+	height = document.getElementById('simulationContainer').offsetHeight - 50; 		//REMOVE "-50" from HEIGHT AFTER REMOVE "Main Simulation goes here text"
 
 	renderer = new THREE.WebGLRenderer ( { antialias: true});
 	renderer.setSize(width, height);
@@ -45,11 +48,7 @@ function init() {
 	var pointLight = new THREE.PointLight(0xffffff);
 	pointLight.position.set(0, 300, 200);
 
-	scene.add(pointLight);
-
-
-
-	
+	scene.add(pointLight);	
 }
 
 function animate() {
@@ -60,4 +59,16 @@ function animate() {
 	cube.rotation.y += 0.01;
 
 	renderer.render(scene, camera);
+}
+
+function onWindowResize(){
+
+	width = document.getElementById('simulationContainer').offsetWidth;
+	height = document.getElementById('simulationContainer').offsetHeight - 50; 		//REMOVE "-50" from HEIGHT AFTER REMOVE "Main Simulation goes here text"
+
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( width, height );
+
 }
