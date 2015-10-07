@@ -66,7 +66,7 @@ function init() {
 
 	scene.add(camera);
 
-	orbitControl = new THREE.OrbitControls(camera);
+	orbitControl = new THREE.OrbitControls(camera, document.getElementById('simulationContainer'));
 	orbitControl.enablePan = false;
 	orbitControl.constraint.maxDistance = 100;
 	orbitControl.constraint.maxDistance = 1200;
