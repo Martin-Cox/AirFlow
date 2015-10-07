@@ -31,6 +31,7 @@ html, body {
   height: 100%;
   flex: 1;
   color: white;
+  overflow: hidden;
 }
 
 
