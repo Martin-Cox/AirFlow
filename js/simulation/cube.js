@@ -14,6 +14,10 @@ function init() {
 	fpsStats = new Stats();
 	fpsStats.setMode(0);
 
+	fpsStats.domElement.style.position = 'absolute';
+	fpsStats.domElement.style.right = '0px';
+	fpsStats.domElement.style.top = '0px';
+
 	document.getElementById("simulationContainer").appendChild(fpsStats.domElement);
 
 	renderer = new THREE.WebGLRenderer ( { antialias: true});
