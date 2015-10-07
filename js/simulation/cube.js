@@ -1,4 +1,4 @@
-var camera, scene, renderer, width, height, clock, orbitControl;
+var camera, scene, renderer, width, height, clock, orbitControl, fpsStats;
 var cubes = [];
 
 init();
@@ -10,6 +10,11 @@ function init() {
 
 	width = document.getElementById('simulationContainer').offsetWidth;
 	height = document.getElementById('simulationContainer').offsetHeight;
+
+	fpsStats = new Stats();
+	fpsStats.setMode(0);
+
+	document.getElementById("simulationContainer").appendChild(fpsStats.domElement);
 
 	renderer = new THREE.WebGLRenderer ( { antialias: true});
 	renderer.setSize(width, height);
@@ -66,17 +71,21 @@ function init() {
 
 function animate() {
 
+	fpsStats.begin();
+
 	requestAnimationFrame(animate);
 
 	for (var i=0; i < 500; i++) {
-		cubes[i].rotation.x += 0.01;
-		cubes[i].rotation.y += 0.01;
+		cubes[i].rotation.x += Math.random()/10;
+		cubes[i].rotation.y += Math.random()/10;
 	}
 
 	var delta = clock.getDelta();
 	orbitControl.update(delta);
 
 	renderer.render(scene, camera);
+
+	fpsStats.end();
 }
 
 function onWindowResize(){
