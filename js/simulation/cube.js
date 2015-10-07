@@ -23,14 +23,25 @@ function init() {
 	scene = new THREE.Scene;
 
 
-	for (var i=0; i < 500; i++) {
+	for (var i=0; i < 2000; i++) {
 		var cubeGeometry = new THREE.CubeGeometry(10, 10, 10);
 
-		var cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xD9216A });
+		var randNum = Math.random();
+		var matColor;
+
+		if (randNum < 0.34) {
+			matColor = 0xD9216A;
+		} else if (randNum > 0.34 && randNum < 0.67) {
+			matColor = 0x18ABDB;
+		} else {
+			matColor = 0x18DB3F;
+		}
+
+		var cubeMaterial = new THREE.MeshLambertMaterial({ color: matColor });
 
 		var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 
-		cube.position.set((( Math.random() - 0.5 ) * 1000), (( Math.random() - 0.5 ) * 1000), (( Math.random() - 0.5 ) * 1000));
+		cube.position.set((( Math.random() - 0.5 ) * 2000), (( Math.random() - 0.5 ) * 2000), (( Math.random() - 0.5 ) * 2000));
 
 		cube.rotation.y = Math.PI * 45 / 180;
 
@@ -75,7 +86,7 @@ function animate() {
 
 	requestAnimationFrame(animate);
 
-	for (var i=0; i < 500; i++) {
+	for (var i=0; i < 2000; i++) {
 		cubes[i].rotation.x += Math.random()/10;
 		cubes[i].rotation.y += Math.random()/10;
 	}
