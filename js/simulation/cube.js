@@ -67,7 +67,9 @@ function init() {
 	scene.add(camera);
 
 	orbitControl = new THREE.OrbitControls(camera);
-	orbitControl.enableZoom = false;
+	orbitControl.enablePan = false;
+	orbitControl.constraint.maxDistance = 100;
+	orbitControl.constraint.maxDistance = 1200;
 	clock = new THREE.Clock();
 
 
