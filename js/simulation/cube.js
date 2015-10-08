@@ -80,10 +80,14 @@ function init() {
 	scene.add(skybox);
 
 
-	var pointLight = new THREE.PointLight(0xffffff);
-	pointLight.position.set(0, 300, 200);
+	var topLight = new THREE.DirectionalLight(0xffffff, 1);
+	topLight.position.set(0, 1, 0);
 
-	scene.add(pointLight);	
+	var bottomLight = new THREE.DirectionalLight(0xffffff, 0.5);
+	bottomLight.position.set(0, -1, 0);
+
+	scene.add(topLight);	
+	scene.add(bottomLight);
 }
 
 function animate() {
