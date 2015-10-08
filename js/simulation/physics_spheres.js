@@ -1,5 +1,5 @@
 var camera, scene, renderer, width, height, clock, orbitControl, fpsStats;
-var spheres = [];
+var objects = [];
 
 init();
 animate();
@@ -32,38 +32,66 @@ function init() {
 	scene.setGravity(new THREE.Vector3( 0, -50, 0 ));
 
 	for (var i=0; i < 50; i++) {
-		var sphereGeometry = new THREE.SphereGeometry(10, 16, 16);
 
-		var randNum = Math.random();
-		var matColor;
+		var object;
 
-		if (randNum < 0.34) {
-			matColor = 0xD9216A;
-		} else if (randNum > 0.34 && randNum < 0.67) {
-			matColor = 0x18ABDB;
+		if (Math.random() > 0.5) {
+			var randNum = Math.random();
+			var matColor;
+
+			if (randNum < 0.34) {
+				matColor = 0xD9216A;
+			} else if (randNum > 0.34 && randNum < 0.67) {
+				matColor = 0x18ABDB;
+			} else {
+				matColor = 0x18DB3F;
+			}
+
+			var sphereGeometry = new THREE.SphereGeometry(10, 16, 16);
+
+			var sphereMaterial = Physijs.createMaterial(
+	          new THREE.MeshLambertMaterial({
+	            color: matColor
+	          }),
+		      0.3, // friction
+		      0.9 // restitution
+	        );
+
+			object = new Physijs.SphereMesh(sphereGeometry, sphereMaterial);
 		} else {
-			matColor = 0x18DB3F;
-		}
+			var randNum = Math.random();
+			var matColor;
 
-		var sphereMaterial = Physijs.createMaterial(
-          new THREE.MeshLambertMaterial({
-            color: matColor
-          }),
-	      0.3, // friction
-	      0.9 // restitution
-        );
+			if (randNum < 0.34) {
+				matColor = 0xD9216A;
+			} else if (randNum > 0.34 && randNum < 0.67) {
+				matColor = 0x18ABDB;
+			} else {
+				matColor = 0x18DB3F;
+			}
 
-		var sphere = new Physijs.SphereMesh(sphereGeometry, sphereMaterial);
+			var boxGeometry = new THREE.BoxGeometry(20, 20, 20);
 
-		sphere.position.set((( Math.random() - 0.5 ) * 400), (( Math.random()) * 400), (( Math.random() - 0.5 ) * 300));
+			var boxMaterial = Physijs.createMaterial(
+	          new THREE.MeshLambertMaterial({
+	            color: matColor
+	          }),
+		      0.3, // friction
+		      0.9 // restitution
+	        );
 
-		sphere.rotation.y = Math.PI * 45 / 180;
+			object = new Physijs.BoxMesh(boxGeometry, boxMaterial);
+		}		
 
-		sphere.castShadow = true;
+		object.position.set((( Math.random() - 0.5 ) * 400), (( Math.random()) * 400), (( Math.random() - 0.5 ) * 300));
 
-		scene.add(sphere);
+		object.rotation.y = Math.PI * 45 / 180;
 
-		spheres.push(sphere);
+		object.castShadow = true;
+
+		scene.add(object);
+
+		objects.push(object);
 	}
 
 	var groundPlaneGeometry = new THREE.CubeGeometry(600, 600, 2);
