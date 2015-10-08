@@ -117,7 +117,7 @@ function init() {
 
 	camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
 
-	camera.position.y = -800;
+	camera.position.y = -1200;
 	camera.position.z = 800;
 
 	camera.lookAt(groundPlane.position);
