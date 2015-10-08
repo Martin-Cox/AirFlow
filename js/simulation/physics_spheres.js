@@ -95,9 +95,13 @@ function init() {
 	}
 
 	var groundPlaneGeometry = new THREE.CubeGeometry(600, 600, 2);
+
+	var groundPlaneTexture = new THREE.ImageUtils.loadTexture('images/grass.png'); 
+
 	var groundPlaneMaterial = Physijs.createMaterial(
       new THREE.MeshLambertMaterial({ 
-        color: 0xffffff
+        map: groundPlaneTexture,
+        side: THREE.DoubleSide
       }),
       0.5, // friction
       0.6 // restitution
