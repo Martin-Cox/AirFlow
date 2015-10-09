@@ -97,6 +97,7 @@ function init() {
 	var groundPlaneGeometry = new THREE.CubeGeometry(600, 600, 2);
 
 	var groundPlaneTexture = new THREE.ImageUtils.loadTexture('images/grass.png'); 
+	groundPlaneTexture.anisotropy = renderer.getMaxAnisotropy();
 
 	var groundPlaneMaterial = Physijs.createMaterial(
       new THREE.MeshLambertMaterial({ 
