@@ -29,7 +29,7 @@ function init() {
 
 	scene = new Physijs.Scene;
 
-	scene.setGravity(new THREE.Vector3( 0, -50, 0 ));
+	scene.setGravity(new THREE.Vector3( 0, 25, 50));
 
 	for (var i=0; i < 50; i++) {
 
@@ -83,7 +83,7 @@ function init() {
 			object = new Physijs.BoxMesh(boxGeometry, boxMaterial);
 		}		
 
-		object.position.set((( Math.random() - 0.5 ) * 400), (( Math.random()) * 400), (( Math.random() - 0.5 ) * 300));
+		object.position.set((( Math.random() - 0.5 ) * 400), (( Math.random()) * 300), (( Math.random() - 1 ) * 300));
 
 		object.rotation.y = Math.PI * 45 / 180;
 
@@ -94,7 +94,8 @@ function init() {
 		objects.push(object);
 	}
 
-	var groundPlaneGeometry = new THREE.CubeGeometry(600, 600, 2);
+	var planeGeometry_A = new THREE.CubeGeometry(600, 600, 2);
+	var planeGeometry_B = new THREE.CubeGeometry(600, 600, 2);
 
 	var groundPlaneTexture = new THREE.ImageUtils.loadTexture('images/grass.png'); 
 	groundPlaneTexture.anisotropy = renderer.getMaxAnisotropy();
@@ -108,24 +109,24 @@ function init() {
       0.6 // restitution
     );
 
-	groundPlane = new Physijs.BoxMesh(groundPlaneGeometry, groundPlaneMaterial, 0); //Gravity, 0 = weightless
-	  
+	groundPlane_A = new Physijs.BoxMesh(planeGeometry_A, groundPlaneMaterial, 0); //Gravity, 0 = weightless
+	groundPlane_B = new Physijs.BoxMesh(planeGeometry_B, groundPlaneMaterial, 0); //Gravity, 0 = weightless
 	    
+	groundPlane_A.position.set(0, 0, 0);
+	groundPlane_B.position.set(0, 325, 100);
 
+	groundPlane_A.rotation.x = 10;
+	groundPlane_B.rotation.x = 250;
 
-	groundPlane.position.set(0, -250, 0);
-
-	groundPlane.rotation.x = 225;
-
-	scene.add(groundPlane);
-
+	scene.add(groundPlane_A);
+	scene.add(groundPlane_B);
 
 	camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
 
-	camera.position.y = -1200;
-	camera.position.z = 800;
+	camera.position.y = 400;
+	camera.position.z = -800;
 
-	camera.lookAt(groundPlane.position);
+	camera.lookAt(groundPlane_A.position);
 
 	scene.add(camera);
 
