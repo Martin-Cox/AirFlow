@@ -153,6 +153,11 @@ function init() {
 
 	scene.add(topLight);	
 	scene.add(bottomLight);
+
+	var pointLight = new THREE.PointLight(0xffffff, 0.75);
+	pointLight.position.set(0, -100, -400);
+
+	scene.add(pointLight);	
 }
 
 function animate() {
