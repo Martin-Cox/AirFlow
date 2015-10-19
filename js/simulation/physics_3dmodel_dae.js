@@ -2,14 +2,20 @@ var camera, scene, renderer, width, height, clock, orbitControl, fpsStats, dae, 
 var objects = [];
 
 
-var loader = new THREE.JSONLoader();
-//loader.options.convertUpAxis = true;
-loader.load( './models/simple_case.json', function ( geometry) {
+var loader = new THREE.ColladaLoader();
+loader.options.convertUpAxis = true;
+loader.load( './models/simple_case.dae', function ( collada ) {
+	/*dae = collada.scene;
+	dae.geometry = collada.dae.geometries['Cube-mesh'].mesh.geometry3js;
+	dae.scale.x = dae.scale.y = dae.scale.z = 100;
+	dae.updateMatrix();*/
+
 	var model_mat = new THREE.MeshLambertMaterial({ color: 0x700BCB });
-	model_mesh = new THREE.Mesh(geometry, model_mat);
+	model_mesh = new Physijs.ConcaveMesh(collada.dae.geometries['Cube-mesh'].mesh.geometry3js, model_mat, 0);
 	model_mesh.scale.x = 100;
 	model_mesh.scale.y = 100;
 	model_mesh.scale.z = 100;
+
 	init();
 	debugaxis(100);
 	animate();
@@ -76,7 +82,9 @@ function init() {
 	scene.add(groundPlane_A);
 	scene.add(groundPlane_B);*/
 
-	model_mesh.position.set(0, -300, 0);
+	//dae.position.set(0, -300, 0);
+	//scene.add(dae);
+		model_mesh.position.set(0, -300, 0);
 	scene.add(model_mesh);
 
 	//var model = new THREE.Mesh(model_geometry, model_material);
@@ -172,7 +180,7 @@ function createObjects(numToCreate) {
 		object = new Physijs.SphereMesh(sphereGeometry, sphereMaterial);
 	
 
-		object.position.set((( Math.random() - 0.5 ) * 200), (( Math.random() - 2 ) * 200), (( Math.random() - 3 ) * 200));
+		object.position.set((( Math.random() - 0.5 ) * 200), (( Math.random() - 3 ) * 200), (( Math.random() - 3 ) * 200));
 
 		object.rotation.y = Math.PI * 45 / 180;
 
