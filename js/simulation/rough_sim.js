@@ -158,14 +158,14 @@ function createCase() {
 	var caseThickness = 4;
 	var fanHoleSize = 200;
 
-	var caseBottomGeometry = new THREE.CubeGeometry(caseWidth, caseLength, caseThickness);
-	var caseTopGeometry = new THREE.CubeGeometry(caseWidth, caseLength, caseThickness);
-	var caseVisibleSideGeometry = new THREE.CubeGeometry(caseLength, caseHeight, caseThickness);
-	var caseInvisibleSideGeometry = new THREE.CubeGeometry(caseLength, caseHeight, caseThickness);
+	var caseBottomGeometry = new THREE.CubeGeometry(caseWidth, caseThickness, caseLength);
+	var caseTopGeometry = new THREE.CubeGeometry(caseWidth, caseThickness, caseLength);
+	var caseVisibleSideGeometry = new THREE.CubeGeometry(caseThickness, caseHeight, caseLength);
+	var caseInvisibleSideGeometry = new THREE.CubeGeometry(caseThickness, caseHeight, caseLength);
 	var caseBackGeometry = new THREE.CubeGeometry(caseWidth, caseHeight - fanHoleSize, caseThickness);
 	var caseFrontGeometry = new THREE.CubeGeometry(caseWidth, caseHeight - fanHoleSize, caseThickness);
 
-	var gpuGeometry = new THREE.CubeGeometry(caseWidth - 100, 375, 25);
+	var gpuGeometry = new THREE.CubeGeometry(caseWidth - 100, 25, 375);
 
 	var caseBottomPlane = new Physijs.BoxMesh(caseBottomGeometry, caseMaterial, 0); //Gravity, 0 = weightless
 	var caseTopPlane = new Physijs.BoxMesh(caseTopGeometry, caseMaterial, 0); //Gravity, 0 = weightless
@@ -176,23 +176,18 @@ function createCase() {
 
 	var gpuPlane = new Physijs.BoxMesh(gpuGeometry, componentMaterial, 0); //Gravity, 0 = weightless
 
-	caseBottomPlane.rotation.x = Math.PI / 2;
 	caseBottomPlane.position.set(0, 0, 0);
 
-	caseTopPlane.rotation.x = Math.PI / 2;
 	caseTopPlane.position.set(0, caseHeight, 0);
 
-	caseVisibleSidePlane.rotation.y = Math.PI / 2;
 	caseVisibleSidePlane.position.set(-caseWidth/2, caseHeight/2, 0);
 
-	caseInvisibleSidePlane.rotation.y = Math.PI / 2;
 	caseInvisibleSidePlane.position.set(caseWidth/2, caseHeight/2, 0);
 
 	caseBackPlane.position.set(0, caseHeight/2 - (fanHoleSize/2), caseLength/2);
 
 	caseFrontPlane.position.set(0, caseHeight/2 + (fanHoleSize/2), -caseLength/2);
 
-	gpuPlane.rotation.x = Math.PI / 2;
 	gpuPlane.position.set(-45, caseHeight/2 - 100, 200);
 
 	scene.add(caseBottomPlane);
