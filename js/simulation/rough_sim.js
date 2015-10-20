@@ -35,76 +35,7 @@ function init() {
 
 	createObjects(50);
 
-
-	/*-CREATE COMPUTER CASE */
-
-	var caseGroup = new THREE.Object3D(); //Empty container to store each case plane in
-
-	var caseMaterial = new THREE.MeshLambertMaterial({
-		color: 0x5F6E7D
-	})
-
-	var transparentMaterial = new THREE.MeshBasicMaterial({ 
-	    opacity: 0.4,
-	    color: 0x5F6E7D,
-	    transparent: true
-	});
-
-	var componentMaterial = new THREE.MeshLambertMaterial({
-		color: 0xD5D3D0
-	})
-
-	var caseWidth = 350;
-	var caseHeight = 800;
-	var caseLength = 900;
-	var caseThickness = 4;
-	var fanHoleSize = 200;
-
-	var caseBottomGeometry = new THREE.CubeGeometry(caseWidth, caseLength, caseThickness);
-	var caseTopGeometry = new THREE.CubeGeometry(caseWidth, caseLength, caseThickness);
-	var caseVisibleSideGeometry = new THREE.CubeGeometry(caseLength, caseHeight, caseThickness);
-	var caseInvisibleSideGeometry = new THREE.CubeGeometry(caseLength, caseHeight, caseThickness);
-	var caseBackGeometry = new THREE.CubeGeometry(caseWidth, caseHeight - fanHoleSize, caseThickness);
-	var caseFrontGeometry = new THREE.CubeGeometry(caseWidth, caseHeight - fanHoleSize, caseThickness);
-
-	var gpuGeometry = new THREE.CubeGeometry(caseWidth - 100, 375, 25);
-
-	var caseBottomPlane = new Physijs.BoxMesh(caseBottomGeometry, caseMaterial, 0); //Gravity, 0 = weightless
-	var caseTopPlane = new Physijs.BoxMesh(caseTopGeometry, caseMaterial, 0); //Gravity, 0 = weightless
-	var caseVisibleSidePlane = new Physijs.BoxMesh(caseVisibleSideGeometry, caseMaterial, 0); //Gravity, 0 = weightless
-	var caseInvisibleSidePlane = new Physijs.BoxMesh(caseInvisibleSideGeometry, transparentMaterial, 0); //Gravity, 0 = weightless
-	var caseBackPlane = new Physijs.BoxMesh(caseBackGeometry, caseMaterial, 0); //Gravity, 0 = weightless
-	var caseFrontPlane = new Physijs.BoxMesh(caseFrontGeometry, caseMaterial, 0); //Gravity, 0 = weightless
-
-	var gpuPlane = new Physijs.BoxMesh(gpuGeometry, componentMaterial, 0); //Gravity, 0 = weightless
-
-	caseBottomPlane.rotation.x = Math.PI / 2;
-	caseBottomPlane.position.set(0, 0, 0);
-
-	caseTopPlane.rotation.x = Math.PI / 2;
-	caseTopPlane.position.set(0, caseHeight, 0);
-
-	caseVisibleSidePlane.rotation.y = Math.PI / 2;
-	caseVisibleSidePlane.position.set(-caseWidth/2, caseHeight/2, 0);
-
-	caseInvisibleSidePlane.rotation.y = Math.PI / 2;
-	caseInvisibleSidePlane.position.set(caseWidth/2, caseHeight/2, 0);
-
-	caseBackPlane.position.set(0, caseHeight/2 - (fanHoleSize/2), caseLength/2);
-
-	caseFrontPlane.position.set(0, caseHeight/2 + (fanHoleSize/2), -caseLength/2);
-
-	gpuPlane.rotation.x = Math.PI / 2;
-	gpuPlane.position.set(-45, caseHeight/2 - 100, 200);
-
-	scene.add(caseBottomPlane);
-	scene.add(caseTopPlane);
-	scene.add(caseVisibleSidePlane);
-	scene.add(caseInvisibleSidePlane);
-	scene.add(caseBackPlane);
-	scene.add(caseFrontPlane);
-	scene.add(gpuPlane);
-
+	createCase();
 
 	camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
 
@@ -200,6 +131,77 @@ function createObjects(numToCreate) {
 
 		objects.push(object);
 	}
+}
+
+function createCase() {
+	//Creates a 3D model of a computer case
+
+	var caseGroup = new THREE.Object3D(); //Empty container to store each case plane in
+
+	var caseMaterial = new THREE.MeshLambertMaterial({
+		color: 0x5F6E7D
+	})
+
+	var transparentMaterial = new THREE.MeshBasicMaterial({ 
+	    opacity: 0.4,
+	    color: 0x5F6E7D,
+	    transparent: true
+	});
+
+	var componentMaterial = new THREE.MeshLambertMaterial({
+		color: 0xD5D3D0
+	})
+
+	var caseWidth = 350;
+	var caseHeight = 800;
+	var caseLength = 900;
+	var caseThickness = 4;
+	var fanHoleSize = 200;
+
+	var caseBottomGeometry = new THREE.CubeGeometry(caseWidth, caseLength, caseThickness);
+	var caseTopGeometry = new THREE.CubeGeometry(caseWidth, caseLength, caseThickness);
+	var caseVisibleSideGeometry = new THREE.CubeGeometry(caseLength, caseHeight, caseThickness);
+	var caseInvisibleSideGeometry = new THREE.CubeGeometry(caseLength, caseHeight, caseThickness);
+	var caseBackGeometry = new THREE.CubeGeometry(caseWidth, caseHeight - fanHoleSize, caseThickness);
+	var caseFrontGeometry = new THREE.CubeGeometry(caseWidth, caseHeight - fanHoleSize, caseThickness);
+
+	var gpuGeometry = new THREE.CubeGeometry(caseWidth - 100, 375, 25);
+
+	var caseBottomPlane = new Physijs.BoxMesh(caseBottomGeometry, caseMaterial, 0); //Gravity, 0 = weightless
+	var caseTopPlane = new Physijs.BoxMesh(caseTopGeometry, caseMaterial, 0); //Gravity, 0 = weightless
+	var caseVisibleSidePlane = new Physijs.BoxMesh(caseVisibleSideGeometry, caseMaterial, 0); //Gravity, 0 = weightless
+	var caseInvisibleSidePlane = new Physijs.BoxMesh(caseInvisibleSideGeometry, transparentMaterial, 0); //Gravity, 0 = weightless
+	var caseBackPlane = new Physijs.BoxMesh(caseBackGeometry, caseMaterial, 0); //Gravity, 0 = weightless
+	var caseFrontPlane = new Physijs.BoxMesh(caseFrontGeometry, caseMaterial, 0); //Gravity, 0 = weightless
+
+	var gpuPlane = new Physijs.BoxMesh(gpuGeometry, componentMaterial, 0); //Gravity, 0 = weightless
+
+	caseBottomPlane.rotation.x = Math.PI / 2;
+	caseBottomPlane.position.set(0, 0, 0);
+
+	caseTopPlane.rotation.x = Math.PI / 2;
+	caseTopPlane.position.set(0, caseHeight, 0);
+
+	caseVisibleSidePlane.rotation.y = Math.PI / 2;
+	caseVisibleSidePlane.position.set(-caseWidth/2, caseHeight/2, 0);
+
+	caseInvisibleSidePlane.rotation.y = Math.PI / 2;
+	caseInvisibleSidePlane.position.set(caseWidth/2, caseHeight/2, 0);
+
+	caseBackPlane.position.set(0, caseHeight/2 - (fanHoleSize/2), caseLength/2);
+
+	caseFrontPlane.position.set(0, caseHeight/2 + (fanHoleSize/2), -caseLength/2);
+
+	gpuPlane.rotation.x = Math.PI / 2;
+	gpuPlane.position.set(-45, caseHeight/2 - 100, 200);
+
+	scene.add(caseBottomPlane);
+	scene.add(caseTopPlane);
+	scene.add(caseVisibleSidePlane);
+	scene.add(caseInvisibleSidePlane);
+	scene.add(caseBackPlane);
+	scene.add(caseFrontPlane);
+	scene.add(gpuPlane);
 }
 
 function restartSim() {
