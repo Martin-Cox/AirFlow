@@ -38,6 +38,9 @@ function init() {
 
 	createCase();
 
+
+	//------------------Testing adding fans--------------------//
+
 	//Test out apply force
 	var fanMaterial = new THREE.MeshLambertMaterial({
 		opacity: 0.4,
@@ -49,9 +52,12 @@ function init() {
 	var fanGeometry = new THREE.CubeGeometry(200, 150, 100);
 	var fanMesh = new Physijs.BoxMesh(fanGeometry, fanMaterial, 0); //Gravity, 0 = weightless
 	fanMesh.position.set(-45, 400, 0);
-	//MAY BE ABLE TO MAKE FAN PASSABLE HERE
+	fanMesh._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
 	fanIDs.push(fanMesh.id);	//Currently only storing fan ID, as such implementing intake/exhaust fans, RPM etc. can't be done unless we then make a call to get this information in collision detector
 	scene.add(fanMesh);
+
+
+	//-------------------------------------------------------//
 
 
 	camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
@@ -160,7 +166,7 @@ function createCase() {
 	})
 
 	var transparentMaterial = new THREE.MeshBasicMaterial({ 
-	    opacity: 0.4,
+	    opacity: 0.2,
 	    color: 0x5F6E7D,
 	    transparent: true,
 	    side: THREE.DoubleSide
