@@ -1,5 +1,6 @@
 var camera, scene, renderer, width, height, clock, orbitControl, fpsStats;
 var objects = [];
+var fanIDs = [];
 
 init();
 debugaxis(100);
@@ -36,6 +37,22 @@ function init() {
 	createObjects(50);
 
 	createCase();
+
+	//Test out apply force
+	var fanMaterial = new THREE.MeshLambertMaterial({
+		opacity: 0.4,
+	    color: 0xB20000,
+	    transparent: true,
+	    side: THREE.DoubleSide
+	})
+
+	var fanGeometry = new THREE.CubeGeometry(200, 150, 100);
+	var fanMesh = new Physijs.BoxMesh(fanGeometry, fanMaterial, 0); //Gravity, 0 = weightless
+	fanMesh.position.set(-45, 400, 0);
+	//MAY BE ABLE TO MAKE FAN PASSABLE HERE
+	fanIDs.push(fanMesh.id);	//Currently only storing fan ID, as such implementing intake/exhaust fans, RPM etc. can't be done unless we then make a call to get this information in collision detector
+	scene.add(fanMesh);
+
 
 	camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
 
@@ -125,7 +142,7 @@ function createObjects(numToCreate) {
 
 		object.position.set((( Math.random() - 0.5 ) * 280), (( Math.random() - 0.25) * 200), (( Math.random() - 3.5 ) * 200));
 
-		object.castShadow = true;
+		object.addEventListener( 'collision', handleCollision );
 
 		scene.add(object);
 
@@ -198,6 +215,18 @@ function createCase() {
 	scene.add(caseBackPlane);
 	scene.add(caseFrontPlane);
 	scene.add(gpuPlane);
+}
+
+function handleCollision(collided_with, linearVelocity, angularVelocity) {
+	//Event gets called when physics objects (spheres) collide with another object
+	var fanID = fanIDs[0];
+	var collidedID = collided_with.id;
+	if (collidedID === fanID) {
+		//Collided with fan
+		this.material.color.setHex(0x000000);
+		//allow air particle to move through fan
+		//apply force
+	}
 }
 
 function restartSim() {
