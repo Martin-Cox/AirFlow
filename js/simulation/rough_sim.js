@@ -75,7 +75,7 @@ function init() {
 	clock = new THREE.Clock();
 
 
-	var skyboxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
+	var skyboxGeometry = new THREE.CubeGeometry(9000, 9000, 9000);
 	var skyboxMaterial = new THREE.MeshBasicMaterial({ color: 0x262B30, side: THREE.BackSide });
 	var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
 
