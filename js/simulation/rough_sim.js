@@ -145,7 +145,8 @@ function createCase() {
 	var transparentMaterial = new THREE.MeshBasicMaterial({ 
 	    opacity: 0.4,
 	    color: 0x5F6E7D,
-	    transparent: true
+	    transparent: true,
+	    side: THREE.DoubleSide
 	});
 
 	var componentMaterial = new THREE.MeshLambertMaterial({
