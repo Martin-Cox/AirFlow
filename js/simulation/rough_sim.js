@@ -229,9 +229,9 @@ function handleCollision(collided_with, linearVelocity, angularVelocity) {
 	var collidedID = collided_with.id;
 	if (collidedID === fanID) {
 		//Collided with fan
-		this.material.color.setHex(0x000000);
-		//allow air particle to move through fan
-		//apply force
+		var forceVector = new THREE.Vector3(0, 1000000, 0); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
+		//this.material.color.setHex(0x000000);
+		this.applyCentralImpulse(forceVector);
 	}
 }
 
