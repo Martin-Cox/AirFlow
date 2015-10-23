@@ -1,6 +1,6 @@
 var camera, scene, renderer, width, height, clock, orbitControl, fpsStats;
 var objects = [];
-var fanIDs = [];
+var fans = [];
 
 init();
 debugaxis(100);
@@ -38,26 +38,8 @@ function init() {
 
 	createCase();
 
-
-	//------------------Testing adding fans--------------------//
-
-	//Test out apply force
-	var fanMaterial = new THREE.MeshLambertMaterial({
-		opacity: 0.4,
-	    color: 0xB20000,
-	    transparent: true,
-	    side: THREE.DoubleSide
-	})
-
-	var fanGeometry = new THREE.CubeGeometry(200, 150, 100);
-	var fanMesh = new Physijs.BoxMesh(fanGeometry, fanMaterial, 0); //Gravity, 0 = weightless
-	fanMesh.position.set(-45, 400, 0);
-	fanMesh._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
-	fanIDs.push(fanMesh.id);	//Currently only storing fan ID, as such implementing intake/exhaust fans, RPM etc. can't be done unless we then make a call to get this information in collision detector
-	scene.add(fanMesh);
-
-
-	//-------------------------------------------------------//
+	createFan("intake", new THREE.Vector3(0, 100, -450));
+	createFan("exhaust", new THREE.Vector3(0, 700, 450));
 
 
 	camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
@@ -223,15 +205,47 @@ function createCase() {
 	scene.add(gpuPlane);
 }
 
+function createFan(paramMode, position) {
+	//------------------Testing adding fans--------------------//
+
+	//Test out apply force
+	var fanMaterial = new THREE.MeshLambertMaterial({
+		opacity: 0.4,
+	    color: 0xB20000,
+	    transparent: true,
+	    side: THREE.DoubleSide
+	})
+
+	var fanGeometry = new THREE.CubeGeometry(200, 150, 200);
+	var fanMesh = new Physijs.BoxMesh(fanGeometry, fanMaterial, 0); //Gravity, 0 = weightless
+
+	fanMesh.position.set(position.x, position.y, position.z);
+	fanMesh._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
+	//fanIDs.push(fanMesh.id);	//Currently only storing fan ID, as such implementing intake/exhaust fans, RPM etc. can't be done unless we then make a call to get this information in collision detector
+
+	var fan = {mesh: fanMesh, id: fanMesh.id, mode:paramMode};
+
+	fans.push(fan);
+
+	scene.add(fanMesh);
+
+
+	//-------------------------------------------------------//
+}
+
 function handleCollision(collided_with, linearVelocity, angularVelocity) {
 	//Event gets called when physics objects (spheres) collide with another object
-	var fanID = fanIDs[0];
-	var collidedID = collided_with.id;
-	if (collidedID === fanID) {
-		//Collided with fan
-		var forceVector = new THREE.Vector3(0, 1000000, 0); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
-		//this.material.color.setHex(0x000000);
-		this.applyCentralImpulse(forceVector);
+	for (var i = 0; i < fans.length; i++) {
+		if (collided_with.id === fans[i].id) {
+			//Collided with fan
+			if ( fans[i].mode === "intake" ) {
+				var forceVector = new THREE.Vector3(0, 0, 1000000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
+			} else if (fans[i].mode === "exhaust" ) {
+				var forceVector = new THREE.Vector3(0, 0, 1000000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
+			}			
+			//this.material.color.setHex(0x000000);
+			this.applyCentralImpulse(forceVector);
+		}
 	}
 }
 
