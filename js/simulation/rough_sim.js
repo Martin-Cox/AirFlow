@@ -32,7 +32,7 @@ function init() {
 
 	scene = new Physijs.Scene;
 
-	scene.setGravity(new THREE.Vector3( 0, 12, 25));
+	scene.setGravity(new THREE.Vector3( 0, 12, 0));
 
 	createObjects(50);
 
@@ -216,7 +216,7 @@ function createFan(paramMode, position) {
 	    side: THREE.DoubleSide
 	})
 
-	var fanGeometry = new THREE.CubeGeometry(200, 150, 200);
+	var fanGeometry = new THREE.CubeGeometry(300, 200, 400);
 	var fanMesh = new Physijs.BoxMesh(fanGeometry, fanMaterial, 0); //Gravity, 0 = weightless
 
 	fanMesh.position.set(position.x, position.y, position.z);
@@ -239,7 +239,7 @@ function handleCollision(collided_with, linearVelocity, angularVelocity) {
 		if (collided_with.id === fans[i].id) {
 			//Collided with fan
 			if ( fans[i].mode === "intake" ) {
-				var forceVector = new THREE.Vector3(0, 0, 1000000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
+				var forceVector = new THREE.Vector3(0, 500000, 1000000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
 			} else if (fans[i].mode === "exhaust" ) {
 				var forceVector = new THREE.Vector3(0, 0, 1000000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
 			}			
