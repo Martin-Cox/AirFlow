@@ -254,7 +254,7 @@ function handleMouseMove( event ) {
 	//If it detects the mouse is touching a fan, it will load the control panel section for that fan for easy access
 
 	//Have to normalise these coords sothat they are between -1 and 1
-	mouse.x = ( ( event.clientX / width ) * 2 - 1) - 0.5;	//Have to -0.5 because the control panel messes up the range, -0.5 is a temp fix, when the control panel size changes, the modifier should change programmatically 
+	mouse.x = ( ( (event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width ) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
 	mouse.y = - ( event.clientY / height ) * 2 + 1;
 
 	raycaster.setFromCamera( mouse, camera );
