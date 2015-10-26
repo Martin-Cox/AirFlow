@@ -225,11 +225,8 @@ function createFan(paramMode, position) {
 
 	fanMesh.position.set(position.x, position.y, position.z);
 	fanMesh._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
-	//fanIDs.push(fanMesh.id);	//Currently only storing fan ID, as such implementing intake/exhaust fans, RPM etc. can't be done unless we then make a call to get this information in collision detector
-
-	var fan = {mesh: fanMesh, id: fanMesh.id, mode:paramMode};
-
-	fans.push(fan);
+	fanMesh.mode = paramMode;
+	fans.push(fanMesh);
 
 	scene.add(fanMesh);
 
@@ -247,7 +244,6 @@ function handleCollision(collided_with, linearVelocity, angularVelocity) {
 			} else if (fans[i].mode === "exhaust" ) {
 				var forceVector = new THREE.Vector3(0, 0, 1000000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
 			}			
-			//this.material.color.setHex(0x000000);
 			this.applyCentralImpulse(forceVector);
 		}
 	}
@@ -305,19 +301,12 @@ function debugaxis(axisLength){
 
 function onDocumentMouseMove( event ) {
 
-	//event.preventDefault();
-
-	mouse.x = ( event.clientX / width ) * 2 - 1;
+	mouse.x = (( event.clientX / width ) * 2 - 1);
 	mouse.y = - ( event.clientY / height ) * 2 + 1;
-
-	var fanObjects = [];
-	for (var i = 0; i < fans.length; i++) {
-		fanObjects.push(fans[i].mesh);
-	}
 
 	raycaster.setFromCamera( mouse, camera );
 
-	var intersects = raycaster.intersectObjects( fanObjects );
+	var intersects = raycaster.intersectObjects( fans );
 
 	if ( intersects.length > 0 ) {
 
@@ -330,3 +319,4 @@ function onDocumentMouseMove( event ) {
 
 //TODO:
 // - Maybe use an eventListener for when $scope changes instead of checking every update frame -> better for perfomance
+// - RMouse over fans not quite working, seems to select the fans when mousing over near them, possibly related to the control panel offset making the app not fullscreen?
