@@ -1,6 +1,8 @@
-var camera, scene, renderer, width, height, clock, orbitControl, fpsStats;
+var camera, scene, renderer, width, height, clock, orbitControl, fpsStats, intersectedObject;
 var objects = [];
 var fans = [];
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
 
 init();
 debugaxis(100);
@@ -81,6 +83,8 @@ function init() {
 
 	scene.add(pointLightA);	
 	scene.add(pointLightB);	
+
+	renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
 }
 
 function animate() {
@@ -297,6 +301,32 @@ function debugaxis(axisLength){
     createAxis(v(0, -axisLength, 0), v(0, axisLength, 0), 0x00FF00);
     createAxis(v(0, 0, -axisLength), v(0, 0, axisLength), 0x0000FF);
 };
+
+
+function onDocumentMouseMove( event ) {
+
+	//event.preventDefault();
+
+	mouse.x = ( event.clientX / width ) * 2 - 1;
+	mouse.y = - ( event.clientY / height ) * 2 + 1;
+
+	var fanObjects = [];
+	for (var i = 0; i < fans.length; i++) {
+		fanObjects.push(fans[i].mesh);
+	}
+
+	raycaster.setFromCamera( mouse, camera );
+
+	var intersects = raycaster.intersectObjects( fanObjects );
+
+	if ( intersects.length > 0 ) {
+
+		intersectedObject = intersects[0];
+		intersectedObject.object.material.color.setHex( 0x00FF00 );
+
+	} 
+}
+
 
 //TODO:
 // - Maybe use an eventListener for when $scope changes instead of checking every update frame -> better for perfomance
