@@ -84,7 +84,7 @@ function init() {
 	scene.add(pointLightA);	
 	scene.add(pointLightB);	
 
-	renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	renderer.domElement.addEventListener( 'mousemove', handleMouseMove, false );
 }
 
 function animate() {
@@ -249,6 +249,31 @@ function handleCollision(collided_with, linearVelocity, angularVelocity) {
 	}
 }
 
+function handleMouseMove( event ) {
+	//Event gets called when the mouse moves, it creates a ray to detect what (if any) objects the mouse is touching
+	//If it detects the mouse is touching a fan, it will load the control panel section for that fan for easy access
+
+	//Have to normalise these coords sothat they are between -1 and 1
+	mouse.x = ( ( event.clientX / width ) * 2 - 1) - 0.5;	//Have to -0.5 because the control panel messes up the range, -0.5 is a temp fix, when the control panel size changes, the modifier should change programmatically 
+	mouse.y = - ( event.clientY / height ) * 2 + 1;
+
+	console.log("Mouse x: " + mouse.x);
+	console.log("Mouse y: " + mouse.y);
+
+	raycaster.setFromCamera( mouse, camera );
+
+	var intersects = raycaster.intersectObjects( fans, true );
+
+	if ( intersects.length > 0 ) {
+
+		intersectedObject = intersects[0];
+		intersectedObject.object.material.color.setHex( 0x00FF00 );
+
+		//TODO: onClick (or on mouse over) load up the control panel section for this particular fan
+
+	} 
+}
+
 function restartSim() {
 	//Removes all existing physics objects from the scene, then generates new physics objects
 	for (var i=0; i < objects.length; i++) {
@@ -299,24 +324,5 @@ function debugaxis(axisLength){
 };
 
 
-function onDocumentMouseMove( event ) {
-
-	mouse.x = (( event.clientX / width ) * 2 - 1);
-	mouse.y = - ( event.clientY / height ) * 2 + 1;
-
-	raycaster.setFromCamera( mouse, camera );
-
-	var intersects = raycaster.intersectObjects( fans );
-
-	if ( intersects.length > 0 ) {
-
-		intersectedObject = intersects[0];
-		intersectedObject.object.material.color.setHex( 0x00FF00 );
-
-	} 
-}
-
-
 //TODO:
 // - Maybe use an eventListener for when $scope changes instead of checking every update frame -> better for perfomance
-// - RMouse over fans not quite working, seems to select the fans when mousing over near them, possibly related to the control panel offset making the app not fullscreen?
