@@ -257,9 +257,6 @@ function handleMouseMove( event ) {
 	mouse.x = ( ( event.clientX / width ) * 2 - 1) - 0.5;	//Have to -0.5 because the control panel messes up the range, -0.5 is a temp fix, when the control panel size changes, the modifier should change programmatically 
 	mouse.y = - ( event.clientY / height ) * 2 + 1;
 
-	console.log("Mouse x: " + mouse.x);
-	console.log("Mouse y: " + mouse.y);
-
 	raycaster.setFromCamera( mouse, camera );
 
 	var intersects = raycaster.intersectObjects( fans, true );
