@@ -1,0 +1,24 @@
+<div class="editorSection" ng-controller="ComponentController">
+  <form novalidate class="editorForm">
+  	<p class="sectionHeader">Component Settings</p>
+    <div class="editorProperty">
+    	<p>Mode of operation: </p>
+    	<input type="text" ng-model="component.mode"/>
+    </div>
+    <div class="editorProperty">
+    	<p>RPM: </p>
+    	<input type="number" ng-model="component.rpm"/>
+    </div>
+    <div class="editorProperty">
+    	<p>Size (mm): </p>
+    	<input type="number" ng-model="component.size"/>
+    </div>
+    <div class="editorProperty">
+      <p>Date created: </p>
+      <input type="date" ng-readonly="true" ng-model="component.dateCreated"/>
+    </div>
+        <div class="editorProperty">
+      <p>Date modified: </p>
+      <input class="123" type="date" ng-readonly="true" ng-model="component.dateModified"/>
+    </div>
+</div>

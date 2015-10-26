@@ -297,3 +297,6 @@ function debugaxis(axisLength){
     createAxis(v(0, -axisLength, 0), v(0, axisLength, 0), 0x00FF00);
     createAxis(v(0, 0, -axisLength), v(0, 0, axisLength), 0x0000FF);
 };
+
+//TODO:
+// - Maybe use an eventListener for when $scope changes instead of checking every update frame -> better for perfomance
