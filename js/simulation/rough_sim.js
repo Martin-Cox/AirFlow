@@ -4,6 +4,9 @@ var fans = [];
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 
+var activeFanColor = 0x00FF00;
+var inactiveFanColor = 0xB20000;
+
 init();
 debugaxis(100);
 animate();
@@ -215,7 +218,7 @@ function createFan(paramMode, position) {
 	//Test out apply force
 	var fanMaterial = new THREE.MeshLambertMaterial({
 		opacity: 0.4,
-	    color: 0xB20000,
+	    color: inactiveFanColor,
 	    transparent: true,
 	    side: THREE.DoubleSide
 	})
@@ -249,7 +252,7 @@ function handleCollision(collided_with, linearVelocity, angularVelocity) {
 	}
 }
 
-function handleMouseMove( event ) {
+function handleMouseMove(event) {
 	//Event gets called when the mouse moves, it creates a ray to detect what (if any) objects the mouse is touching
 	//If it detects the mouse is touching a fan, it will load the control panel section for that fan for easy access
 
@@ -264,11 +267,19 @@ function handleMouseMove( event ) {
 	if ( intersects.length > 0 ) {
 
 		intersectedObject = intersects[0];
-		intersectedObject.object.material.color.setHex( 0x00FF00 );
+		intersectedObject.object.material.color.setHex(activeFanColor);
+
+
 
 		//TODO: onClick (or on mouse over) load up the control panel section for this particular fan
+		//Include active = true marker here after user clicks on fan
 
-	} 
+	} else {
+		//Include an if check for an active fan here. Will likely not need for loop for resetting color as we can just get the active fan
+		for (var i = 0; i < fans.length; i++) {
+			fans[i].material.color.setHex(inactiveFanColor);
+		}
+	}
 }
 
 function restartSim() {
