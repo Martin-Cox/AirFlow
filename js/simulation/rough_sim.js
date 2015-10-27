@@ -233,6 +233,9 @@ function createFan(paramMode, position) {
 
 	scene.add(fanMesh);
 
+	//Add component controller for this fan
+	document.getElementById('tabbedPaneContainer').insertAdjacentHTML('beforeend', '<component-Settings id="' + fanMesh.id +'"></component-Settings>');
+
 
 	//-------------------------------------------------------//
 }
@@ -269,7 +272,7 @@ function handleMouseMove(event) {
 		intersectedObject = intersects[0];
 		intersectedObject.object.material.color.setHex(activeFanColor);
 
-
+		document.getElementById(intersectedObject.object.id).style.color = "red";	//Placeholder. When user clicks on the fan it's component section will display
 
 		//TODO: onClick (or on mouse over) load up the control panel section for this particular fan
 		//Include active = true marker here after user clicks on fan
@@ -278,6 +281,7 @@ function handleMouseMove(event) {
 		//Include an if check for an active fan here. Will likely not need for loop for resetting color as we can just get the active fan
 		for (var i = 0; i < fans.length; i++) {
 			fans[i].material.color.setHex(inactiveFanColor);
+			document.getElementById(intersectedObject.object.id).style.color = "black";	//Placeholder. When user clicks on the fan it's component section will display
 		}
 	}
 }
