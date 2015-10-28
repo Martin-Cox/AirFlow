@@ -4,8 +4,9 @@ var fans = [];
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 
-var activeFanColor = 0x00FF00;
-var inactiveFanColor = 0xB20000;
+var hoverFanColor = 0xD88080;
+var editFanColor = 0x00FF00;
+var normalFanColor = 0xB20000;
 
 init();
 debugaxis(100);
@@ -88,6 +89,7 @@ function init() {
 	scene.add(pointLightB);	
 
 	renderer.domElement.addEventListener( 'mousemove', handleMouseMove, false );
+	renderer.domElement.addEventListener( 'mousedown', handleMouseClick, false );
 }
 
 function animate() {
@@ -218,7 +220,7 @@ function createFan(paramMode, position) {
 	//Test out apply force
 	var fanMaterial = new THREE.MeshLambertMaterial({
 		opacity: 0.4,
-	    color: inactiveFanColor,
+	    color: normalFanColor,
 	    transparent: true,
 	    side: THREE.DoubleSide
 	})
@@ -229,6 +231,7 @@ function createFan(paramMode, position) {
 	fanMesh.position.set(position.x, position.y, position.z);
 	fanMesh._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
 	fanMesh.mode = paramMode;
+	fanMesh.editing = false;
 	fans.push(fanMesh);
 
 	scene.add(fanMesh);
@@ -256,10 +259,48 @@ function handleCollision(collided_with, linearVelocity, angularVelocity) {
 }
 
 function handleMouseMove(event) {
-	//Event gets called when the mouse moves, it creates a ray to detect what (if any) objects the mouse is touching
-	//If it detects the mouse is touching a fan, it will load the control panel section for that fan for easy access
+	//When a user hovers on a fan change fan color to hover state only if we are NOT editing that fan 
 
-	//Have to normalise these coords sothat they are between -1 and 1
+	var touchFan = detectTouchingFan(event);
+
+	if (touchFan) {
+		//Only change to hover color when we are NOT editing the current fan
+		if (touchFan.object.editing == false) {
+			touchFan.object.material.color.setHex(hoverFanColor);
+		}
+	} else {
+		for (var i = 0; i < fans.length; i++) {
+			//Only set fans that we are NOT editing to normal fan color
+			if (fans[i].editing == false) {
+				fans[i].material.color.setHex(normalFanColor);
+			}
+		}
+	}
+}
+
+function handleMouseClick(event) {
+	//When a user clicks on a fan, open the component control panel section and change fan color
+
+	var touchFan = detectTouchingFan(event);
+
+	//For peace of mind, reset all fans to not editing when we click
+	for (var i = 0; i < fans.length; i++) {
+		fans[i].editing = false;
+		fans[i].material.color.setHex(normalFanColor);
+		document.getElementById(fans[i].id).style.color = "black";
+	}
+
+	if (touchFan) {
+		touchFan.object.material.color.setHex(editFanColor);
+		touchFan.object.editing = true;
+		document.getElementById(touchFan.object.id).style.color = "red";	//Placeholder. When user clicks on the fan it's component section will display
+	}
+}
+
+function detectTouchingFan(event) {
+	//Returns a Fan object if the mouse is touching one, else nothing is returned
+
+	//Have to normalise these coords so that they are between -1 and 1
 	mouse.x = ( ( (event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width ) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
 	mouse.y = - ( event.clientY / height ) * 2 + 1;
 
@@ -268,21 +309,9 @@ function handleMouseMove(event) {
 	var intersects = raycaster.intersectObjects( fans, true );
 
 	if ( intersects.length > 0 ) {
-
-		intersectedObject = intersects[0];
-		intersectedObject.object.material.color.setHex(activeFanColor);
-
-		document.getElementById(intersectedObject.object.id).style.color = "red";	//Placeholder. When user clicks on the fan it's component section will display
-
-		//TODO: onClick (or on mouse over) load up the control panel section for this particular fan
-		//Include active = true marker here after user clicks on fan
-
+		return intersectedObject = intersects[0];
 	} else {
-		//Include an if check for an active fan here. Will likely not need for loop for resetting color as we can just get the active fan
-		for (var i = 0; i < fans.length; i++) {
-			fans[i].material.color.setHex(inactiveFanColor);
-			document.getElementById(intersectedObject.object.id).style.color = "black";	//Placeholder. When user clicks on the fan it's component section will display
-		}
+		return null;
 	}
 }
 
