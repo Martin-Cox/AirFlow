@@ -57,7 +57,7 @@ function init() {
 
 	orbitControl = new THREE.OrbitControls(camera, document.getElementById('simulationContainer'));
 	//orbitControl.enablePan = false;
-	orbitControl.constraint.maxDistance = 1000;
+	orbitControl.constraint.minDistance = 600;
 	orbitControl.constraint.maxDistance = 2200;
 	clock = new THREE.Clock();
 
