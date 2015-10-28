@@ -9,7 +9,6 @@ var editFanColor = 0x00FF00;
 var normalFanColor = 0xB20000;
 
 init();
-debugaxis(100);
 animate();
 
 function init() {
@@ -58,8 +57,8 @@ function init() {
 
 	orbitControl = new THREE.OrbitControls(camera, document.getElementById('simulationContainer'));
 	//orbitControl.enablePan = false;
-	orbitControl.constraint.maxDistance = 100;
-	orbitControl.constraint.maxDistance = 1600;
+	orbitControl.constraint.maxDistance = 1000;
+	orbitControl.constraint.maxDistance = 2200;
 	clock = new THREE.Clock();
 
 
@@ -87,6 +86,8 @@ function init() {
 
 	scene.add(pointLightA);	
 	scene.add(pointLightB);	
+
+	scene.add(new THREE.AxisHelper(200));
 
 	renderer.domElement.addEventListener( 'mousemove', handleMouseMove, false );
 	renderer.domElement.addEventListener( 'mousedown', handleMouseClick, false );
@@ -338,32 +339,6 @@ function onWindowResize(){
     renderer.setSize( width, height );
 
 }
-
-function debugaxis(axisLength){
-	/*
-		Code written by http://nooshu.com/debug-axes-in-three-js
-	*/
-	//X = RED, Y = GREEN, Z = BLUE
-
-    //Shorten the vertex function
-    function v(x,y,z){
-            return new THREE.Vector3(x,y,z);
-    }
-   
-    //Create axis (point1, point2, colour)
-    function createAxis(p1, p2, color){
-            var line, lineGeometry = new THREE.Geometry(),
-            lineMat = new THREE.LineBasicMaterial({color: color});
-            lineGeometry.vertices.push(p1, p2);
-            line = new THREE.Line(lineGeometry, lineMat);
-            scene.add(line);
-    }
-   
-    createAxis(v(-axisLength, 0, 0), v(axisLength, 0, 0), 0xFF0000);
-    createAxis(v(0, -axisLength, 0), v(0, axisLength, 0), 0x00FF00);
-    createAxis(v(0, 0, -axisLength), v(0, 0, axisLength), 0x0000FF);
-};
-
 
 //TODO:
 // - Maybe use an eventListener for when $scope changes instead of checking every update frame -> better for perfomance
