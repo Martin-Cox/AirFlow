@@ -218,31 +218,48 @@ function createCase() {
 function createFan(paramMode, position) {
 	//------------------Testing adding fans--------------------//
 
-	//Test out apply force
-	var fanMaterial = new THREE.MeshLambertMaterial({
+	var fan = new Object();
+
+	fan.mode = paramMode;
+
+	//------------------------CREATE FAN AOE OBJECT-----------------------//
+	var fanAOEMaterial = new THREE.MeshLambertMaterial({
 		opacity: 0.4,
 	    color: normalFanColor,
 	    transparent: true,
 	    side: THREE.DoubleSide
 	})
 
-	var fanGeometry = new THREE.CubeGeometry(300, 200, 400);
-	var fan = new Physijs.BoxMesh(fanGeometry, fanMaterial, 0); //Gravity, 0 = weightless
+	var fanAOEGeometry = new THREE.CubeGeometry(300, 200, 400);
+	var fanAOEObject = new Physijs.BoxMesh(fanAOEGeometry, fanAOEMaterial, 0); //Gravity, 0 = weightless
 
-	fan.position.set(position.x, position.y, position.z);
-	fan._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
-	fan.mode = paramMode;
-	fan.editing = false;
-	fans.push(fan);
+	fanAOEObject.position.set(position.x, position.y, position.z);
+	fanAOEObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
 
-	scene.add(fan);
+	fanAOEObject.editing = false;	//TODO: Move to root level fan object
+
+	scene.add(fanAOEObject);
+	//------------------------CREATE FAN AOE OBJECT-----------------------//
+
+	//------------------------CREATE FAN OBJECT-----------------------//
+	
+	//TODO: Create actual fan physical object here and assign it as a property of fan
+
+	//------------------------CREATE FAN OBJECT-----------------------//
+
+
+	fan.fanAOEObject = fanAOEObject;
+	fan.fanObject = null;
+	fan.id = fanAOEObject.id;
+
+	fans.push(fan);	
 
 	//Show wireframe for the fan AOE object
-	edges = new THREE.EdgesHelper(fan, 0x90DAFF);
+	edges = new THREE.EdgesHelper(fanAOEObject, 0x90DAFF);
 	scene.add(edges);
 
 	//Add component controller for this fan
-	document.getElementById('tabbedPaneContainer').insertAdjacentHTML('beforeend', '<component-Settings id="' + fan.id +'"></component-Settings>');
+	document.getElementById('tabbedPaneContainer').insertAdjacentHTML('beforeend', '<component-Settings id="' + fanAOEObject.id +'"></component-Settings>');
 
 
 	//-------------------------------------------------------//
@@ -251,14 +268,14 @@ function createFan(paramMode, position) {
 function handleCollision(collided_with, linearVelocity, angularVelocity) {
 	//Event gets called when physics objects (spheres) collide with another object
 	for (var i = 0; i < fans.length; i++) {
-		if (collided_with.id === fans[i].id) {
+		if (collided_with.id === fans[i].fanAOEObject.id) {
 			//Collided with fan
 			if ( fans[i].mode === "intake" ) {
 				var forceVector = new THREE.Vector3(0, 50000, 700000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
 			} else if (fans[i].mode === "exhaust" ) {
 				var forceVector = new THREE.Vector3(0, 0, 1000000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
 			}			
-			this.applyCentralImpulse(forceVector);
+			this.applyCentralImpulse(forceVector);	//change to applyCentralForce
 		}
 	}
 }
@@ -276,8 +293,8 @@ function handleMouseMove(event) {
 	} else {
 		for (var i = 0; i < fans.length; i++) {
 			//Only set fans that we are NOT editing to normal fan color
-			if (fans[i].editing == false) {
-				fans[i].material.color.setHex(normalFanColor);
+			if (fans[i].fanAOEObject.editing == false) {
+				fans[i].fanAOEObject.material.color.setHex(normalFanColor);
 			}
 		}
 	}
@@ -291,7 +308,7 @@ function handleMouseClick(event) {
 	//For peace of mind, reset all fans to not editing when we click
 	for (var i = 0; i < fans.length; i++) {
 		fans[i].editing = false;
-		fans[i].material.color.setHex(normalFanColor);
+		fans[i].fanAOEObject.material.color.setHex(normalFanColor);
 		document.getElementById(fans[i].id).style.color = "black";
 	}
 
@@ -303,7 +320,7 @@ function handleMouseClick(event) {
 }
 
 function detectTouchingFan(event) {
-	//Returns a Fan object if the mouse is touching one, else nothing is returned
+	//Returns a fanAOEObject if the mouse is touching one, else nothing is returned
 
 	//Have to normalise these coords so that they are between -1 and 1
 	mouse.x = ( ( (event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width ) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
@@ -311,7 +328,13 @@ function detectTouchingFan(event) {
 
 	raycaster.setFromCamera( mouse, camera );
 
-	var intersects = raycaster.intersectObjects( fans, true );
+	//Isolate the fan AOE objects from all of the fans
+	var fanAOEObjects = [];
+	for (var i = 0; i < fans.length; i++) {
+		fanAOEObjects.push(fans[i].fanAOEObject);
+	}
+
+	var intersects = raycaster.intersectObjects( fanAOEObjects, true );
 
 	if ( intersects.length > 0 ) {
 		return intersectedObject = intersects[0];
