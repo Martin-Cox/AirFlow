@@ -307,7 +307,7 @@ function handleMouseClick(event) {
 
 	//For peace of mind, reset all fans to not editing when we click
 	for (var i = 0; i < fans.length; i++) {
-		fans[i].editing = false;
+		fans[i].fanAOEObject.editing = false;
 		fans[i].fanAOEObject.material.color.setHex(normalFanColor);
 		document.getElementById(fans[i].id).style.color = "black";
 	}
