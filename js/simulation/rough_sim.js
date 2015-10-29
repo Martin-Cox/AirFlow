@@ -230,7 +230,7 @@ function createFan(paramMode, position) {
 	    side: THREE.DoubleSide
 	})
 
-	var fanAOEGeometry = new THREE.CubeGeometry(300, 200, 400);
+	var fanAOEGeometry = new THREE.CubeGeometry(350, 200, 400);
 	var fanAOEObject = new Physijs.BoxMesh(fanAOEGeometry, fanAOEMaterial, 0); //Gravity, 0 = weightless
 
 	fanAOEObject.position.set(position.x, position.y, position.z);
@@ -275,7 +275,7 @@ function handleCollision(collided_with, linearVelocity, angularVelocity) {
 			} else if (fans[i].mode === "exhaust" ) {
 				var forceVector = new THREE.Vector3(0, 0, 1000000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
 			}			
-			this.applyCentralImpulse(forceVector);	//change to applyCentralForce
+			this.applyCentralImpulse(forceVector);
 		}
 	}
 }
