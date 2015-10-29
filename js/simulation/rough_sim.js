@@ -227,18 +227,22 @@ function createFan(paramMode, position) {
 	})
 
 	var fanGeometry = new THREE.CubeGeometry(300, 200, 400);
-	var fanMesh = new Physijs.BoxMesh(fanGeometry, fanMaterial, 0); //Gravity, 0 = weightless
+	var fan = new Physijs.BoxMesh(fanGeometry, fanMaterial, 0); //Gravity, 0 = weightless
 
-	fanMesh.position.set(position.x, position.y, position.z);
-	fanMesh._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
-	fanMesh.mode = paramMode;
-	fanMesh.editing = false;
-	fans.push(fanMesh);
+	fan.position.set(position.x, position.y, position.z);
+	fan._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
+	fan.mode = paramMode;
+	fan.editing = false;
+	fans.push(fan);
 
-	scene.add(fanMesh);
+	scene.add(fan);
+
+	//Show wireframe for the fan AOE object
+	edges = new THREE.EdgesHelper(fan, 0x90DAFF);
+	scene.add(edges);
 
 	//Add component controller for this fan
-	document.getElementById('tabbedPaneContainer').insertAdjacentHTML('beforeend', '<component-Settings id="' + fanMesh.id +'"></component-Settings>');
+	document.getElementById('tabbedPaneContainer').insertAdjacentHTML('beforeend', '<component-Settings id="' + fan.id +'"></component-Settings>');
 
 
 	//-------------------------------------------------------//
