@@ -18,6 +18,11 @@
 	<body ng-app="AirFlowApp">
 		<div class="main" ng-controller="MainController">
 
+			<div id="loadingSplash" ng-click="hideSplash()">
+				<img src="/images/logo_small.svg" alt="AirFlow logo"> 
+				<p id="loadingSplashLoadingText">Loading...</p>
+			</div>
+
 			<div id="tabbedPaneContainer">
 				Tabbed pane goes here
 				<project-Settings></project-Settings>

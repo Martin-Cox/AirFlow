@@ -1,3 +1,0 @@
-app.controller('ProjectSettingsController', ['$scope', function($scope) {
-
-}]);

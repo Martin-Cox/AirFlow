@@ -258,6 +258,9 @@ function createFan(paramMode, position) {
 	edges = new THREE.EdgesHelper(fanAOEObject, 0x90DAFF);
 	scene.add(edges);
 
+	//TODO: Add wireframe edges object to fan object, so we can change it's color later
+
+
 	//Add component controller for this fan
 	document.getElementById('tabbedPaneContainer').insertAdjacentHTML('beforeend', '<component-Settings id="' + fanAOEObject.id +'"></component-Settings>');
 
@@ -283,6 +286,8 @@ function handleCollision(collided_with, linearVelocity, angularVelocity) {
 function handleMouseMove(event) {
 	//When a user hovers on a fan change fan color to hover state only if we are NOT editing that fan 
 
+	//TODO: Change fanAOEObject color change to wireframe color change
+
 	var touchFan = detectTouchingFan(event);
 
 	if (touchFan) {
@@ -302,6 +307,8 @@ function handleMouseMove(event) {
 
 function handleMouseClick(event) {
 	//When a user clicks on a fan, open the component control panel section and change fan color
+
+	//TODO: Change fanAOEObject color change to wireframe color change
 
 	var touchFan = detectTouchingFan(event);
 

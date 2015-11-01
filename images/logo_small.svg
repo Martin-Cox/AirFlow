@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="800"
+   height="600"
+   id="svg4714"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   viewBox="0 0 800 600"
+   sodipodi:docname="logo_small.svg">
+  <defs
+     id="defs4716" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.84852814"
+     inkscape:cx="278.72646"
+     inkscape:cy="279.77399"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid5290" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata4719">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <rect
+       id="rect3356"
+       width="800"
+       height="600"
+       x="0"
+       y="-9.7805634e-005"
+       style="fill:#262b30;fill-opacity:1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:180px;line-height:125%;font-family:Oswald;-inkscape-font-specification:'Oswald, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#f5f5f5;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="59.708008"
+       y="495.55692"
+       id="text3352"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3354"
+         x="59.708008"
+         y="495.55692"
+         dx="0"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:180px;line-height:125%;font-family:Oswald;-inkscape-font-specification:'Oswald, Normal';text-align:start;letter-spacing:9.5px;writing-mode:lr-tb;text-anchor:start;fill:#f5f5f5;fill-opacity:1">AIRFLOW</tspan></text>
+    <g
+       id="g5292"
+       transform="translate(-130.42195,0)">
+      <circle
+         r="25.82107"
+         cy="196.76999"
+         cx="530.63031"
+         id="path4161"
+         style="fill:#f5f5f5;fill-opacity:1" />
+      <circle
+         r="11.250002"
+         cy="235.8533"
+         cx="490.21365"
+         id="path4161-0"
+         style="fill:#00ccff;fill-opacity:1" />
+      <circle
+         r="11.250002"
+         cy="267.93661"
+         cx="458.13034"
+         id="path4161-0-1"
+         style="fill:#00ccff;fill-opacity:1" />
+      <circle
+         r="11.250002"
+         cy="158.35336"
+         cx="569.797"
+         id="path4161-0-1-1"
+         style="fill:#00ccff;fill-opacity:1" />
+      <circle
+         r="11.250002"
+         cy="125.85336"
+         cx="601.88031"
+         id="path4161-0-1-8"
+         style="fill:#00ccff;fill-opacity:1" />
+      <circle
+         r="11.250002"
+         cy="235.22836"
+         cx="570.00531"
+         id="path4161-0-1-1-5"
+         style="fill:#00ccff;fill-opacity:1" />
+      <circle
+         r="11.250002"
+         cy="268.35336"
+         cx="602.71356"
+         id="path4161-0-1-1-4"
+         style="fill:#00ccff;fill-opacity:1" />
+      <circle
+         r="11.250002"
+         cy="157.93674"
+         cx="491.04703"
+         id="path4161-0-1-1-9"
+         style="fill:#00ccff;fill-opacity:1" />
+      <circle
+         r="11.250002"
+         cy="125.43667"
+         cx="460.63034"
+         id="path4161-0-1-1-58"
+         style="fill:#00ccff;fill-opacity:1" />
+    </g>
+  </g>
+</svg>
