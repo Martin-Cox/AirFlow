@@ -46,13 +46,25 @@ html, body {
   opacity: 1;
   transition: opacity 1s;
 }
-
-#loadingSplash img {
-  height: 50%;
+#loadingSplashIcon {
+  height: 5em;
   display: block;
   margin: 0 auto;
+  margin-top: 15%;
+  -webkit-animation:spin 4s linear infinite;
+  -moz-animation:spin 4s linear infinite;
+  animation:spin 4s linear infinite;
 }
-#loadingSplash p {
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+#loadingSplashLogoText {
+  color: #F5F5F5;
+  font-size: 8em;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  text-align: center;
+}
+#loadingSplashLoadingText {
   color: #F5F5F5;
   font-size: 1.2em;
   text-shadow: 0 1px 1px rgba(0,0,0,.2);
