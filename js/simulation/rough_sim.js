@@ -409,8 +409,7 @@ function onWindowResize(){
 }
 
 //TODO (IN ORDER):
-// - Resize fan AOE so it only spawns inside case
-// - Streaming/Spawning of particles at intake fans
+// - Change rate of spawning in particles dependant on the number of intake fans
 // - Deletion of particle on collision with exhaust fans
 // - Air Particles are recycled from a pool with a max size configurable by user
 // - Fan model and animations
