@@ -296,17 +296,17 @@ function handleMouseMove(event) {
 
 	var touchFan = detectTouchingFan(event);
 
+	//For peace of mind, reset all fans not being edited to normal fan color
+	for (var i = 0; i < fans.length; i++) {
+		if (fans[i].editing == false) {
+			fans[i].fanPhysicalObject.material.color.setHex(normalFanColor);
+		}
+	}
+
 	if (touchFan) {
 		//Only change to hover color when we are NOT editing the current fan
 		if (touchFan.editing == false) {
 			touchFan.fanPhysicalObject.material.color.setHex(hoverFanColor);
-		}
-	} else {
-		for (var i = 0; i < fans.length; i++) {
-			//Only set fans that we are NOT editing to normal fan color
-			if (fans[i].editing == false) {
-				fans[i].fanPhysicalObject.material.color.setHex(normalFanColor);
-			}
 		}
 	}
 }
