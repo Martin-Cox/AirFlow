@@ -235,10 +235,17 @@ function createFan(paramMode, position) {
 	    side: THREE.DoubleSide
 	})
 
-	var fanAOEGeometry = new THREE.CubeGeometry(350, 175, 400);
+	var fanAOEGeometry = new THREE.CubeGeometry(350, 175, 200);
 	var fanAOEObject = new Physijs.BoxMesh(fanAOEGeometry, fanAOEMaterial, 0); //Gravity, 0 = weightless
 
-	fanAOEObject.position.set(position.x, position.y, position.z);
+
+	//Checking param mode here to ffset positions, this is only a temp solution, actual xyz coords will be in a JSON
+	if (paramMode == "intake") {
+		fanAOEObject.position.set(position.x, position.y, position.z + 100);
+	} else {
+		fanAOEObject.position.set(position.x, position.y, position.z - 100);
+	}
+
 	fanAOEObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
 
 	scene.add(fanAOEObject);
@@ -385,5 +392,29 @@ function onWindowResize(){
 
 }
 
-//TODO:
+//TODO (IN ORDER):
+// - Resize fan AOE so it only spawns inside case
+// - Streaming/Spawning of particles at intake fans
+// - Deletion of particle on collision with exhaust fans
+// - Air Particles are recycled from a pool with a max size configurable by user
+// - Fan model and animations
+// - Color change and culling of particles that have been around for a long time
+// - Better integration of AngularJS and Simulation code
+// - Read default case dimensions from JSON file
+// - Read default fan information from JSON file
+// - Simulation updates automatically when settings change
+// - User configurable fan settings on fan-by-fan basis (RPM, mode, active/inactive etc.)
+// - User configurable environment settings
+// - User configurable project settings
+// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)
+// - Simulation quality settings (AA on/off)
+// - How to use overlay
+// - Clean up code, optimisation, proper documentation etc.
+// - Testing on multiple devices
+// - Save information to a .airflow file (OPTIONAL)
+// - Upload project from .airflow file (OPTIONAL)
+// - User defined case settings (OPTIONAL)
+
+//OTHER NOTES:
 // - Maybe use an eventListener for when $scope changes instead of checking every update frame -> better for perfomance
+// - Not all fans will be intake or exhaust, e.g. GPU/CPU fan will be neither
