@@ -220,7 +220,8 @@ function createCase() {
 }
 
 function createFan(paramMode, position) {
-	//------------------Testing adding fans--------------------//
+	/*A fan is made up a of a fanObject with two sub-objects, a fanAOEObject representing the are of effect for a fan
+	and the fanPhysicalObject, which is the physical fan the user sees*/
 
 	var fan = new Object();
 
@@ -258,8 +259,6 @@ function createFan(paramMode, position) {
 	fanPhysicalObject.position.set(position.x, position.y, position.z);
 	fanPhysicalObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
 
-	fanPhysicalObject.editing = false;	//TODO: Move to root level fan object
-
 	scene.add(fanPhysicalObject);
 
 	//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
@@ -268,14 +267,13 @@ function createFan(paramMode, position) {
 	fan.fanAOEObject = fanAOEObject;
 	fan.fanPhysicalObject = fanPhysicalObject;
 	fan.id = fanPhysicalObject.id;
+	fan.editing = false;
 	fan.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, 0x90DAFF);
 
 	fans.push(fan);	
 
 	//Add component controller for this fan
 	document.getElementById('tabbedPaneContainer').insertAdjacentHTML('beforeend', '<component-Settings id="' + fan.id +'"></component-Settings>');
-
-	//-------------------------------------------------------//
 }
 
 function handleCollision(collided_with, linearVelocity, angularVelocity) {
@@ -300,13 +298,13 @@ function handleMouseMove(event) {
 
 	if (touchFan) {
 		//Only change to hover color when we are NOT editing the current fan
-		if (touchFan.object.editing == false) {
-			touchFan.object.material.color.setHex(hoverFanColor);
+		if (touchFan.editing == false) {
+			touchFan.fanPhysicalObject.material.color.setHex(hoverFanColor);
 		}
 	} else {
 		for (var i = 0; i < fans.length; i++) {
 			//Only set fans that we are NOT editing to normal fan color
-			if (fans[i].fanPhysicalObject.editing == false) {
+			if (fans[i].editing == false) {
 				fans[i].fanPhysicalObject.material.color.setHex(normalFanColor);
 			}
 		}
@@ -317,33 +315,26 @@ function handleMouseClick(event) {
 	//When a user clicks on a fan, open the component control panel section and change fan color
 
 	var touchFan = detectTouchingFan(event);
-	var fanObject;
 
 	//For peace of mind, reset all fans to not editing when we click
 	for (var i = 0; i < fans.length; i++) {
-		fans[i].fanPhysicalObject.editing = false;
+		fans[i].editing = false;
 		fans[i].fanPhysicalObject.material.color.setHex(normalFanColor);
 		scene.remove(fans[i].AOEWireframe); 
 		document.getElementById(fans[i].id).style.color = "black";
-
-		//Get the root fan object for the touched fanPhysicalObject
-		if (touchFan) {
-			if (touchFan.object.id == fans[i].id) {
-				fanObject = fans[i];
-			}
-		}
 	}
 
+	//If we clicked on a fan, do stuff here
 	if (touchFan) {
-		touchFan.object.material.color.setHex(editFanColor);
-		touchFan.object.editing = true;
-		scene.add(fanObject.AOEWireframe);
-		document.getElementById(touchFan.object.id).style.color = "red";	//Placeholder. When user clicks on the fan it's component section will display
+		touchFan.fanPhysicalObject.material.color.setHex(editFanColor);
+		touchFan.editing = true;
+		scene.add(touchFan.AOEWireframe);
+		document.getElementById(touchFan.id).style.color = "red";	//Placeholder. When user clicks on the fan it's component section will display
 	}
 }
 
 function detectTouchingFan(event) {
-	//Returns a fanObjectObject if the mouse is touching one, else nothing is returned
+	//Returns a fanObject if the mouse is touching one, else nothing is returned
 
 	//Have to normalise these coords so that they are between -1 and 1
 	mouse.x = ( ( (event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width ) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
@@ -359,8 +350,13 @@ function detectTouchingFan(event) {
 
 	var intersects = raycaster.intersectObjects( fanPhysicalObjects, true );
 
-	if ( intersects.length > 0 ) {
-		return intersectedObject = intersects[0];
+	//If we have touched a fanPhysicalObject, return the root fanObject it belongs to
+	if ( intersects.length > 0 ) {;
+		for (var i = 0; i < fans.length; i++) {
+			if (fans[i].fanPhysicalObject.id == intersects[0].object.id) {
+				return fans[i];
+			}
+		}
 	} else {
 		return null;
 	}
@@ -373,7 +369,6 @@ function restartSim() {
 			scene.remove(objects[i]);
 		}
 	}
-	//animate();
 	createObjects(50);
 }
 
