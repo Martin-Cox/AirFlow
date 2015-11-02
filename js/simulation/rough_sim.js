@@ -1,6 +1,8 @@
 var camera, scene, renderer, width, height, clock, orbitControl, fpsStats, intersectedObject;
-var objects = [];
+var particles = [];
 var fans = [];
+var exhaustFans = [];
+var intakeFans = [];
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 
@@ -39,13 +41,10 @@ function init() {
 
 	scene.setGravity(new THREE.Vector3( 0, 12, 0));
 
-	createObjects(50);
-
 	createCase();
 
 	createFan("intake", new THREE.Vector3(0, 100, -450));
 	createFan("exhaust", new THREE.Vector3(0, 700, 450));
-
 
 	camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
 
@@ -68,6 +67,7 @@ function init() {
 
 	scene.add(skybox);
 
+	createParticles(50);
 
 	var topLight = new THREE.DirectionalLight(0xffffff, 1);
 	topLight.position.set(0, 1, 0);
@@ -109,43 +109,58 @@ function animate() {
 	fpsStats.end();
 }
 
-function createObjects(numToCreate) {
-	//Creates numToCreate random physics objects to be used in the simulation
-	for (var i=0; i < numToCreate; i++) {
+function createParticles(numToCreate) {	
+	var particle;
 
-		var object;
+	var randNum = Math.random();
+	var matColor;
 
-		var randNum = Math.random();
-		var matColor;
-
-		if (randNum < 0.34) {
-			matColor = 0xD9216A;
-		} else if (randNum > 0.34 && randNum < 0.67) {
-			matColor = 0x18ABDB;
-		} else {
-			matColor = 0x18DB3F;
-		}
-
-		var sphereGeometry = new THREE.SphereGeometry(10, 16, 16);
-
-		var sphereMaterial = Physijs.createMaterial(
-          new THREE.MeshLambertMaterial({
-            color: matColor
-          }),
-	      0.3, // friction
-	      1 // restitution
-        );
-
-		object = new Physijs.SphereMesh(sphereGeometry, sphereMaterial);	
-
-		object.position.set((( Math.random() - 0.5 ) * 280), (( Math.random() - 0.25) * 200), (( Math.random() - 3.5 ) * 200));
-
-		object.addEventListener( 'collision', handleCollision );
-
-		scene.add(object);
-
-		objects.push(object);
+	if (randNum < 0.34) {
+		matColor = 0xD9216A;
+	} else if (randNum > 0.34 && randNum < 0.67) {
+		matColor = 0x18ABDB;
+	} else {
+		matColor = 0x18DB3F;
 	}
+
+	var sphereGeometry = new THREE.SphereGeometry(10, 16, 16);
+
+	var sphereMaterial = Physijs.createMaterial(
+      new THREE.MeshLambertMaterial({
+        color: matColor
+      }),
+      0.3, // friction
+      1 // restitution
+    );
+
+	particle = new Physijs.SphereMesh(sphereGeometry, sphereMaterial);	
+
+	//Randomly select one of the intake fans to act as a spawn point for this particle
+	var fanObject = intakeFans[Math.floor(Math.random()*intakeFans.length)];
+	var spawnPosition = new THREE.Vector3();
+
+	//Randomise the position the particle will spawn in the fanAOEObject
+	spawnPosition.x = fanObject.fanAOEObject.position.x + ((Math.random() - 0.9 ) * 100);
+	spawnPosition.y = fanObject.fanAOEObject.position.y + ((Math.random() - 0.9 ) * 100);
+	spawnPosition.z = fanObject.fanAOEObject.position.z - ((Math.random() - 0.9 ) * 150);
+
+	particle.position.set(spawnPosition.x, spawnPosition.y, spawnPosition.z);
+
+	particle.addEventListener( 'collision', handleCollision );
+
+	scene.add(particle);
+
+	particles.push(particle);
+
+	if (particles.length < numToCreate) {
+		setTimeout(function() {
+        	createParticles(numToCreate);
+        }, 300);
+	}
+}
+
+function spawnParticle() {
+
 }
 
 function createCase() {
@@ -223,10 +238,6 @@ function createFan(paramMode, position) {
 	/*A fan is made up a of a fanObject with two sub-objects, a fanAOEObject representing the are of effect for a fan
 	and the fanPhysicalObject, which is the physical fan the user sees*/
 
-	var fan = new Object();
-
-	fan.mode = paramMode;
-
 	//------------------------CREATE FAN AOE OBJECT-----------------------//
 	var fanAOEMaterial = new THREE.MeshLambertMaterial({
 		opacity: 0,
@@ -252,9 +263,6 @@ function createFan(paramMode, position) {
 	//------------------------CREATE FAN AOE OBJECT-----------------------//
 
 	//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
-	
-	//TODO: Create actual fan physical object here and assign it as a property of fan
-
 	var fanPhysicalMaterial = new THREE.MeshLambertMaterial ({
 		color: normalFanColor,
 		side: THREE.DoubleSide
@@ -267,15 +275,22 @@ function createFan(paramMode, position) {
 	fanPhysicalObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
 
 	scene.add(fanPhysicalObject);
-
 	//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
 
+	var fan = new Object();
 
 	fan.fanAOEObject = fanAOEObject;
 	fan.fanPhysicalObject = fanPhysicalObject;
 	fan.id = fanPhysicalObject.id;
 	fan.editing = false;
+	fan.mode = paramMode;
 	fan.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, 0x90DAFF);
+
+	if (paramMode == "intake") {
+		intakeFans.push(fan);
+	} else if (paramMode == "exhaust") {
+		exhaustFans.push(fan);
+	}
 
 	fans.push(fan);	
 
@@ -371,12 +386,13 @@ function detectTouchingFan(event) {
 
 function restartSim() {
 	//Removes all existing physics objects from the scene, then generates new physics objects
-	for (var i=0; i < objects.length; i++) {
-		 if(objects[i] != null) {
-			scene.remove(objects[i]);
+	for (var i=0; i < particles.length; i++) {
+		 if(particles[i] != null) {
+			scene.remove(particles[i]);
 		}
 	}
-	createObjects(50);
+	particles.splice(0, particles.length);
+	createParticles(50);
 }
 
 function onWindowResize(){
