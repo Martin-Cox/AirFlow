@@ -146,7 +146,7 @@ function createParticles(numToCreate) {
 
 	particle.position.set(spawnPosition.x, spawnPosition.y, spawnPosition.z);
 
-	particle.addEventListener( 'collision', handleCollision );
+	particle.addEventListener( 'collision', handleCollision);
 
 	scene.add(particle);
 
@@ -299,18 +299,32 @@ function createFan(paramMode, position) {
 }
 
 function handleCollision(collided_with, linearVelocity, angularVelocity) {
+	//TODO: Get forceVector from fanObject
+
 	//Event gets called when physics objects (spheres) collide with another object
 	for (var i = 0; i < fans.length; i++) {
 		if (collided_with.id === fans[i].fanAOEObject.id) {
-			//Collided with fan
+			//Collided with fanAOEObject, apply suitable force
 			if ( fans[i].mode === "intake" ) {
 				var forceVector = new THREE.Vector3(0, 50000, 700000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
 			} else if (fans[i].mode === "exhaust" ) {
 				var forceVector = new THREE.Vector3(0, 0, 1000000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
 			}			
 			this.applyCentralImpulse(forceVector);
+		} else if (collided_with.id === fans[i].fanPhysicalObject.id && fans[i].mode === "exhaust") {
+			//Collided with exhuast fanPhysicalObject, delete the particle
+			for (var j = 0; j < particles.length; j++) {
+				if (particles[j].id === this.id) {
+					recycleParticle(particles[j]);
+				}
+			}
 		}
 	}
+}
+
+function recycleParticle(particle) {
+	//TODO: Recycle particle into a pool of particle objects so it can be used without having to recreate it many times
+	scene.remove(particle);	//TEMP
 }
 
 function handleMouseMove(event) {
@@ -388,7 +402,7 @@ function restartSim() {
 	//Removes all existing physics objects from the scene, then generates new physics objects
 	for (var i=0; i < particles.length; i++) {
 		 if(particles[i] != null) {
-			scene.remove(particles[i]);
+			recycleParticle(particles[i]);
 		}
 	}
 	particles.splice(0, particles.length);
@@ -409,8 +423,7 @@ function onWindowResize(){
 }
 
 //TODO (IN ORDER):
-// - Change rate of spawning in particles dependant on the number of intake fans
-// - Deletion of particle on collision with exhaust fans
+// - Deletion of particle on collision with exhaust fans (removed from pool of air particle objects)
 // - Air Particles are recycled from a pool with a max size configurable by user
 // - Fan model and animations
 // - Color change and culling of particles that have been around for a long time
@@ -422,6 +435,7 @@ function onWindowResize(){
 // - User configurable environment settings
 // - User configurable project settings
 // - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)
+// - Change rate of spawning in particles dependant on the number of intake fans
 // - Simulation quality settings (AA on/off)
 // - How to use overlay
 // - Clean up code, optimisation, proper documentation etc.
