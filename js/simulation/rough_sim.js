@@ -1,5 +1,6 @@
 var camera, scene, renderer, width, height, clock, orbitControl, fpsStats, intersectedObject;
 var particles = [];
+var availableParticles = [];
 var fans = [];
 var exhaustFans = [];
 var intakeFans = [];
@@ -89,6 +90,8 @@ function init() {
 
 	scene.add(new THREE.AxisHelper(200));
 
+	spawnParticles();
+
 	renderer.domElement.addEventListener( 'mousemove', handleMouseMove, false );
 	renderer.domElement.addEventListener( 'mousedown', handleMouseClick, false );
 }
@@ -109,31 +112,69 @@ function animate() {
 	fpsStats.end();
 }
 
-function createParticles(numToCreate) {	
-	var particle;
+function createParticles(numToCreate) {
+	//Creates the pool of particles that will be added to the scene
 
-	var randNum = Math.random();
-	var matColor;
+	for (var i = 0; i < numToCreate; i++) {
+		var particle;
 
-	if (randNum < 0.34) {
-		matColor = 0xD9216A;
-	} else if (randNum > 0.34 && randNum < 0.67) {
-		matColor = 0x18ABDB;
-	} else {
-		matColor = 0x18DB3F;
+		var randNum = Math.random();
+		var matColor;
+
+		if (randNum < 0.34) {
+			matColor = 0xD9216A;
+		} else if (randNum > 0.34 && randNum < 0.67) {
+			matColor = 0x18ABDB;
+		} else {
+			matColor = 0x18DB3F;
+		}
+
+		var sphereGeometry = new THREE.SphereGeometry(10, 16, 16);
+
+		var sphereMaterial = Physijs.createMaterial(
+	      new THREE.MeshLambertMaterial({
+	        color: matColor
+	      }),
+	      0.3, // friction
+	      1 // restitution
+	    );
+
+		particle = new Physijs.SphereMesh(sphereGeometry, sphereMaterial);	
+
+		setParticleStartingPosition(particle);
+
+		particle.addEventListener( 'collision', handleCollision);
+
+		particles.push(particle);
+		availableParticles.push(particle);
 	}
+}
 
-	var sphereGeometry = new THREE.SphereGeometry(10, 16, 16);
+function spawnParticles() {	
+	//Adds the first available particle to the scene every spawnRate ms. If none are available, wait spawnRate ms and check again
 
-	var sphereMaterial = Physijs.createMaterial(
-      new THREE.MeshLambertMaterial({
-        color: matColor
-      }),
-      0.3, // friction
-      1 // restitution
-    );
+	var spawnRate = 300;
 
-	particle = new Physijs.SphereMesh(sphereGeometry, sphereMaterial);	
+	if (availableParticles.length > 0) {
+
+		//Add first available particle to scene
+		scene.add(availableParticles[0]);
+
+		//Remove from pool of available particles
+		availableParticles.splice(0, 1);
+
+		setTimeout(function() {
+        	spawnParticles();
+        }, spawnRate);
+	} else {
+		setTimeout(function() {
+        	spawnParticles();
+        }, spawnRate);
+	}
+}
+
+function setParticleStartingPosition(particle) {
+	//Chooses a random intake fan to act as a starting point, then randomises the starting coordinates within the fanAOEObject
 
 	//Randomly select one of the intake fans to act as a spawn point for this particle
 	var fanObject = intakeFans[Math.floor(Math.random()*intakeFans.length)];
@@ -144,24 +185,22 @@ function createParticles(numToCreate) {
 	spawnPosition.y = fanObject.fanAOEObject.position.y + ((Math.random() - 0.9 ) * 100);
 	spawnPosition.z = fanObject.fanAOEObject.position.z - ((Math.random() - 0.9 ) * 150);
 
+	//Reset particle position at a random intake fan
 	particle.position.set(spawnPosition.x, spawnPosition.y, spawnPosition.z);
 
-	particle.addEventListener( 'collision', handleCollision);
-
-	scene.add(particle);
-
-	particles.push(particle);
-
-	if (particles.length < numToCreate) {
-		setTimeout(function() {
-        	createParticles(numToCreate);
-        }, 300);
-	}
+	return particle;
 }
 
-function spawnParticle() {
+function recycleParticle(particle) {
+	//Removes a particle from the scene, resets its starting position, and adds it back to the pool of available particles
 
+	scene.remove(particle);
+
+	setParticleStartingPosition(particle);
+
+	availableParticles.push(particle);
 }
+
 
 function createCase() {
 	//Creates a 3D model of a computer case
@@ -322,11 +361,6 @@ function handleCollision(collided_with, linearVelocity, angularVelocity) {
 	}
 }
 
-function recycleParticle(particle) {
-	//TODO: Recycle particle into a pool of particle objects so it can be used without having to recreate it many times
-	scene.remove(particle);	//TEMP
-}
-
 function handleMouseMove(event) {
 	//When a user hovers on a fan change fan color to hover state only if we are NOT editing that fan 
 
@@ -406,7 +440,6 @@ function restartSim() {
 		}
 	}
 	particles.splice(0, particles.length);
-	createParticles(50);
 }
 
 function onWindowResize(){
@@ -423,7 +456,6 @@ function onWindowResize(){
 }
 
 //TODO (IN ORDER):
-// - Deletion of particle on collision with exhaust fans (removed from pool of air particle objects)
 // - Air Particles are recycled from a pool with a max size configurable by user
 // - Fan model and animations
 // - Color change and culling of particles that have been around for a long time
