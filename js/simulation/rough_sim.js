@@ -432,16 +432,6 @@ function detectTouchingFan(event) {
 	}
 }
 
-function restartSim() {
-	//Removes all existing physics objects from the scene, then generates new physics objects
-	for (var i=0; i < particles.length; i++) {
-		 if(particles[i] != null) {
-			recycleParticle(particles[i]);
-		}
-	}
-	particles.splice(0, particles.length);
-}
-
 function onWindowResize(){
 	//Dynamically resizes renderer and camera when window is resized
 
@@ -456,7 +446,6 @@ function onWindowResize(){
 }
 
 //TODO (IN ORDER):
-// - Air Particles are recycled from a pool with a max size configurable by user
 // - Fan model and animations
 // - Color change and culling of particles that have been around for a long time
 // - Better integration of AngularJS and Simulation code
