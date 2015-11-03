@@ -345,7 +345,7 @@ function handleCollision(collided_with, linearVelocity, angularVelocity) {
 		if (collided_with.id === fans[i].fanAOEObject.id) {
 			//Collided with fanAOEObject, apply suitable force
 			if ( fans[i].mode === "intake" ) {
-				var forceVector = new THREE.Vector3(0, 50000, 700000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
+				var forceVector = new THREE.Vector3(0, 50000, 300000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
 			} else if (fans[i].mode === "exhaust" ) {
 				var forceVector = new THREE.Vector3(0, 0, 1000000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
 			}			
