@@ -91,6 +91,7 @@ function init() {
 	scene.add(new THREE.AxisHelper(200));
 
 	spawnParticles();
+	cullParticles();
 
 	renderer.domElement.addEventListener( 'mousemove', handleMouseMove, false );
 	renderer.domElement.addEventListener( 'mousedown', handleMouseClick, false );
@@ -157,6 +158,9 @@ function spawnParticles() {
 
 	if (availableParticles.length > 0) {
 
+		//Record the unix time ms that the particle spawned
+		availableParticles[0].spawnTime = (new Date).getTime();
+
 		//Add first available particle to scene
 		scene.add(availableParticles[0]);
 
@@ -198,9 +202,39 @@ function recycleParticle(particle) {
 
 	setParticleStartingPosition(particle);
 
+	particle.spawnTime = null;
+
 	availableParticles.push(particle);
 }
 
+function cullParticles() {	
+	//Removes a particle from the scene using recycleParticle() if it has existed for too long. 
+	//cullTime is an integer in ms representing the longest amount of time before the particle should be culled. Will be configurable in project settings
+	//recheckTime is an integer in ms represeting the preiod of time between checking for particles that need to be culled. Will be configurable in sim quality settings
+
+	var recheckTime = 1000; //1 second, debug value
+
+	if (particles.length > 0) {
+
+		var cullTime = 20000; //20 seconds, debug value
+
+		var unixTime = (new Date).getTime();
+
+		for (var i = 0; i < particles.length; i++) {
+			if (particles[i].spawnTime != null && unixTime - particles[i].spawnTime >= cullTime) {
+				recycleParticle(particles[i]);
+			}
+		}
+
+		setTimeout(function() {
+        	cullParticles();
+        }, recheckTime);
+	} else {
+		setTimeout(function() {
+        	cullParticles();
+        }, recheckTime);
+	}
+}
 
 function createCase() {
 	//Creates a 3D model of a computer case
@@ -448,17 +482,18 @@ function onWindowResize(){
 //TODO (IN ORDER):
 // - Fan model and animations
 // - Color change and culling of particles that have been around for a long time
-// - Better integration of AngularJS and Simulation code
-// - Read default case dimensions from JSON file
-// - Read default fan information from JSON file
-// - Simulation updates automatically when settings change
-// - User configurable fan settings on fan-by-fan basis (RPM, mode, active/inactive etc.)
-// - User configurable environment settings
-// - User configurable project settings
-// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)
+// - Better integration of AngularJS and Simulation code 									- AND UNIT TESTS
+// - Read default case dimensions from JSON file 											- AND UNIT TESTS
+// - Read default fan information from JSON file 											- AND UNIT TESTS
+// - Simulation updates automatically when settings changes 								- AND UNIT TESTS
+// - User configurable fan settings on fan-by-fan basis (RPM, mode, active/inactive etc.)	- AND UNIT TESTS
+// - User configurable environment settings 												- AND UNIT TESTS
+// - User configurable project settings 													- AND UNIT TESTS
+// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS
 // - Change rate of spawning in particles dependant on the number of intake fans
-// - Simulation quality settings (AA on/off)
+// - Simulation quality settings (AA on/off) 
 // - How to use overlay
+// - About popup
 // - Clean up code, optimisation, proper documentation etc.
 // - Testing on multiple devices
 // - Save information to a .airflow file (OPTIONAL)
@@ -468,3 +503,4 @@ function onWindowResize(){
 //OTHER NOTES:
 // - Maybe use an eventListener for when $scope changes instead of checking every update frame -> better for perfomance
 // - Not all fans will be intake or exhaust, e.g. GPU/CPU fan will be neither
+// - For performance reason, it may be beneficial to keep track of a particles original spawn position, and just move it there on recycle, instead of calculating a new one each time)
