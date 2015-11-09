@@ -481,7 +481,7 @@ function onWindowResize(){
 
 //TODO (IN ORDER):
 // - Fan model and animations
-// - Color change and culling of particles that have been around for a long time
+// - Color change of particles that have been around for a long time
 // - Better integration of AngularJS and Simulation code 									- AND UNIT TESTS
 // - Read default case dimensions from JSON file 											- AND UNIT TESTS
 // - Read default fan information from JSON file 											- AND UNIT TESTS
