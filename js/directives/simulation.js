@@ -375,9 +375,6 @@ app.directive('simulation', function() {
 			}
 
 			fans.push(fan);	
-
-			//Add component controller for this fan
-			document.getElementById('tabbedPaneContainer').insertAdjacentHTML('beforeend', '<component-Settings id="' + fan.id +'"></component-Settings>');
 		}
 
 		function handleCollision(collided_with, linearVelocity, angularVelocity) {
@@ -491,7 +488,7 @@ app.directive('simulation', function() {
 		//TODO (IN ORDER):
 		// - Fan model and animations
 		// - Color change of particles that have been around for a long time
-		// - Better integration of AngularJS and Simulation code 									- AND UNIT TESTS
+		// - Create component settings controller <component-Settings id="fan.id" for each fan
 		// - Read default case dimensions from JSON file 											- AND UNIT TESTS
 		// - Read default fan information from JSON file 											- AND UNIT TESTS
 		// - Simulation updates automatically when settings changes 								- AND UNIT TESTS
