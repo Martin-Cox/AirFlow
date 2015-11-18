@@ -77,7 +77,7 @@ app.directive('simulation', function() {
 
 			scene.add(skybox);
 
-			createParticles(50);
+			createParticles(100);
 
 			var topLight = new THREE.DirectionalLight(0xffffff, 1);
 			topLight.position.set(0, 1, 0);
@@ -269,7 +269,7 @@ app.directive('simulation', function() {
 				color: 0xD5D3D0
 			})
 
-			var caseWidth = 350;
+			var caseWidth = 300;
 			var caseHeight = 800;
 			var caseLength = 900;
 			var caseThickness = 4;
@@ -352,7 +352,7 @@ app.directive('simulation', function() {
 				side: THREE.DoubleSide
 			})
 
-			var fanPhysicalGeometry = new THREE.CubeGeometry(350, 200, 50);
+			var fanPhysicalGeometry = new THREE.CubeGeometry(300, 200, 50);
 			var fanPhysicalObject = new Physijs.BoxMesh(fanPhysicalGeometry, fanPhysicalMaterial, 0); //Gravity, 0 = weightless
 
 			fanPhysicalObject.position.set(position.x, position.y, position.z);
