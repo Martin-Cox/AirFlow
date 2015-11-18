@@ -225,7 +225,7 @@ app.directive('simulation', function() {
 
 			if (particles.length > 0) {
 
-				var cullTime = 20000; //20 seconds, debug value
+				var cullTime = 30000; //30 seconds, debug value
 
 				var unixTime = (new Date).getTime();
 
@@ -317,7 +317,7 @@ app.directive('simulation', function() {
 		}
 
 		function createFan(paramMode, position) {
-			/*A fan is made up a of a fanObject with two sub-objects, a fanAOEObject representing the are of effect for a fan
+			/*A fan is made up a of a fanObject with two sub-objects, a fanAOEObject representing the area of effect for a fan
 			and the fanPhysicalObject, which is the physical fan the user sees*/
 
 			//------------------------CREATE FAN AOE OBJECT-----------------------//
@@ -327,10 +327,12 @@ app.directive('simulation', function() {
 			    transparent: true,
 			    side: THREE.DoubleSide
 			})
+;
+			var fanAOEGeometry = new THREE.CylinderGeometry(100, 100, 200, 50, 50);
+			var fanAOEObject = new Physijs.CylinderMesh(fanAOEGeometry, fanAOEMaterial, 0); //Gravity, 0 = weightless
 
-			var fanAOEGeometry = new THREE.CubeGeometry(350, 175, 200);
-			var fanAOEObject = new Physijs.BoxMesh(fanAOEGeometry, fanAOEMaterial, 0); //Gravity, 0 = weightless
-
+			fanAOEObject.rotation.x = 90 * Math.PI/180;	//Rotate the cylinder 90 degrees, Three.js uses radians, so convert ot radians first
+ 
 
 			//Checking param mode here to ffset positions, this is only a temp solution, actual xyz coords will be in a JSON
 			if (paramMode == "intake") {
@@ -367,6 +369,7 @@ app.directive('simulation', function() {
 			fan.editing = false;
 			fan.mode = paramMode;
 			fan.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, 0x90DAFF);
+			//fan.AOEWireframe = new THREE.WireframeHelper(fanAOEObject, 0x90DAFF);
 
 			if (paramMode == "intake") {
 				intakeFans.push(fan);
@@ -431,7 +434,7 @@ app.directive('simulation', function() {
 				fans[i].editing = false;
 				fans[i].fanPhysicalObject.material.color.setHex(normalFanColor);
 				scene.remove(fans[i].AOEWireframe); 
-				document.getElementById(fans[i].id).style.color = "black";
+				//document.getElementById(fans[i].id).style.color = "black";
 			}
 
 			//If we clicked on a fan, do stuff here
@@ -439,7 +442,7 @@ app.directive('simulation', function() {
 				touchFan.fanPhysicalObject.material.color.setHex(editFanColor);
 				touchFan.editing = true;
 				scene.add(touchFan.AOEWireframe);
-				document.getElementById(touchFan.id).style.color = "red";	//Placeholder. When user clicks on the fan it's component section will display
+				//document.getElementById(touchFan.id).style.color = "red";	//Placeholder. When user clicks on the fan it's component section will display
 			}
 		}
 
@@ -500,7 +503,7 @@ app.directive('simulation', function() {
 		// - Simulation quality settings (AA on/off) 
 		// - How to use overlay
 		// - About popup
-		// - Clean up code, optimisation, proper documentation etc.
+		// - Clean up code, optimisation, proper documentation etc. SEE quality standards in interim report
 		// - Testing on multiple devices
 		// - Save information to a .airflow file (OPTIONAL)
 		// - Upload project from .airflow file (OPTIONAL)
