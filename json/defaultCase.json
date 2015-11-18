@@ -1,0 +1,29 @@
+{
+  "materials": {
+    "caseMaterial": {
+      "color": "0x5F6E7D",
+      "friction": 0.3,
+      "restitution": 0.1
+    },
+    "transparentMaterial": {
+      "color": "0x5F6E7D",
+      "friction": 0.3,
+      "restitution": 0.1,
+      "transparent": true,
+      "opacity": 0.2,
+      "side": "THREE.DoubleSide"
+    },
+    "componentMaterial": {
+      "color": "0xD5D3D0",
+      "friction": 0.3,
+      "restitution": 0.1
+    }
+  },
+  "dimensions": {
+    "width": 210,
+    "height": 486,
+    "depth": 495,
+    "thickness": 4,
+    "fanHoleSize": 120
+  }
+}
