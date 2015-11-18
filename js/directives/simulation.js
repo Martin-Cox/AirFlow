@@ -2,7 +2,7 @@ app.directive('simulation', function() {
   return { 
     restrict: 'E', 
     scope: { 
-      settings: '=' 
+      settings: '=' 	//Change settings to a defaults array
     }, 
     templateUrl: 'js/directives/simulation.html',
     link: function(scope, elem, attr) {
@@ -19,6 +19,8 @@ app.directive('simulation', function() {
 		var hoverFanColor = 0xD88080;
 		var editFanColor = 0x00FF00;
 		var normalFanColor = 0xB20000;
+
+		var caseDefaults = scope.settings;
 
 		init();
 		animate();
@@ -193,6 +195,8 @@ app.directive('simulation', function() {
 			var fanObject = intakeFans[Math.floor(Math.random()*intakeFans.length)];
 			var spawnPosition = new THREE.Vector3();
 
+			var x = scope;
+
 			//Randomise the position the particle will spawn in the fanAOEObject
 			spawnPosition.x = fanObject.fanAOEObject.position.x + ((Math.random() - 0.9 ) * 100);
 			spawnPosition.y = fanObject.fanAOEObject.position.y + ((Math.random() - 0.9 ) * 100);
@@ -247,6 +251,12 @@ app.directive('simulation', function() {
 
 		function createCase() {
 			//Creates a 3D model of a computer case
+
+			if (caseDefaults.dimensions != null) {
+				console.log ("ok");
+			} else {
+				console.log("bad");
+			}
 
 			var caseGroup = new THREE.Object3D(); //Empty container to store each case plane in
 
@@ -492,7 +502,7 @@ app.directive('simulation', function() {
 		// - Fan model and animations
 		// - Color change of particles that have been around for a long time
 		// - Create component settings controller <component-Settings id="fan.id" for each fan
-		// - Read default case dimensions from JSON file 											- AND UNIT TESTS
+		// - Read default case dimensions from JSON file 											- AND UNIT TESTS		BEFORE ANGULAR STUFF CAN BE DONE, NEED TO ONLY INITIALISE SIM WHEN ANGULAR HAS FINISHED LOADING
 		// - Read default fan information from JSON file 											- AND UNIT TESTS
 		// - Simulation updates automatically when settings changes 								- AND UNIT TESTS
 		// - User configurable fan settings on fan-by-fan basis (RPM, mode, active/inactive etc.)	- AND UNIT TESTS
