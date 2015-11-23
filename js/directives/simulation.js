@@ -1,8 +1,8 @@
-app.directive('simulation', function() { 
+app.directive('simulation', ['$http', function($http) { 
   return { 
     restrict: 'E', 
     scope: { 
-      settings: '=' 	//Change settings to a defaults array
+      settings: '=' 
     }, 
     templateUrl: 'js/directives/simulation.html',
     link: function(scope, elem, attr) {
@@ -20,10 +20,24 @@ app.directive('simulation', function() {
 		var editFanColor = 0x00FF00;
 		var normalFanColor = 0xB20000;
 
-		var caseDefaults = scope.settings;
+		var caseDefaults;
 
-		init();
-		animate();
+		getDefaults();
+
+		function getDefaults() {
+			//Get the default case properties from a JSON files
+		    $http.get('/json/defaultCase.json').
+		      success(function(data, status, headers, config) {
+		        caseDefaults = data;
+		        init();
+				animate();
+		      }).
+		      error(function(data, status, headers, config) {
+		        //TODO: Create error message here 
+		        console.log("failure");
+		        promise.reject();
+		      });
+		}
 
 		function init() {
 			//Loads physijs files, creates scene etc.
@@ -253,9 +267,9 @@ app.directive('simulation', function() {
 			//Creates a 3D model of a computer case
 
 			if (caseDefaults.dimensions != null) {
-				console.log ("ok");
+				console.log("success");
 			} else {
-				console.log("bad");
+				console.log("failure");
 			}
 
 			var caseGroup = new THREE.Object3D(); //Empty container to store each case plane in
@@ -499,10 +513,12 @@ app.directive('simulation', function() {
 		}
 
 		//TODO (IN ORDER):
+		// - Loading screen displays ready when still making http AJAX calls in get defaults, need to change this so only changes to ready on document ready AND AJAX call success/failure
+		// - Move initial animate() call to only get called when the user actually clicks past the loading screen 
+		// - Actually read and use JSON data to create case geometry	
 		// - Fan model and animations
 		// - Color change of particles that have been around for a long time
 		// - Create component settings controller <component-Settings id="fan.id" for each fan
-		// - Read default case dimensions from JSON file 											- AND UNIT TESTS		BEFORE ANGULAR STUFF CAN BE DONE, NEED TO ONLY INITIALISE SIM WHEN ANGULAR HAS FINISHED LOADING
 		// - Read default fan information from JSON file 											- AND UNIT TESTS
 		// - Simulation updates automatically when settings changes 								- AND UNIT TESTS
 		// - User configurable fan settings on fan-by-fan basis (RPM, mode, active/inactive etc.)	- AND UNIT TESTS
@@ -526,4 +542,4 @@ app.directive('simulation', function() {
 
     }
   }; 
-});
+}]);
