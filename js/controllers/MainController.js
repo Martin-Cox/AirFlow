@@ -1,7 +1,5 @@
 app.controller('MainController', ['$scope', '$http', function($scope, $http) {
 
-    $scope.caseDefaults = [];
-
 	angular.element(document).ready(function() {
         document.getElementById('loadingSplashLoadingText').innerHTML = 'Click anywhere to begin';
     });
@@ -16,15 +14,4 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
         	document.getElementsByClassName("main")[0].removeChild(splashElement);
         },800);
     };
-
-    //Get the default case properties from a JSON file
-    $http.get('/json/defaultCase.json').
-      success(function(data, status, headers, config) {
-        $scope.caseDefaults = data;
-      }).
-      error(function(data, status, headers, config) {
-        //TODO: Create error message here 
-        console.log("failure");
-      });
-
 }]);

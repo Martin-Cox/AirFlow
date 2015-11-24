@@ -1,4 +1,4 @@
-app.directive('simulation', ['$http', function($http) { 
+app.directive('simulation', ['$http', 'defaultsService', function($http, defaultsService) { 
   return { 
     restrict: 'E', 
     scope: { 
@@ -25,18 +25,10 @@ app.directive('simulation', ['$http', function($http) {
 		getDefaults();
 
 		function getDefaults() {
-			//Get the default case properties from a JSON files
-		    $http.get('/json/defaultCase.json').
-		      success(function(data, status, headers, config) {
-		        caseDefaults = data;
-		        init();
-				animate();
-		      }).
-		      error(function(data, status, headers, config) {
-		        //TODO: Create error message here 
-		        console.log("failure");
-		        promise.reject();
-		      });
+			//Get defaults using defaultsService, then when all promises are fulfilled, run init and anim functions
+			//TODO: Implement promises into defaultsService
+			caseDefaults = defaultsService.getCaseDefaults();
+			var x = 4;
 		}
 
 		function init() {
