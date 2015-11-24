@@ -26,8 +26,15 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 		function getDefaults() {
 			//Get defaults using defaultsService, then when all promises are fulfilled, run init and anim functions
-			//TODO: Implement promises into defaultsService
-			caseDefaults = defaultsService.getCaseDefaults();
+			var caseDefaultsPromise = defaultsService.getCaseDefaults();
+			caseDefaultsPromise.then(function(result) {
+				//Function run only after service AJAX call has completed
+				//TODO: Handle if error returned, create error message dialog
+				caseDefaults = result;
+				init();
+				animate();
+				//TODO: Get fan defaults
+			});
 			var x = 4;
 		}
 
