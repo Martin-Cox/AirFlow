@@ -68,8 +68,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			createCase();
 
-			createFan("intake", new THREE.Vector3(0, 100, -450));
-			createFan("exhaust", new THREE.Vector3(0, 700, 450));
+			createFan("intake", new THREE.Vector3(0, 100, -375));
+			createFan("exhaust", new THREE.Vector3(0, 600, 375));
 
 			camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
 
@@ -154,7 +154,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 					matColor = 0x18DB3F;
 				}
 
-				var sphereGeometry = new THREE.SphereGeometry(10, 16, 16);
+				var sphereGeometry = new THREE.SphereGeometry(5, 16, 16);
 
 				var sphereMaterial = Physijs.createMaterial(
 			      new THREE.MeshLambertMaterial({
@@ -265,56 +265,50 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		function createCase() {
 			//Creates a 3D model of a computer case
 
-			if (caseDefaults.dimensions != null) {
-				console.log("success");
-			} else {
-				console.log("failure");
-			}
-
 			var caseGroup = new THREE.Object3D(); //Empty container to store each case plane in
 
 			var caseMaterial = Physijs.createMaterial(
 		      	new THREE.MeshLambertMaterial({
-					color: 0x5F6E7D
+					color: parseInt(caseDefaults.materials.caseMaterial.color)
 				}),
-		      	0.3, // friction
-		      	0.1 // restitution
+		      	caseDefaults.materials.caseMaterial.friction,
+		      	caseDefaults.materials.caseMaterial.restitution
 		    );
 
-			var transparentMaterial = new THREE.MeshBasicMaterial({ 
-			    opacity: 0.2,
-			    color: 0x5F6E7D,
-			    transparent: true,
-			    side: THREE.DoubleSide
-			});
+			var transparentMaterial = Physijs.createMaterial(
+				new THREE.MeshBasicMaterial({ 
+				    opacity: caseDefaults.materials.transparentMaterial.opacity,
+				    color: parseInt(caseDefaults.materials.transparentMaterial.color),
+				    transparent: caseDefaults.materials.transparentMaterial.transparent,
+				    side: caseDefaults.materials.transparentMaterial.side
+				}),
+				caseDefaults.materials.transparentMaterial.friction,
+				caseDefaults.materials.transparentMaterial.restitution
+			);
 
-			var componentMaterial = new THREE.MeshLambertMaterial({
-				color: 0xD5D3D0
-			})
+			var componentMaterial = Physijs.createMaterial(
+		      	new THREE.MeshLambertMaterial({
+					color: parseInt(caseDefaults.materials.componentMaterial.color)
+				}),
+		      	caseDefaults.materials.componentMaterial.friction,
+		      	caseDefaults.materials.componentMaterial.restitution
+		    );
 
-			var caseWidth = 300;
-			var caseHeight = 800;
-			var caseLength = 900;
-			var caseThickness = 4;
-			var fanHoleSize = 200;
+			//Increase size of case TODO:Maybe remove this and change zoom levels and speed of orbit camera
+			var caseWidth = caseDefaults.dimensions.width * 1.5;
+			var caseHeight = caseDefaults.dimensions.height * 1.5;
+			var caseDepth = caseDefaults.dimensions.depth * 1.5;
+			var caseThickness = caseDefaults.dimensions.thickness * 1.5;
+			var fanHoleSize = caseDefaults.dimensions.fanHoleSize * 1.5;
 
-			var caseBottomGeometry = new THREE.CubeGeometry(caseWidth, caseThickness, caseLength);
-			var caseTopGeometry = new THREE.CubeGeometry(caseWidth, caseThickness, caseLength);
-			var caseVisibleSideGeometry = new THREE.CubeGeometry(caseThickness, caseHeight, caseLength);
-			var caseInvisibleSideGeometry = new THREE.CubeGeometry(caseThickness, caseHeight, caseLength);
-			var caseBackGeometry = new THREE.CubeGeometry(caseWidth, caseHeight - fanHoleSize, caseThickness);
-			var caseFrontGeometry = new THREE.CubeGeometry(caseWidth, caseHeight - fanHoleSize, caseThickness);
+			var caseBottomPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseThickness, caseDepth), caseMaterial, 0); //Gravity, 0 = weightless
+			var caseTopPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseThickness, caseDepth), caseMaterial, 0); //Gravity, 0 = weightless
+			var caseVisibleSidePlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseThickness, caseHeight, caseDepth), caseMaterial, 0); //Gravity, 0 = weightless
+			var caseInvisibleSidePlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseThickness, caseHeight, caseDepth), transparentMaterial, 0); //Gravity, 0 = weightless
+			var caseBackPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseHeight, caseThickness), caseMaterial, 0); //Gravity, 0 = weightless
+			var caseFrontPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseHeight, caseThickness), caseMaterial, 0); //Gravity, 0 = weightless
 
-			var gpuGeometry = new THREE.CubeGeometry(caseWidth - 100, 25, 375);
-
-			var caseBottomPlane = new Physijs.BoxMesh(caseBottomGeometry, caseMaterial, 0); //Gravity, 0 = weightless
-			var caseTopPlane = new Physijs.BoxMesh(caseTopGeometry, caseMaterial, 0); //Gravity, 0 = weightless
-			var caseVisibleSidePlane = new Physijs.BoxMesh(caseVisibleSideGeometry, caseMaterial, 0); //Gravity, 0 = weightless
-			var caseInvisibleSidePlane = new Physijs.BoxMesh(caseInvisibleSideGeometry, transparentMaterial, 0); //Gravity, 0 = weightless
-			var caseBackPlane = new Physijs.BoxMesh(caseBackGeometry, caseMaterial, 0); //Gravity, 0 = weightless
-			var caseFrontPlane = new Physijs.BoxMesh(caseFrontGeometry, caseMaterial, 0); //Gravity, 0 = weightless
-
-			var gpuPlane = new Physijs.BoxMesh(gpuGeometry, componentMaterial, 0); //Gravity, 0 = weightless
+			var gpuPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth - 100, 25, caseDepth/2.25), componentMaterial, 0); //Gravity, 0 = weightless
 
 			caseBottomPlane.position.set(0, 0, 0);
 
@@ -324,9 +318,9 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			caseInvisibleSidePlane.position.set(caseWidth/2, caseHeight/2, 0);
 
-			caseBackPlane.position.set(0, caseHeight/2 - (fanHoleSize/2), caseLength/2);
+			caseBackPlane.position.set(0, caseHeight/2, caseDepth/2);
 
-			caseFrontPlane.position.set(0, caseHeight/2 + (fanHoleSize/2), -caseLength/2);
+			caseFrontPlane.position.set(0, caseHeight/2, -caseDepth/2);
 
 			gpuPlane.position.set(-45, caseHeight/2 - 100, 200);
 
@@ -411,9 +405,9 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				if (collided_with.id === fans[i].fanAOEObject.id) {
 					//Collided with fanAOEObject, apply suitable force
 					if ( fans[i].mode === "intake" ) {
-						var forceVector = new THREE.Vector3(0, 50000, 300000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
+						var forceVector = new THREE.Vector3(0, 5000, 30000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
 					} else if (fans[i].mode === "exhaust" ) {
-						var forceVector = new THREE.Vector3(0, 0, 1000000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
+						var forceVector = new THREE.Vector3(0, 0, 100000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
 					}			
 					this.applyCentralImpulse(forceVector);
 				} else if (collided_with.id === fans[i].fanPhysicalObject.id && fans[i].mode === "exhaust") {
