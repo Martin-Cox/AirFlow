@@ -1,0 +1,33 @@
+{
+  "fanObject": {
+    "material": {
+      "color": "0x333333",
+      "side": "THREE.DoubleSide"
+    },
+    "dimensions": {
+      "width": 180,
+      "height": 180,
+      "depth": 40
+    }
+  },
+  "fanAOEObject": {
+    "material": {
+      "color": "0x333333",
+      "transparent": true,
+      "opacity": 0,
+      "side": "THREE.DoubleSide"
+    },
+    "dimensions": {
+      "radiusTop": 120,
+      "radiusBottom": 120,
+      "height": 200,
+      "radiusSegments": 50,
+      "heightSegments": 50
+    }
+  },
+  "properties": {
+      "size": 120,
+      "rpm": 1200,
+      "mode": "intake"
+  }
+}
