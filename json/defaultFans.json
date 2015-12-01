@@ -1,0 +1,78 @@
+ {
+  "fanOne" : {
+    "fanObject": {
+      "material": {
+        "color": "0x333333",
+        "side": "THREE.DoubleSide"
+      },
+      "dimensions": {
+        "width": 180,
+        "height": 180,
+        "depth": 40
+      }
+    },
+    "fanAOEObject": {
+      "material": {
+        "color": "0x333333",
+        "transparent": true,
+        "opacity": 0,
+        "side": "THREE.DoubleSide"
+      },
+      "dimensions": {
+        "radiusTop": 140,
+        "radiusBottom": 140,
+        "height": 250,
+        "radiusSegments": 50,
+        "heightSegments": 50
+      }
+    },
+    "properties": {
+      "size": 140,
+      "rpm": 1800,
+      "mode": "intake"
+    },
+    "position" : {
+      "x": 0,
+      "y": 100,
+      "z": -375
+    }
+  },
+  "fanTwo" : {
+    "fanObject": {
+      "material": {
+        "color": "0x333333",
+        "side": "THREE.DoubleSide"
+      },
+      "dimensions": {
+        "width": 180,
+        "height": 180,
+        "depth": 40
+      }
+    },
+    "fanAOEObject": {
+      "material": {
+        "color": "0x333333",
+        "transparent": true,
+        "opacity": 0,
+        "side": "THREE.DoubleSide"
+      },
+      "dimensions": {
+        "radiusTop": 120,
+        "radiusBottom": 120,
+        "height": 180,
+        "radiusSegments": 50,
+        "heightSegments": 50
+      }
+    },
+    "properties": {
+      "size": 120,
+      "rpm": 1000,
+      "mode": "exhaust"
+    },
+    "position" : {
+      "x": 0,
+      "y": 600,
+      "z": 375
+    }
+  }
+}
