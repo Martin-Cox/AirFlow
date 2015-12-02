@@ -210,18 +210,28 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		function setParticleStartingPosition(particle) {
 			//Chooses a random intake fan to act as a starting point, then randomises the starting coordinates within the fanAOEObject
 
-			//TODO: Doesn't seem to be spawning in correct area for a fan AOEObject, need to change randomise the position to choose a random position within fnaAOEObject.position.x + fanAOEObject.height/2 - fanAOEObject
-
 			//Randomly select one of the intake fans to act as a spawn point for this particle
 			var fanObject = intakeFans[Math.floor(Math.random()*intakeFans.length)];
+
 			var spawnPosition = new THREE.Vector3();
 
-			var x = scope;
+			var fanAOEObjectHeight = fanObject.fanAOEObject.geometry.parameters.height;
+			var fanAOEObjectRadius = fanObject.fanAOEObject.geometry.parameters.radiusBottom;
+
+			//Calculate the maximum and mimimum coordinates for where the fanAOEObject is
+			var maxX = fanObject.fanAOEObject.position.x + fanAOEObjectRadius/2;
+			var minX = fanObject.fanAOEObject.position.x - fanAOEObjectRadius/2;
+
+			var maxY = fanObject.fanAOEObject.position.y + fanAOEObjectRadius/2;
+			var minY = fanObject.fanAOEObject.position.y - fanAOEObjectRadius/2;
+
+			var maxZ = fanObject.fanAOEObject.position.z + fanAOEObjectHeight/2;
+			var minZ = fanObject.fanAOEObject.position.z - fanAOEObjectHeight/2;
 
 			//Randomise the position the particle will spawn in the fanAOEObject
-			spawnPosition.x = fanObject.fanAOEObject.position.x + ((Math.random() - 0.9 ) * 100);
-			spawnPosition.y = fanObject.fanAOEObject.position.y + ((Math.random() - 0.9 ) * 100);
-			spawnPosition.z = fanObject.fanAOEObject.position.z - ((Math.random() - 0.9 ) * 150);
+			spawnPosition.x = Math.floor(Math.random()*(maxX-minX+1)+minX);
+			spawnPosition.y = Math.floor(Math.random()*(maxY-minY+1)+minY);
+			spawnPosition.z = Math.floor(Math.random()*(maxZ-minZ+1)+minZ);
 
 			//Reset particle position at a random intake fan
 			particle.position.set(spawnPosition.x, spawnPosition.y, spawnPosition.z);
