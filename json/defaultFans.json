@@ -6,8 +6,8 @@
         "side": "THREE.DoubleSide"
       },
       "dimensions": {
-        "width": 180,
-        "height": 180,
+        "width": 140,
+        "height": 140,
         "depth": 40
       }
     },
@@ -19,11 +19,11 @@
         "side": "THREE.DoubleSide"
       },
       "dimensions": {
-        "radiusTop": 140,
-        "radiusBottom": 140,
-        "height": 250,
-        "radiusSegments": 50,
-        "heightSegments": 50
+        "radiusTop": 70,
+        "radiusBottom": 70,
+        "height": 125,
+        "radiusSegments": 25,
+        "heightSegments": 25
       }
     },
     "properties": {
@@ -34,7 +34,7 @@
     "position" : {
       "x": 0,
       "y": 100,
-      "z": -375
+      "z": -248
     }
   },
   "fanTwo" : {
@@ -44,8 +44,8 @@
         "side": "THREE.DoubleSide"
       },
       "dimensions": {
-        "width": 180,
-        "height": 180,
+        "width": 120,
+        "height": 120,
         "depth": 40
       }
     },
@@ -57,11 +57,11 @@
         "side": "THREE.DoubleSide"
       },
       "dimensions": {
-        "radiusTop": 120,
-        "radiusBottom": 120,
-        "height": 180,
-        "radiusSegments": 50,
-        "heightSegments": 50
+        "radiusTop": 60,
+        "radiusBottom": 60,
+        "height": 90,
+        "radiusSegments": 25,
+        "heightSegments": 25
       }
     },
     "properties": {
@@ -71,8 +71,8 @@
     },
     "position" : {
       "x": 0,
-      "y": 600,
-      "z": 375
+      "y": 420,
+      "z": 248
     }
   }
 }

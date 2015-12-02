@@ -21,6 +21,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		var normalFanColor = 0xB20000;
 
 		var caseDefaults;
+		var fanDefaults;
 
 		getDefaults();
 
@@ -31,9 +32,14 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				//Function run only after service AJAX call has completed
 				//TODO: Handle if error returned, create error message dialog
 				caseDefaults = result;
-				init();
-				animate();
-				//TODO: Get fan defaults
+				var fanDefaultsPromise = defaultsService.getFanDefaults();
+				fanDefaultsPromise.then(function(result) {
+					//Function run only after service AJAX call has completed
+					//TODO: Handle if error returned, create error message dialog
+					fanDefaults = result;
+					init();
+					animate();
+				});
 			});
 			var x = 4;
 		}
@@ -68,8 +74,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			createCase();
 
-			createFan("intake", new THREE.Vector3(0, 100, -375));
-			createFan("exhaust", new THREE.Vector3(0, 600, 375));
+			createDefaultFan(fanDefaults.fanOne);
+			createDefaultFan(fanDefaults.fanTwo);
 
 			camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
 
@@ -204,6 +210,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		function setParticleStartingPosition(particle) {
 			//Chooses a random intake fan to act as a starting point, then randomises the starting coordinates within the fanAOEObject
 
+			//TODO: Doesn't seem to be spawning in correct area for a fan AOEObject, need to change randomise the position to choose a random position within fnaAOEObject.position.x + fanAOEObject.height/2 - fanAOEObject
+
 			//Randomly select one of the intake fans to act as a spawn point for this particle
 			var fanObject = intakeFans[Math.floor(Math.random()*intakeFans.length)];
 			var spawnPosition = new THREE.Vector3();
@@ -295,11 +303,11 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		    );
 
 			//Increase size of case TODO:Maybe remove this and change zoom levels and speed of orbit camera
-			var caseWidth = caseDefaults.dimensions.width * 1.5;
-			var caseHeight = caseDefaults.dimensions.height * 1.5;
-			var caseDepth = caseDefaults.dimensions.depth * 1.5;
-			var caseThickness = caseDefaults.dimensions.thickness * 1.5;
-			var fanHoleSize = caseDefaults.dimensions.fanHoleSize * 1.5;
+			var caseWidth = caseDefaults.dimensions.width;
+			var caseHeight = caseDefaults.dimensions.height;
+			var caseDepth = caseDefaults.dimensions.depth;
+			var caseThickness = caseDefaults.dimensions.thickness;
+			var fanHoleSize = caseDefaults.dimensions.fanHoleSize;
 
 			var caseBottomPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseThickness, caseDepth), caseMaterial, 0); //Gravity, 0 = weightless
 			var caseTopPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseThickness, caseDepth), caseMaterial, 0); //Gravity, 0 = weightless
@@ -307,8 +315,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			var caseInvisibleSidePlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseThickness, caseHeight, caseDepth), transparentMaterial, 0); //Gravity, 0 = weightless
 			var caseBackPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseHeight, caseThickness), caseMaterial, 0); //Gravity, 0 = weightless
 			var caseFrontPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseHeight, caseThickness), caseMaterial, 0); //Gravity, 0 = weightless
-
-			var gpuPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth - 100, 25, caseDepth/2.25), componentMaterial, 0); //Gravity, 0 = weightless
 
 			caseBottomPlane.position.set(0, 0, 0);
 
@@ -322,79 +328,77 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			caseFrontPlane.position.set(0, caseHeight/2, -caseDepth/2);
 
-			gpuPlane.position.set(-45, caseHeight/2 - 100, 200);
-
 			scene.add(caseBottomPlane);
 			scene.add(caseTopPlane);
 			scene.add(caseVisibleSidePlane);
 			scene.add(caseInvisibleSidePlane);
 			scene.add(caseBackPlane);
 			scene.add(caseFrontPlane);
-			scene.add(gpuPlane);
 		}
 
-		function createFan(paramMode, position) {
+		function createDefaultFan(fan) {
 			/*A fan is made up a of a fanObject with two sub-objects, a fanAOEObject representing the area of effect for a fan
 			and the fanPhysicalObject, which is the physical fan the user sees*/
 
 			//------------------------CREATE FAN AOE OBJECT-----------------------//
 			var fanAOEMaterial = new THREE.MeshLambertMaterial({
-				opacity: 0,
-			    color: normalFanColor,
-			    transparent: true,
-			    side: THREE.DoubleSide
-			})
-;
-			var fanAOEGeometry = new THREE.CylinderGeometry(100, 100, 200, 50, 50);
-			var fanAOEObject = new Physijs.CylinderMesh(fanAOEGeometry, fanAOEMaterial, 0); //Gravity, 0 = weightless
+				opacity: fan.fanAOEObject.material.opacity,
+			    color: parseInt(fan.fanAOEObject.material.color),
+			    transparent: fan.fanAOEObject.material.transparent,
+			    side: fan.fanAOEObject.material.side
+			});
+
+			var fanAOEObject = new Physijs.CylinderMesh(new THREE.CylinderGeometry(fan.fanAOEObject.dimensions.radiusTop, fan.fanAOEObject.dimensions.radiusBottom, fan.fanAOEObject.dimensions.height, fan.fanAOEObject.dimensions.radiusSegments, fan.fanAOEObject.dimensions.heightSegments), fanAOEMaterial, 0); //Gravity, 0 = weightless
 
 			fanAOEObject.rotation.x = 90 * Math.PI/180;	//Rotate the cylinder 90 degrees, Three.js uses radians, so convert ot radians first
  
-
-			//Checking param mode here to ffset positions, this is only a temp solution, actual xyz coords will be in a JSON
-			if (paramMode == "intake") {
-				fanAOEObject.position.set(position.x, position.y, position.z + 100);
-			} else {
-				fanAOEObject.position.set(position.x, position.y, position.z - 100);
-			}
-
 			fanAOEObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
+
+			//Checking param mode here to offset positions
+			//TODO: Add support for fans that are neither intake or exhaust (e.g. GPU fan)
+			if (fan.properties.mode != "exhaust") {
+				fanAOEObject.position.set(fan.position.x, fan.position.y, fan.position.z + (fan.fanAOEObject.dimensions.height/2) + (fan.fanObject.dimensions.depth/2));
+			} else {
+				fanAOEObject.position.set(fan.position.x, fan.position.y, fan.position.z - (fan.fanAOEObject.dimensions.height/2) - (fan.fanObject.dimensions.depth/2));
+			}
 
 			scene.add(fanAOEObject);
 			//------------------------CREATE FAN AOE OBJECT-----------------------//
 
 			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
 			var fanPhysicalMaterial = new THREE.MeshLambertMaterial ({
-				color: normalFanColor,
-				side: THREE.DoubleSide
-			})
+				color: parseInt(fan.fanObject.material.color),
+				side: fan.fanObject.material.side
+			});
 
-			var fanPhysicalGeometry = new THREE.CubeGeometry(300, 200, 50);
-			var fanPhysicalObject = new Physijs.BoxMesh(fanPhysicalGeometry, fanPhysicalMaterial, 0); //Gravity, 0 = weightless
+			var fanPhysicalObject = new Physijs.BoxMesh(new THREE.CubeGeometry(fan.fanObject.dimensions.width, fan.fanObject.dimensions.height, fan.fanObject.dimensions.depth), fanPhysicalMaterial, 0); //Gravity, 0 = weightless
 
-			fanPhysicalObject.position.set(position.x, position.y, position.z);
+			fanPhysicalObject.position.set(fan.position.x, fan.position.y, fan.position.z);
 			fanPhysicalObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
 
 			scene.add(fanPhysicalObject);
 			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
 
-			var fan = new Object();
+			var fanObject = new Object();
 
-			fan.fanAOEObject = fanAOEObject;
-			fan.fanPhysicalObject = fanPhysicalObject;
-			fan.id = fanPhysicalObject.id;
-			fan.editing = false;
-			fan.mode = paramMode;
-			fan.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, 0x90DAFF);
-			//fan.AOEWireframe = new THREE.WireframeHelper(fanAOEObject, 0x90DAFF);
+			fanObject.fanAOEObject = fanAOEObject;
+			fanObject.fanPhysicalObject = fanPhysicalObject;
+			fanObject.id = fanPhysicalObject.id;
+			fanObject.editing = false;
+			fanObject.mode = fan.properties.mode;
+			fanObject.size = fan.properties.size;
+			fanObject.rpm = fan.properties.rpm;
+			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, 0x90DAFF);
 
-			if (paramMode == "intake") {
-				intakeFans.push(fan);
-			} else if (paramMode == "exhaust") {
-				exhaustFans.push(fan);
+			//Checking param mode here to offset positions
+			//TODO: Add support for fans that are neither intake or exhaust (e.g. GPU fan)
+			if (fan.properties.mode != "exhaust") {
+				intakeFans.push(fanObject);
+			} else {
+				exhaustFans.push(fanObject);
 			}
 
-			fans.push(fan);	
+			fans.push(fanObject);	
 		}
 
 		function handleCollision(collided_with, linearVelocity, angularVelocity) {
@@ -506,13 +510,12 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		//TODO (IN ORDER):
+		// - Add components to defaultCase.json
 		// - Loading screen displays ready when still making http AJAX calls in get defaults, need to change this so only changes to ready on document ready AND AJAX call success/failure
-		// - Move initial animate() call to only get called when the user actually clicks past the loading screen 
-		// - Actually read and use JSON data to create case geometry	
+		// - Move initial animate() call to only get called when the user actually clicks past the loading screen 	
 		// - Fan model and animations
 		// - Color change of particles that have been around for a long time
 		// - Create component settings controller <component-Settings id="fan.id" for each fan
-		// - Read default fan information from JSON file 											- AND UNIT TESTS
 		// - Simulation updates automatically when settings changes 								- AND UNIT TESTS
 		// - User configurable fan settings on fan-by-fan basis (RPM, mode, active/inactive etc.)	- AND UNIT TESTS
 		// - User configurable environment settings 												- AND UNIT TESTS
@@ -532,6 +535,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		// - Maybe use an eventListener for when $scope changes instead of checking every update frame -> better for perfomance
 		// - Not all fans will be intake or exhaust, e.g. GPU/CPU fan will be neither
 		// - For performance reason, it may be beneficial to keep track of a particles original spawn position, and just move it there on recycle, instead of calculating a new one each time)
+		// - fanAOEObject radius should be 1/2 fan size
 
     }
   }; 
