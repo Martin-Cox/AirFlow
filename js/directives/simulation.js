@@ -72,7 +72,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			scene.setGravity(new THREE.Vector3( 0, 12, 0));
 
-			createCase();
+			createDefaultCase();
 
 			createDefaultFan(fanDefaults.fanOne);
 			createDefaultFan(fanDefaults.fanTwo);
@@ -280,7 +280,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			}
 		}
 
-		function createCase() {
+		function createDefaultCase() {
 			//Creates a 3D model of a computer case
 
 			var caseGroup = new THREE.Object3D(); //Empty container to store each case plane in
