@@ -1,9 +1,7 @@
 app.directive('simulation', ['$http', 'defaultsService', function($http, defaultsService) { 
   return { 
     restrict: 'E', 
-    scope: { 
-      settings: '=' 
-    }, 
+    scope: false,
     templateUrl: 'js/directives/simulation.html',
     link: function(scope, elem, attr) {
 
@@ -36,6 +34,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				fanDefaultsPromise.then(function(result) {
 					//Function run only after service AJAX call has completed
 					//TODO: Handle if error returned, create error message dialog
+					scope.ajaxComplete = true;
 					fanDefaults = result;
 					init();
 					animate();
@@ -521,7 +520,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		//TODO (IN ORDER):
 		// - Add components to defaultCase.json
 		// - Fan color is immediatly overwritten by fanNormalColor, fanHoverColor, fanEditColor - Need to remove these and implement changing color in a different way to reduce global variables
-		// - Loading screen displays ready when still making http AJAX calls in get defaults, need to change this so only changes to ready on document ready AND AJAX call success/failure
 		// - Move initial animate() call to only get called when the user actually clicks past the loading screen 	
 		// - Fan model and animations
 		// - Color change of particles that have been around for a long time
