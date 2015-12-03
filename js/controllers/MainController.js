@@ -16,6 +16,9 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
             setTimeout(function() {
             	document.getElementsByClassName("main")[0].removeChild(splashElement);
             }, 800);
+
+            $scope.animate();
+            $scope.spawnParticles();
         }
     };
 }]);

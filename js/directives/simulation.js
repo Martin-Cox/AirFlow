@@ -37,7 +37,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 					scope.ajaxComplete = true;
 					fanDefaults = result;
 					init();
-					animate();
+					//animate();
 				});
 			});
 		}
@@ -118,21 +118,20 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			scene.add(new THREE.AxisHelper(200));
 
-			spawnParticles();
 			cullParticles();
 
 			renderer.domElement.addEventListener( 'mousemove', handleMouseMove, false );
 			renderer.domElement.addEventListener( 'mousedown', handleMouseClick, false );
 		}
 
-		function animate() {
+		scope.animate = function() {
 			//Animates/simulates scene
 
 			fpsStats.begin();
 
 			scene.simulate(); //Run physics simulation
 
-			requestAnimationFrame(animate);
+			requestAnimationFrame(scope.animate);
 			var delta = clock.getDelta();
 			orbitControl.update(delta);
 
@@ -179,7 +178,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			}
 		}
 
-		function spawnParticles() {	
+		scope.spawnParticles = function() {
 			//Adds the first available particle to the scene every spawnRate ms. If none are available, wait spawnRate ms and check again
 
 			var spawnRate = 300;
@@ -196,11 +195,11 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				availableParticles.splice(0, 1);
 
 				setTimeout(function() {
-		        	spawnParticles();
+		        	scope.spawnParticles();
 		        }, spawnRate);
 			} else {
 				setTimeout(function() {
-		        	spawnParticles();
+		        	scope.spawnParticles();
 		        }, spawnRate);
 			}
 		}
