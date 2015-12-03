@@ -518,8 +518,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 		//TODO (IN ORDER):
 		// - Add components to defaultCase.json
-		// - Fan color is immediatly overwritten by fanNormalColor, fanHoverColor, fanEditColor - Need to remove these and implement changing color in a different way to reduce global variables
-		// - Move initial animate() call to only get called when the user actually clicks past the loading screen 	
+		// - Fan color is immediatly overwritten by fanNormalColor, fanHoverColor, fanEditColor - Need to remove these and implement changing color in a different way to reduce global variables	
 		// - Fan model and animations
 		// - Color change of particles that have been around for a long time
 		// - Create component settings controller <component-Settings id="fan.id" for each fan
