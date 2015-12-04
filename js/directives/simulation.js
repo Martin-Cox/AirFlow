@@ -8,9 +8,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
     	var camera, scene, renderer, width, height, clock, orbitControl, fpsStats, intersectedObject;
 		var particles = [];
 		var availableParticles = [];
-		var fans = [];
-		var exhaustFans = [];
-		var intakeFans = [];
 		var raycaster = new THREE.Raycaster();
 		var mouse = new THREE.Vector2();
 
@@ -207,7 +204,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			//Chooses a random intake fan to act as a starting point, then randomises the starting coordinates within the fanAOEObject
 
 			//Randomly select one of the intake fans to act as a spawn point for this particle
-			var fanObject = intakeFans[Math.floor(Math.random()*intakeFans.length)];
+			var fanObject = scope.intakeFans[Math.floor(Math.random()*scope.intakeFans.length)];
 
 			var spawnPosition = new THREE.Vector3();
 
@@ -399,28 +396,28 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			//Checking param mode here to offset positions
 			//TODO: Add support for fans that are neither intake or exhaust (e.g. GPU fan)
 			if (fan.properties.mode != "exhaust") {
-				intakeFans.push(fanObject);
+				scope.intakeFans.push(fanObject);
 			} else {
-				exhaustFans.push(fanObject);
+				scope.exhaustFans.push(fanObject);
 			}
 
-			fans.push(fanObject);	
+			scope.fans.push(fanObject);	
 		}
 
 		function handleCollision(collided_with, linearVelocity, angularVelocity) {
 			//TODO: Get forceVector from fanObject
 
 			//Event gets called when physics objects (spheres) collide with another object
-			for (var i = 0; i < fans.length; i++) {
-				if (collided_with.id === fans[i].fanAOEObject.id) {
+			for (var i = 0; i < scope.fans.length; i++) {
+				if (collided_with.id === scope.fans[i].fanAOEObject.id) {
 					//Collided with fanAOEObject, apply suitable force
-					if ( fans[i].mode === "intake" ) {
+					if (scope.fans[i].mode === "intake" ) {
 						var forceVector = new THREE.Vector3(0, 5000, 30000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
-					} else if (fans[i].mode === "exhaust" ) {
+					} else if (scope.fans[i].mode === "exhaust" ) {
 						var forceVector = new THREE.Vector3(0, 0, 100000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
 					}			
 					this.applyCentralImpulse(forceVector);
-				} else if (collided_with.id === fans[i].fanPhysicalObject.id && fans[i].mode === "exhaust") {
+				} else if (collided_with.id === scope.fans[i].fanPhysicalObject.id && scope.fans[i].mode === "exhaust") {
 					//Collided with exhuast fanPhysicalObject, delete the particle
 					for (var j = 0; j < particles.length; j++) {
 						if (particles[j].id === this.id) {
@@ -437,9 +434,9 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			var touchFan = detectTouchingFan(event);
 
 			//For peace of mind, reset all fans not being edited to normal fan color
-			for (var i = 0; i < fans.length; i++) {
-				if (fans[i].editing == false) {
-					fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
+			for (var i = 0; i < scope.fans.length; i++) {
+				if (scope.fans[i].editing == false) {
+					scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
 				}
 			}
 
@@ -457,10 +454,10 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			var touchFan = detectTouchingFan(event);
 
 			//For peace of mind, reset all fans to not editing when we click
-			for (var i = 0; i < fans.length; i++) {
-				fans[i].editing = false;
-				fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
-				scene.remove(fans[i].AOEWireframe); 
+			for (var i = 0; i < scope.fans.length; i++) {
+				scope.fans[i].editing = false;
+				scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
+				scene.remove(scope.fans[i].AOEWireframe); 
 				//document.getElementById(fans[i].id).style.color = "black";
 			}
 
@@ -477,24 +474,24 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			//Returns a fanObject if the mouse is touching one, else nothing is returned
 
 			//Have to normalise these coords so that they are between -1 and 1
-			mouse.x = ( ( (event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width ) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
-			mouse.y = - ( event.clientY / height ) * 2 + 1;
+			mouse.x = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
+			mouse.y = - (event.clientY / height) * 2 + 1;
 
 			raycaster.setFromCamera( mouse, camera );
 
 			//Isolate the fanPhysicalObjects from the root fan objects
 			var fanPhysicalObjects = [];
-			for (var i = 0; i < fans.length; i++) {
-				fanPhysicalObjects.push(fans[i].fanPhysicalObject);
+			for (var i = 0; i < scope.fans.length; i++) {
+				fanPhysicalObjects.push(scope.fans[i].fanPhysicalObject);
 			}
 
-			var intersects = raycaster.intersectObjects( fanPhysicalObjects, true );
+			var intersects = raycaster.intersectObjects(fanPhysicalObjects, true);
 
 			//If we have touched a fanPhysicalObject, return the root fanObject it belongs to
-			if ( intersects.length > 0 ) {;
-				for (var i = 0; i < fans.length; i++) {
-					if (fans[i].fanPhysicalObject.id == intersects[0].object.id) {
-						return fans[i];
+			if (intersects.length > 0) {;
+				for (var i = 0; i < scope.fans.length; i++) {
+					if (scope.fans[i].fanPhysicalObject.id == intersects[0].object.id) {
+						return scope.fans[i];
 					}
 				}
 			} else {
@@ -520,6 +517,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		// - Color change of particles that have been around for a long time
 		// - Move global variables to scope objects (see notes)
 		// - Create component settings controller <component-Settings id="fan.id" for each fan
+		// - Add force numbers to fan objects, not have them hardcoded in handleCollision
 		// - Simulation updates automatically when settings changes 								- AND UNIT TESTS
 		// - User configurable fan settings on fan-by-fan basis (RPM, mode, active/inactive etc.)	- AND UNIT TESTS
 		// - User configurable environment settings 												- AND UNIT TESTS

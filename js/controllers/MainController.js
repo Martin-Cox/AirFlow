@@ -6,6 +6,10 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
     $scope.defaultFans = null;
     $scope.fanColors = null;
 
+    $scope.fans = [];
+    $scope.exhaustFans = [];
+    $scope.intakeFans = [];
+
 	angular.element(document).ready(function() {
         document.getElementById('loadingSplashLoadingText').innerHTML = 'Click anywhere to begin';
     });
