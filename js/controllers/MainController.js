@@ -1,6 +1,7 @@
 app.controller('MainController', ['$scope', '$http', function($scope, $http) {
 
     $scope.ajaxComplete = false;
+    $scope.fanColors = null;
 
 	angular.element(document).ready(function() {
         document.getElementById('loadingSplashLoadingText').innerHTML = 'Click anywhere to begin';

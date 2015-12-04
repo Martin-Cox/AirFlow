@@ -34,7 +34,11 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				fanDefaultsPromise.then(function(result) {
 					//Function run only after service AJAX call has completed
 					//TODO: Handle if error returned, create error message dialog
+
+					//Need to change this value after all AJAX calls have completed to notify controller that loading has completed
 					scope.ajaxComplete = true;
+
+					scope.fanColors = result.colors;
 					fanDefaults = result;
 					init();
 					//animate();
@@ -350,7 +354,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			//------------------------CREATE FAN AOE OBJECT-----------------------//
 			var fanAOEMaterial = new THREE.MeshLambertMaterial({
 				opacity: fan.fanAOEObject.material.opacity,
-			    color: parseInt(fan.fanAOEObject.material.color),
+			    color: parseInt(scope.fanColors.normal),
 			    transparent: fan.fanAOEObject.material.transparent,
 			    side: fan.fanAOEObject.material.side
 			});
@@ -374,7 +378,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
 			var fanPhysicalMaterial = new THREE.MeshLambertMaterial ({
-				color: parseInt(fan.fanObject.material.color),
+				color: parseInt(scope.fanColors.normal),
 				side: fan.fanObject.material.side
 			});
 
@@ -395,7 +399,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			fanObject.mode = fan.properties.mode;
 			fanObject.size = fan.properties.size;
 			fanObject.rpm = fan.properties.rpm;
-			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, 0x90DAFF);
+			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 
 			//Checking param mode here to offset positions
 			//TODO: Add support for fans that are neither intake or exhaust (e.g. GPU fan)
@@ -440,14 +444,14 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			//For peace of mind, reset all fans not being edited to normal fan color
 			for (var i = 0; i < fans.length; i++) {
 				if (fans[i].editing == false) {
-					fans[i].fanPhysicalObject.material.color.setHex(normalFanColor);
+					fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
 				}
 			}
 
 			if (touchFan) {
 				//Only change to hover color when we are NOT editing the current fan
 				if (touchFan.editing == false) {
-					touchFan.fanPhysicalObject.material.color.setHex(hoverFanColor);
+					touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.highlight));
 				}
 			}
 		}
@@ -460,14 +464,14 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			//For peace of mind, reset all fans to not editing when we click
 			for (var i = 0; i < fans.length; i++) {
 				fans[i].editing = false;
-				fans[i].fanPhysicalObject.material.color.setHex(normalFanColor);
+				fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
 				scene.remove(fans[i].AOEWireframe); 
 				//document.getElementById(fans[i].id).style.color = "black";
 			}
 
 			//If we clicked on a fan, do stuff here
 			if (touchFan) {
-				touchFan.fanPhysicalObject.material.color.setHex(editFanColor);
+				touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.edit));
 				touchFan.editing = true;
 				scene.add(touchFan.AOEWireframe);
 				//document.getElementById(touchFan.id).style.color = "red";	//Placeholder. When user clicks on the fan it's component section will display
@@ -518,9 +522,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 		//TODO (IN ORDER):
 		// - Add components to defaultCase.json
-		// - Fan color is immediatly overwritten by fanNormalColor, fanHoverColor, fanEditColor - Need to remove these and implement changing color in a different way to reduce global variables	
-		// - Fan model and animations
 		// - Color change of particles that have been around for a long time
+		// - Move global variables to scope objects (see notes)
 		// - Create component settings controller <component-Settings id="fan.id" for each fan
 		// - Simulation updates automatically when settings changes 								- AND UNIT TESTS
 		// - User configurable fan settings on fan-by-fan basis (RPM, mode, active/inactive etc.)	- AND UNIT TESTS
@@ -533,6 +536,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		// - About popup
 		// - Clean up code, optimisation, proper documentation etc. SEE quality standards in interim report
 		// - Testing on multiple devices
+		// - Fan model and animations
 		// - Save information to a .airflow file (OPTIONAL)
 		// - Upload project from .airflow file (OPTIONAL)
 		// - User defined case settings (OPTIONAL)
@@ -542,7 +546,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		// - Not all fans will be intake or exhaust, e.g. GPU/CPU fan will be neither
 		// - For performance reason, it may be beneficial to keep track of a particles original spawn position, and just move it there on recycle, instead of calculating a new one each time)
 		// - fanAOEObject radius should be 1/2 fan size
-
+		// - Global vars should be scope objects e.g. fanNormalColor should be stored in $scope.fan, user defined fan properties in $scope.fans.0.rpm
+		// - ^ Doing that we can use $scope.watch() to watch for changes to these variables which measn that we can easily notify the sim code of any updates.
     }
   }; 
 }]);
