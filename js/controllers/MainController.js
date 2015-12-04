@@ -2,6 +2,7 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
 
     $scope.ajaxComplete = false;
 
+    $scope.defaultCase = null;
     $scope.defaultFans = null;
     $scope.fanColors = null;
 

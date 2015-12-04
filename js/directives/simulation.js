@@ -14,8 +14,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		var raycaster = new THREE.Raycaster();
 		var mouse = new THREE.Vector2();
 
-		var caseDefaults;
-
 		getDefaults();
 
 		function getDefaults() {
@@ -24,7 +22,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			caseDefaultsPromise.then(function(result) {
 				//Function run only after service AJAX call has completed
 				//TODO: Handle if error returned, create error message dialog
-				caseDefaults = result;
+				scope.defaultCase = result;
 				var fanDefaultsPromise = defaultsService.getFanDefaults();
 				fanDefaultsPromise.then(function(result) {
 					//Function run only after service AJAX call has completed
@@ -71,7 +69,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			scene.setGravity(new THREE.Vector3( 0, 12, 0));
 
-			createDefaultCase();
+			createDefaultCase(scope.defaultCase);
 
 			createDefaultFan(scope.defaultFans.fanOne);
 			createDefaultFan(scope.defaultFans.fanTwo);
@@ -278,7 +276,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			}
 		}
 
-		function createDefaultCase() {
+		function createDefaultCase(caseDefaults) {
 			//Creates a 3D model of a computer case
 
 			var caseGroup = new THREE.Object3D(); //Empty container to store each case plane in
