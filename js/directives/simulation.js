@@ -391,6 +391,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			fanObject.mode = fan.properties.mode;
 			fanObject.size = fan.properties.size;
 			fanObject.rpm = fan.properties.rpm;
+			fanObject.forceVector = new THREE.Vector3(fan.properties.forceVector.x, fan.properties.forceVector.y, fan.properties.forceVector.z);
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 
 			//Checking param mode here to offset positions
@@ -411,12 +412,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			for (var i = 0; i < scope.fans.length; i++) {
 				if (collided_with.id === scope.fans[i].fanAOEObject.id) {
 					//Collided with fanAOEObject, apply suitable force
-					if (scope.fans[i].mode === "intake" ) {
-						var forceVector = new THREE.Vector3(0, 5000, 30000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
-					} else if (scope.fans[i].mode === "exhaust" ) {
-						var forceVector = new THREE.Vector3(0, 0, 100000); 	//Force/Impulse is quantified by units pushing in a 3 axis directions. NOTE: A really big number is needed to produce any noticeable affect
-					}			
-					this.applyCentralImpulse(forceVector);
+					this.applyCentralImpulse(scope.fans[i].forceVector);
 				} else if (collided_with.id === scope.fans[i].fanPhysicalObject.id && scope.fans[i].mode === "exhaust") {
 					//Collided with exhuast fanPhysicalObject, delete the particle
 					for (var j = 0; j < particles.length; j++) {
@@ -517,9 +513,9 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		// - Color change of particles that have been around for a long time
 		// - Move global variables to scope objects (see notes)
 		// - Create component settings controller <component-Settings id="fan.id" for each fan
-		// - Add force numbers to fan objects, not have them hardcoded in handleCollision
 		// - Simulation updates automatically when settings changes 								- AND UNIT TESTS
 		// - User configurable fan settings on fan-by-fan basis (RPM, mode, active/inactive etc.)	- AND UNIT TESTS
+		// - Write algorithm to determine forceVector for a fan bvased upon: size, rpm, position in world etc.
 		// - User configurable environment settings 												- AND UNIT TESTS
 		// - User configurable project settings 													- AND UNIT TESTS
 		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS

@@ -27,7 +27,12 @@
     "properties": {
       "size": 140,
       "rpm": 1800,
-      "mode": "intake"
+      "mode": "intake",
+      "forceVector" : {
+        "x": 0,
+        "y": 5000,
+        "z": 30000
+      }
     },
     "position" : {
       "x": 0,
@@ -63,7 +68,12 @@
     "properties": {
       "size": 120,
       "rpm": 1000,
-      "mode": "exhaust"
+      "mode": "exhaust",
+      "forceVector" : {
+        "x": 0,
+        "y": 1000,
+        "z": 60000
+      }
     },
     "position" : {
       "x": 0,
