@@ -1,6 +1,8 @@
 app.controller('MainController', ['$scope', '$http', function($scope, $http) {
 
     $scope.ajaxComplete = false;
+
+    $scope.defaultFans = null;
     $scope.fanColors = null;
 
 	angular.element(document).ready(function() {

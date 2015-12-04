@@ -14,12 +14,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		var raycaster = new THREE.Raycaster();
 		var mouse = new THREE.Vector2();
 
-		var hoverFanColor = 0xD88080;
-		var editFanColor = 0x00FF00;
-		var normalFanColor = 0xB20000;
-
 		var caseDefaults;
-		var fanDefaults;
 
 		getDefaults();
 
@@ -38,10 +33,12 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 					//Need to change this value after all AJAX calls have completed to notify controller that loading has completed
 					scope.ajaxComplete = true;
 
+					//Store default values in the scope variables
 					scope.fanColors = result.colors;
-					fanDefaults = result;
+					scope.defaultFans = result;
+
+					//Create the 3D scene
 					init();
-					//animate();
 				});
 			});
 		}
@@ -76,8 +73,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			createDefaultCase();
 
-			createDefaultFan(fanDefaults.fanOne);
-			createDefaultFan(fanDefaults.fanTwo);
+			createDefaultFan(scope.defaultFans.fanOne);
+			createDefaultFan(scope.defaultFans.fanTwo);
 
 			camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
 
