@@ -33,10 +33,8 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
 
     $scope.$watch('editFan', function() {
         if ($scope.editFan !== null) {
-            //User is editing a fan, load values here
-            console.log("Click on fan: " + $scope.editFan.id);
-            //TODO: Distinction between user clicking on a new fan, and changing a value in the currently selected fan
-
+            //User is editing a fan, expand component settigns section here
+            //Component settings section will automatically update with values, so we don't need to change anything
         }
     });
 
