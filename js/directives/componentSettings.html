@@ -10,15 +10,19 @@
     	<input type="number" ng-model="editFan.rpm"/>
     </div>
     <div class="editorProperty">
+      <p>FORCE Z: </p>
+      <input type="number" ng-model="editFan.forceVector.z"/>
+    </div>
+    <div class="editorProperty">
     	<p>Size (mm): </p>
-    	<input type="number" ng-model="component.size"/>
+    	<input type="number" ng-model="editFan.size"/>
     </div>
     <div class="editorProperty">
       <p>Date created: </p>
-      <input type="date" ng-readonly="true" ng-model="component.dateCreated"/>
+      <input type="date" ng-readonly="true" ng-model="editFan.dateCreated"/>
     </div>
         <div class="editorProperty">
       <p>Date modified: </p>
-      <input class="123" type="date" ng-readonly="true" ng-model="component.dateModified"/>
+      <input class="123" type="date" ng-readonly="true" ng-model="editFan.dateModified"/>
     </div>
 </div>

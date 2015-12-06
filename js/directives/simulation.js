@@ -514,12 +514,11 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		// - Color change of particles that have been around for a long time
 		// - Move global variables to scope objects (see notes)
 		// - Create component settings controller <component-Settings id="fan.id" for each fan
-		// - Simulation updates automatically when settings changes 								- AND UNIT TESTS
-		// - User configurable fan settings on fan-by-fan basis (RPM, mode, active/inactive etc.)	- AND UNIT TESTS
 		// - Write algorithm to determine forceVector for a fan bvased upon: size, rpm, position in world etc.
 		// - User configurable environment settings 												- AND UNIT TESTS
 		// - User configurable project settings 													- AND UNIT TESTS
 		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS
+		// - Input validation on ALL user enterable data (using Angular)
 		// - Change rate of spawning in particles dependant on the number of intake fans
 		// - Simulation quality settings (AA on/off) 
 		// - How to use overlay
@@ -538,6 +537,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		// - fanAOEObject radius should be 1/2 fan size
 		// - Global vars should be scope objects e.g. fanNormalColor should be stored in $scope.fan, user defined fan properties in $scope.fans.0.rpm
 		// - ^ Doing that we can use $scope.watch() to watch for changes to these variables which measn that we can easily notify the sim code of any updates.
+		// - Because of the way angular works, I don't need to add methods to update the sim when the user changes values in the component section!
     }
   }; 
 }]);
