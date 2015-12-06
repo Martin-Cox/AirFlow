@@ -9,6 +9,7 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
     $scope.fans = [];
     $scope.exhaustFans = [];
     $scope.intakeFans = [];
+    $scope.editFan = null;
 
 	angular.element(document).ready(function() {
         document.getElementById('loadingSplashLoadingText').innerHTML = 'Click anywhere to begin';
@@ -29,4 +30,14 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
             $scope.spawnParticles();
         }
     };
+
+    $scope.$watch('editFan', function() {
+        if ($scope.editFan !== null) {
+            //User is editing a fan, load values here
+            console.log("Click on fan: " + $scope.editFan.id);
+            //TODO: Distinction between user clicking on a new fan, and changing a value in the currently selected fan
+
+        }
+    });
+
 }]);

@@ -406,9 +406,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		function handleCollision(collided_with, linearVelocity, angularVelocity) {
-			//TODO: Get forceVector from fanObject
-
 			//Event gets called when physics objects (spheres) collide with another object
+
 			for (var i = 0; i < scope.fans.length; i++) {
 				if (collided_with.id === scope.fans[i].fanAOEObject.id) {
 					//Collided with fanAOEObject, apply suitable force
@@ -454,7 +453,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				scope.fans[i].editing = false;
 				scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
 				scene.remove(scope.fans[i].AOEWireframe); 
-				//document.getElementById(fans[i].id).style.color = "black";
+				scope.editFan = null;
+				scope.$digest();
 			}
 
 			//If we clicked on a fan, do stuff here
@@ -462,7 +462,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.edit));
 				touchFan.editing = true;
 				scene.add(touchFan.AOEWireframe);
-				//document.getElementById(touchFan.id).style.color = "red";	//Placeholder. When user clicks on the fan it's component section will display
+				scope.editFan = touchFan;
+				scope.$digest();
 			}
 		}
 
