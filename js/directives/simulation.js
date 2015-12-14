@@ -391,8 +391,11 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			fanObject.mode = fan.properties.mode;
 			fanObject.size = fan.properties.size;
 			fanObject.rpm = fan.properties.rpm;
-			fanObject.forceVector = new THREE.Vector3(fan.properties.forceVector.x, fan.properties.forceVector.y, fan.properties.forceVector.z);
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
+
+			//Calculate force
+			//fanObject.forceVector = new THREE.Vector3(fan.properties.forceVector.x, fan.properties.forceVector.y, fan.properties.forceVector.z);
+			fanObject.forceVector =  calculateForceVector(fanObject);;
 
 			//Checking param mode here to offset positions
 			//TODO: Add support for fans that are neither intake or exhaust (e.g. GPU fan)
@@ -403,6 +406,16 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			}
 
 			scope.fans.push(fanObject);	
+		}
+
+		function calculateForceVector(fan) {
+			//TODO: This only calculates Z axis force, it should change which axis it applies to depending on the placement of the fan
+			//TODO: Include percentage power when calculatin force (see Excel sheet)
+			var forceZ = 0;
+
+			forceZ = ((fan.size * 5000) + (fan.rpm * 100))/10;
+
+			return new THREE.Vector3(0,0,forceZ);
 		}
 
 		function handleCollision(collided_with, linearVelocity, angularVelocity) {
