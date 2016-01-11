@@ -527,7 +527,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		//TODO (IN ORDER):
-		// - When fan settings change reclaculate force
 		// - Add components to defaultCase.json
 		// - Color change of particles that have been around for a long time
 		// - Move global variables to scope objects (see notes)
