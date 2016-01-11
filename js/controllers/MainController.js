@@ -32,10 +32,16 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
     };
 
     $scope.$watch('editFan', function() {
-        if ($scope.editFan !== null) {
+        if ($scope.editFan != null) {
             //User is editing a fan, expand component settigns section here
             //Component settings section will automatically update with values, so we don't need to change anything
+            console.log("Clicked on a fan");
         }
     });
+
+    $scope.propertiesChange = function(changedProperty) {
+        //Called when the user edits a fan property
+        $scope.editFan.properties.forceVector = $scope.calculateForceVector($scope.editFan);
+    }
 
 }]);

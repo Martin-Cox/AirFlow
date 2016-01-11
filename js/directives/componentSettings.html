@@ -3,23 +3,23 @@
   	<p class="sectionHeader">Component Settings</p>
     <div class="editorProperty">
     	<p>Mode: </p>
-    	<input type="text" ng-model="editFan.mode"/>
+    	<input type="text" ng-model="editFan.properties.mode" ng-change="propertiesChange(editFan.properties.mode)"/>
     </div>
     <div class="editorProperty">
     	<p>Max RPM: </p>
-    	<input type="number" ng-model="editFan.maxRPM"/>
+    	<input type="number" ng-model="editFan.properties.maxRPM" ng-change="propertiesChange(editFan.properties.maxRPM)"/>
     </div>
     <div class="editorProperty">
     	<p>Size (mm): </p>
-    	<input type="number" ng-model="editFan.size"/>
+    	<input type="number" ng-model="editFan.properties.size" ng-change="propertiesChange(editFan.properties.size)"/>
     </div>
     <div class="editorProperty">
       <p>Current RPM (%): </p>
-      <input type="number" ng-model="editFan.percentageRPM"/>
+      <input type="number" ng-model="editFan.properties.percentageRPM" ng-change="propertiesChange(editFan.properties.percentageRPM)"/>
     </div>
     <div class="editorProperty">
       <p>FORCE Z: </p>
-      <input type="number" ng-model="editFan.forceVector.z"/>
+      <input type="number" ng-model="editFan.properties.forceVector.z"/>
     </div>
     <div class="editorProperty">
       <p>Date created: </p>

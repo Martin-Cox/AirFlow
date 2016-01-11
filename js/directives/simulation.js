@@ -384,19 +384,21 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			var fanObject = new Object();
 
+			fanObject.properties = new Object();
+
 			fanObject.fanAOEObject = fanAOEObject;
 			fanObject.fanPhysicalObject = fanPhysicalObject;
 			fanObject.id = fanPhysicalObject.id;
 			fanObject.editing = false;
-			fanObject.mode = fan.properties.mode;
-			fanObject.size = fan.properties.size;
-			fanObject.maxRPM = fan.properties.rpm;
-			fanObject.percentageRPM = fan.properties.percentage;
+			fanObject.properties.mode = fan.properties.mode;
+			fanObject.properties.size = fan.properties.size;
+			fanObject.properties.maxRPM = fan.properties.rpm;
+			fanObject.properties.percentageRPM = fan.properties.percentage;
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 
 			//Calculate force
 			//fanObject.forceVector = new THREE.Vector3(fan.properties.forceVector.x, fan.properties.forceVector.y, fan.properties.forceVector.z);
-			fanObject.forceVector =  calculateForceVector(fanObject);;
+			fanObject.properties.forceVector =  scope.calculateForceVector(fanObject);
 
 			//Checking param mode here to offset positions
 			//TODO: Add support for fans that are neither intake or exhaust (e.g. GPU fan)
@@ -409,12 +411,13 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			scope.fans.push(fanObject);	
 		}
 
-		function calculateForceVector(fan) {
+		//function calculateForceVector(fan) {
+		scope.calculateForceVector = function(fan) {
 			//TODO: This only calculates Z axis force, it should change which axis it applies to depending on the placement of the fan
 
-			var maxForce = ((fan.size * 5000) + (fan.maxRPM * 100));
+			var maxForce = ((fan.properties.size * 5000) + (fan.properties.maxRPM * 100));
 
-			var realForce = (fan.percentageRPM/1000)*maxForce;
+			var realForce = (fan.properties.percentageRPM/1000)*maxForce;
 
 			return new THREE.Vector3(0,0,realForce);
 		}
@@ -425,8 +428,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			for (var i = 0; i < scope.fans.length; i++) {
 				if (collided_with.id === scope.fans[i].fanAOEObject.id) {
 					//Collided with fanAOEObject, apply suitable force
-					this.applyCentralImpulse(scope.fans[i].forceVector);
-				} else if (collided_with.id === scope.fans[i].fanPhysicalObject.id && scope.fans[i].mode === "exhaust") {
+					this.applyCentralImpulse(scope.fans[i].properties.forceVector);
+				} else if (collided_with.id === scope.fans[i].fanPhysicalObject.id && scope.fans[i].properties.mode === "exhaust") {
 					//Collided with exhuast fanPhysicalObject, delete the particle
 					for (var j = 0; j < particles.length; j++) {
 						if (particles[j].id === this.id) {
