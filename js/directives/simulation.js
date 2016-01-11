@@ -390,7 +390,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			fanObject.editing = false;
 			fanObject.mode = fan.properties.mode;
 			fanObject.size = fan.properties.size;
-			fanObject.rpm = fan.properties.rpm;
+			fanObject.maxRPM = fan.properties.rpm;
+			fanObject.percentageRPM = fan.properties.percentage;
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 
 			//Calculate force
@@ -410,12 +411,12 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 		function calculateForceVector(fan) {
 			//TODO: This only calculates Z axis force, it should change which axis it applies to depending on the placement of the fan
-			//TODO: Include percentage power when calculatin force (see Excel sheet)
-			var forceZ = 0;
 
-			forceZ = ((fan.size * 5000) + (fan.rpm * 100))/10;
+			var maxForce = ((fan.size * 5000) + (fan.maxRPM * 100));
 
-			return new THREE.Vector3(0,0,forceZ);
+			var realForce = (fan.percentageRPM/1000)*maxForce;
+
+			return new THREE.Vector3(0,0,realForce);
 		}
 
 		function handleCollision(collided_with, linearVelocity, angularVelocity) {
@@ -523,6 +524,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		//TODO (IN ORDER):
+		// - When fan settings change reclaculate force
 		// - Add components to defaultCase.json
 		// - Color change of particles that have been around for a long time
 		// - Move global variables to scope objects (see notes)
@@ -536,6 +538,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		// - Simulation quality settings (AA on/off) 
 		// - How to use overlay
 		// - About popup
+		// - Standardised error messages
 		// - Clean up code, optimisation, proper documentation etc. SEE quality standards in interim report
 		// - Testing on multiple devices
 		// - Fan model and animations

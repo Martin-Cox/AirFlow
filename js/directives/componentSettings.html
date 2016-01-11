@@ -6,16 +6,20 @@
     	<input type="text" ng-model="editFan.mode"/>
     </div>
     <div class="editorProperty">
-    	<p>RPM: </p>
-    	<input type="number" ng-model="editFan.rpm"/>
-    </div>
-    <div class="editorProperty">
-      <p>FORCE Z: </p>
-      <input type="number" ng-model="editFan.forceVector.z"/>
+    	<p>Max RPM: </p>
+    	<input type="number" ng-model="editFan.maxRPM"/>
     </div>
     <div class="editorProperty">
     	<p>Size (mm): </p>
     	<input type="number" ng-model="editFan.size"/>
+    </div>
+    <div class="editorProperty">
+      <p>Current RPM (%): </p>
+      <input type="number" ng-model="editFan.percentageRPM"/>
+    </div>
+    <div class="editorProperty">
+      <p>FORCE Z: </p>
+      <input type="number" ng-model="editFan.forceVector.z"/>
     </div>
     <div class="editorProperty">
       <p>Date created: </p>

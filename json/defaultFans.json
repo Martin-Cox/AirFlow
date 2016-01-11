@@ -27,6 +27,7 @@
     "properties": {
       "size": 140,
       "rpm": 1800,
+      "percentage": 80,
       "mode": "intake",
       "forceVector" : {
         "x": 0,
@@ -68,6 +69,7 @@
     "properties": {
       "size": 120,
       "rpm": 1000,
+      "percentage": 100,
       "mode": "exhaust",
       "forceVector" : {
         "x": 0,
