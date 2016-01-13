@@ -411,13 +411,14 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			scope.fans.push(fanObject);	
 		}
 
-		//function calculateForceVector(fan) {
 		scope.calculateForceVector = function(fan) {
 			//TODO: This only calculates Z axis force, it should change which axis it applies to depending on the placement of the fan
 
 			var maxForce = ((fan.properties.size * 5000) + (fan.properties.maxRPM * 100));
 
 			var realForce = (fan.properties.percentageRPM/1000)*maxForce;
+
+			if (realForce > 300000) { realForce = 300000 }; //Max value is a magic number, will be explained why in documentation
 
 			return new THREE.Vector3(0,0,realForce);
 		}
