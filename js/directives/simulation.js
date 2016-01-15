@@ -8,6 +8,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
     	var camera, scene, renderer, width, height, clock, orbitControl, fpsStats, intersectedObject;
 		var particles = [];
 		var availableParticles = [];
+		var insideCase;
 		var raycaster = new THREE.Raycaster();
 		var mouse = new THREE.Vector2();
 
@@ -286,6 +287,17 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		      	caseDefaults.materials.caseMaterial.restitution
 		    );
 
+			var insideBoxMaterial = Physijs.createMaterial(
+				new THREE.MeshBasicMaterial({ 
+				    opacity: caseDefaults.materials.insideBoxMaterial.opacity,
+				    color: parseInt(caseDefaults.materials.insideBoxMaterial.color),
+				    transparent: caseDefaults.materials.insideBoxMaterial.transparent,
+				    side: caseDefaults.materials.insideBoxMaterial.side
+				}),
+				caseDefaults.materials.insideBoxMaterial.friction,
+				caseDefaults.materials.insideBoxMaterial.restitution
+		    );
+
 			var transparentMaterial = Physijs.createMaterial(
 				new THREE.MeshBasicMaterial({ 
 				    opacity: caseDefaults.materials.transparentMaterial.opacity,
@@ -319,6 +331,10 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			var caseBackPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseHeight, caseThickness), caseMaterial, 0); //Gravity, 0 = weightless
 			var caseFrontPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseHeight, caseThickness), caseMaterial, 0); //Gravity, 0 = weightless
 
+			//Create an invisible mesh that fills the inside of the case, it will be used to detect the difference between the inside/outside of a case
+			insideCase = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseHeight, caseDepth), insideBoxMaterial, 0); //Gravity, 0 = weightless
+			insideCase._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
+
 			caseBottomPlane.position.set(0, 0, 0);
 
 			caseTopPlane.position.set(0, caseHeight, 0);
@@ -331,12 +347,16 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			caseFrontPlane.position.set(0, caseHeight/2, -caseDepth/2);
 
+			insideCase.position.set(0, caseHeight/2, 0);
+
 			scene.add(caseBottomPlane);
 			scene.add(caseTopPlane);
 			scene.add(caseVisibleSidePlane);
 			scene.add(caseInvisibleSidePlane);
 			scene.add(caseBackPlane);
 			scene.add(caseFrontPlane);
+
+			scene.add(insideCase);
 		}
 
 		function createDefaultFan(fan) {
@@ -560,3 +580,9 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
     }
   }; 
 }]);
+
+
+//TODO: 15/10
+// - Implement on highlight fan, set noRotate on OrbitCamera to true so we can click and drag the fan without also rotating the camera
+// - Draggable fans
+// - The force axis is determined by mode of operation and which (biggest!) side of the fan is touching the inside cube 
