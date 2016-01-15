@@ -502,9 +502,9 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				scene.add(touchFan.AOEWireframe);
 				scope.editFan = touchFan;
 				scope.$digest();
-				orbitControl.noRotate = true;
+				orbitControl.enableRotate = false;
 			} else {
-				orbitControl.noRotate = false;
+				orbitControl.enableRotate = true;
 			}
 		}
 
