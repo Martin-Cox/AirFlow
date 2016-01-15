@@ -558,6 +558,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		//TODO (IN ORDER):
+		// - Implement draggable fans
+		// - Determine the force axis for a fan by ode of operation and which (biggest!) side of the fan is touching the inside cube 
 		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation - Fix using intersectsCase in detectTouchingFan
 		// - Add components to defaultCase.json
 		// - Color change of particles that have been around for a long time
@@ -591,9 +593,3 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
     }
   }; 
 }]);
-
-
-//TODO: 15/10
-// - Implement on highlight fan, set noRotate on OrbitCamera to true so we can click and drag the fan without also rotating the camera
-// - Draggable fans
-// - The force axis is determined by mode of operation and which (biggest!) side of the fan is touching the inside cube 
