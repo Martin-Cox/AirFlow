@@ -277,8 +277,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		function createDefaultCase(caseDefaults) {
 			//Creates a 3D model of a computer case
 
-			var caseGroup = new THREE.Object3D(); //Empty container to store each case plane in
-
 			var caseMaterial = Physijs.createMaterial(
 		      	new THREE.MeshLambertMaterial({
 					color: parseInt(caseDefaults.materials.caseMaterial.color)
@@ -355,8 +353,14 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			scene.add(caseInvisibleSidePlane);
 			scene.add(caseBackPlane);
 			scene.add(caseFrontPlane);
-
 			scene.add(insideCase);
+
+			//Add the visible case panels to the scope caseGroup object for use elsewhere
+			scope.caseGroup.push(caseBottomPlane);
+			scope.caseGroup.push(caseTopPlane);
+			scope.caseGroup.push(caseVisibleSidePlane);
+			scope.caseGroup.push(caseBackPlane);
+			scope.caseGroup.push(caseFrontPlane);
 		}
 
 		function createDefaultFan(fan) {
@@ -523,12 +527,15 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				fanPhysicalObjects.push(scope.fans[i].fanPhysicalObject);
 			}
 
-			var intersects = raycaster.intersectObjects(fanPhysicalObjects, true);
+			var x = scope.caseGroup;
+
+			var intersectsFans = raycaster.intersectObjects(fanPhysicalObjects, true);
+			var intersectsCase = raycaster.intersectObjects(scope.caseGroup, true);
 
 			//If we have touched a fanPhysicalObject, return the root fanObject it belongs to
-			if (intersects.length > 0) {;
+			if (intersectsFans.length > 0) {;
 				for (var i = 0; i < scope.fans.length; i++) {
-					if (scope.fans[i].fanPhysicalObject.id == intersects[0].object.id) {
+					if (scope.fans[i].fanPhysicalObject.id == intersectsFans[0].object.id) {
 						return scope.fans[i];
 					}
 				}
@@ -551,7 +558,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		//TODO (IN ORDER):
-		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation
+		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation - Fix using intersectsCase in detectTouchingFan
 		// - Add components to defaultCase.json
 		// - Color change of particles that have been around for a long time
 		// - Move global variables to scope objects (see notes)
