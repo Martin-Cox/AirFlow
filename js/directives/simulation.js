@@ -502,6 +502,9 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				scene.add(touchFan.AOEWireframe);
 				scope.editFan = touchFan;
 				scope.$digest();
+				orbitControl.noRotate = true;
+			} else {
+				orbitControl.noRotate = false;
 			}
 		}
 
@@ -548,6 +551,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		//TODO (IN ORDER):
+		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation
 		// - Add components to defaultCase.json
 		// - Color change of particles that have been around for a long time
 		// - Move global variables to scope objects (see notes)
