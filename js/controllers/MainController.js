@@ -9,6 +9,7 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
     $scope.fans = [];
     $scope.exhaustFans = [];
     $scope.intakeFans = [];
+    $scope.dragFan = null;
     $scope.editFan = null;
 
     $scope.caseGroup= [];

@@ -10,7 +10,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		var availableParticles = [];
 		var insideCase;
 		var dragPlane;
-		var dragFan;
 		var raycaster = new THREE.Raycaster();
 		var mouse = new THREE.Vector2();
 		var offset = new THREE.Vector3();
@@ -483,7 +482,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		function handleMouseMove(event) {			
-			if (scope.editFan != null) {
+			if (scope.dragFan != null) {
 
 				console.log("Dragging fan");
 
@@ -504,12 +503,12 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 				//Update fan position to mouse position
 				if (intersects.length > 0) {
-					scope.editFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
+					scope.dragFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
 
 					//TODO: Update fanAOEObject position correctly
-					scope.editFan.fanAOEObject.position.set(scope.editFan.fanPhysicalObject.position.x, scope.editFan.fanPhysicalObject.position.y, scope.editFan.fanPhysicalObject.position.z + (100) + (20));
-					scope.editFan.fanPhysicalObject.__dirtyPosition = true;
-					scope.editFan.fanAOEObject.__dirtyPosition = true;
+					scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z + (100) + (20));
+					scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
+					scope.dragFan.fanAOEObject.__dirtyPosition = true;
 
 					scope.$digest();
 				}
@@ -545,6 +544,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
 				scene.remove(scope.fans[i].AOEWireframe); 
 				scope.editFan = null;
+				scope.dragFan = null;
 				scope.$digest();
 			}
 
@@ -554,6 +554,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				touchFan.editing = true;
 				scene.add(touchFan.AOEWireframe);
 				scope.editFan = touchFan;
+				scope.dragFan = touchFan;
 				scope.$digest();
 				orbitControl.enableRotate = false;
 			} else {
@@ -561,7 +562,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			}
 
 			//If we are editing a fan, do stuff here
-			if (scope.editFan != null) {				
+			if (scope.dragFan != null) {				
 				//Have to normalise these coords so that they are between -1 and 1
 				var mouseX = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
 				var mouseY = - (event.clientY / height) * 2 + 1;
@@ -577,22 +578,22 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 				if (intersects.length > 0) {
 					offset.copy(intersects[0].point).sub(dragPlane.position);
-					scope.editFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
-					scope.editFan.fanPhysicalObject.__dirtyPosition = true;
+					scope.dragFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
+					scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
 				}
 			}
 		}
 
 		function handleMouseRelease(event) {
-			if (scope.editFan != null) {
+			if (scope.dragFan != null) {
 				//When a user stops clicking/dragging on a fan, move the fan to the new position if valid
 				console.log("Dropping fan");
 
 				//TODO: Update fan position to offset coords
 
-				scope.editFan.fanPhysicalObject.position.set(offset.x, offset.y, offset.z);
+				scope.dragFan.fanPhysicalObject.position.set(offset.x, offset.y, offset.z);
 
-				scope.editFan = null;	//Breaks being able to edit fan properties, need to implement some way to determine whether we want to drag or not		
+				scope.dragFan = null;
 				scope.$digest();	
 			}
 		}
