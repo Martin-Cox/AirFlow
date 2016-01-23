@@ -427,7 +427,9 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			fanObject.properties = new Object();
 
 			fanObject.fanAOEObject = fanAOEObject;
+			fanObject.fanAOEObject.dimensions = fan.fanAOEObject.dimensions;
 			fanObject.fanPhysicalObject = fanPhysicalObject;
+			fanObject.fanPhysicalObject.dimensions = fan.fanObject.dimensions;
 			fanObject.id = fanPhysicalObject.id;
 			fanObject.editing = false;
 			fanObject.properties.mode = fan.properties.mode;
@@ -497,16 +499,13 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				var dragRaycaster = new THREE.Raycaster();
 				dragRaycaster.set(camera.position, vector.sub(camera.position).normalize());
 				
-				//var intersects = dragRaycaster.intersectObjects(fanPhysicalObjects);
-
 				var intersects = dragRaycaster.intersectObject(dragPlane);
 
 				//Update fan position to mouse position
 				if (intersects.length > 0) {
 					scope.dragFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
 
-					//TODO: Update fanAOEObject position correctly
-					scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z + (100) + (20));
+					scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z + (scope.dragFan.fanAOEObject.dimensions.height/2) + (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
 					scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
 					scope.dragFan.fanAOEObject.__dirtyPosition = true;
 
@@ -578,8 +577,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 				if (intersects.length > 0) {
 					offset.copy(intersects[0].point).sub(dragPlane.position);
-					scope.dragFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
-					scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
 				}
 			}
 		}
@@ -644,7 +641,11 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		//TODO (IN ORDER):
-		// - Implement draggable fans
+		// - After initial drag to plane, the fan is offset from the mouse position when trying to drag
+		// - It takes a long time for particles to stop spawning in the old position of the fan, try to cut this down (maybe something to do with the pool of particles e.g. the start pos for each aprticle is created before it is spawned in, therefore we have to wait for at least 1 whole go through of the particle pool before it startts to use the new starting pos)
+		// - Drag fans across the plane on the outside of the insideCube
+		// - Be able to drag fans to a different plane and it rotates correctly
+		// - fanAOEObjects should always be "locked" to the same position on the fanPhysicalObject, and always point inside the case
 		// - Determine the force axis for a fan by ode of operation and which (biggest!) side of the fan is touching the inside cube 
 		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation - Fix using intersectsCase in detectTouchingFan
 		// - Add components to defaultCase.json
