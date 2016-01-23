@@ -9,8 +9,10 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		var particles = [];
 		var availableParticles = [];
 		var insideCase;
+		var dragFan;
 		var raycaster = new THREE.Raycaster();
 		var mouse = new THREE.Vector2();
+		var offset = new THREE.Vector3();
 
 		getDefaults();
 
@@ -119,6 +121,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			renderer.domElement.addEventListener( 'mousemove', handleMouseMove, false );
 			renderer.domElement.addEventListener( 'mousedown', handleMouseClick, false );
+			renderer.domElement.addEventListener( 'mouseup', handleMouseRelease, false );
 		}
 
 		scope.animate = function() {
@@ -286,11 +289,14 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		    );
 
 			var insideBoxMaterial = Physijs.createMaterial(
-				new THREE.MeshBasicMaterial({ 
+				/*new THREE.MeshBasicMaterial({ 
 				    opacity: caseDefaults.materials.insideBoxMaterial.opacity,
 				    color: parseInt(caseDefaults.materials.insideBoxMaterial.color),
 				    transparent: caseDefaults.materials.insideBoxMaterial.transparent,
 				    side: caseDefaults.materials.insideBoxMaterial.side
+				}),*/
+				new THREE.MeshBasicMaterial({ 
+				    visible: false
 				}),
 				caseDefaults.materials.insideBoxMaterial.friction,
 				caseDefaults.materials.insideBoxMaterial.restitution
@@ -481,8 +487,35 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				//Only change to hover color when we are NOT editing the current fan
 				if (touchFan.editing == false) {
 					touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.highlight));
+				}				
+			}
+
+			//DRAG FANS
+			if (scope.editFan != null) {
+
+				console.log("Dragging fan");
+
+				//Have to normalise these coords so that they are between -1 and 1
+				var mouseX = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
+				var mouseY = - (event.clientY / height) * 2 + 1;
+
+				//Get 3D vector from 3D mouse position using unproject function
+				var vector  = new THREE.Vector3(mouseX, mouseY, 1);
+				vector.unproject(camera);
+
+				var dragRaycaster = new THREE.Raycaster();
+				dragRaycaster.set(camera.position, vector.sub(camera.position).normalize());
+				
+				//var intersects = dragRaycaster.intersectObjects(fanPhysicalObjects);
+
+				var intersects = dragRaycaster.intersectObject(insideCase);
+
+				if (intersects.length > 0) {
+					scope.editFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
+					scope.$digest();
 				}
 			}
+
 		}
 
 		function handleMouseClick(event) {
@@ -509,6 +542,42 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				orbitControl.enableRotate = false;
 			} else {
 				orbitControl.enableRotate = true;
+			}
+
+			if (scope.editFan != null) {				
+				//Have to normalise these coords so that they are between -1 and 1
+				var mouseX = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
+				var mouseY = - (event.clientY / height) * 2 + 1;
+
+				//Get 3D vector from 3D mouse position using unproject function
+				var vector  = new THREE.Vector3(mouseX, mouseY, 1);
+				vector.unproject(camera);
+
+				var dragRaycaster = new THREE.Raycaster();
+				dragRaycaster.set(camera.position, vector.sub(camera.position).normalize());
+				
+				//var intersects = dragRaycaster.intersectObjects(fanPhysicalObjects);
+
+				var intersects = dragRaycaster.intersectObject(insideCase);
+
+				if (intersects.length > 0) {
+					//scope.editFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
+					offset.copy(intersects[0].point).sub(insideCase.position);
+				}
+			}
+		}
+
+		function handleMouseRelease(event) {
+			if (scope.editFan != null) {
+				//When a user stops clicking/dragging on a fan, move the fan to the new position if valid
+				console.log("Dropping fan");
+
+				//TODO: Update fan position to offset coords
+
+				scope.editFan.fanPhysicalObject.position.set(offset.x, offset.y, offset.z);
+
+				scope.editFan = null;		
+				scope.$digest();	
 			}
 		}
 
