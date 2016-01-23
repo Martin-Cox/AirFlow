@@ -134,7 +134,13 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			fpsStats.begin();
 
-			scene.simulate(); //Run physics simulation
+
+			//Physijs doesn't play nice with draggable objects
+			//So we pause the physics simulation as we drag an object
+			//TODO: unpause simulation in mouse up function
+			//if (scope.editFan == null ) {
+				scene.simulate(); //Run physics simulation
+			//}
 
 			requestAnimationFrame(scope.animate);
 			var delta = clock.getDelta();
@@ -496,8 +502,15 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 				var intersects = dragRaycaster.intersectObject(dragPlane);
 
+				//Update fan position to mouse position
 				if (intersects.length > 0) {
 					scope.editFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
+
+					//TODO: Update fanAOEObject position correctly
+					scope.editFan.fanAOEObject.position.set(scope.editFan.fanPhysicalObject.position.x, scope.editFan.fanPhysicalObject.position.y, scope.editFan.fanPhysicalObject.position.z + (100) + (20));
+					scope.editFan.fanPhysicalObject.__dirtyPosition = true;
+					scope.editFan.fanAOEObject.__dirtyPosition = true;
+
 					scope.$digest();
 				}
 			} else {
@@ -563,8 +576,9 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				var intersects = dragRaycaster.intersectObject(dragPlane);
 
 				if (intersects.length > 0) {
-					//scope.editFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
 					offset.copy(intersects[0].point).sub(dragPlane.position);
+					scope.editFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
+					scope.editFan.fanPhysicalObject.__dirtyPosition = true;
 				}
 			}
 		}
@@ -578,7 +592,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 				scope.editFan.fanPhysicalObject.position.set(offset.x, offset.y, offset.z);
 
-				scope.editFan = null;		
+				scope.editFan = null;	//Breaks being able to edit fan properties, need to implement some way to determine whether we want to drag or not		
 				scope.$digest();	
 			}
 		}
