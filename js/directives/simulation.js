@@ -179,8 +179,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 				particle = new Physijs.SphereMesh(sphereGeometry, sphereMaterial);	
 
-				setParticleStartingPosition(particle);
-
 				particle.addEventListener( 'collision', handleCollision);
 
 				particles.push(particle);
@@ -194,6 +192,9 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			var spawnRate = 300;
 
 			if (availableParticles.length > 0) {
+
+				//Set spawn position as the particle is created
+				setParticleStartingPosition(availableParticles[0]);
 
 				//Record the unix time ms that the particle spawned
 				availableParticles[0].spawnTime = (new Date).getTime();
@@ -250,8 +251,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			//Removes a particle from the scene, resets its starting position, and adds it back to the pool of available particles
 
 			scene.remove(particle);
-
-			setParticleStartingPosition(particle);
 
 			particle.spawnTime = null;
 
