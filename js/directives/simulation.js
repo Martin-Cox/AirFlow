@@ -554,6 +554,10 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				scope.dragFan = touchFan;
 				scope.$digest();
 				orbitControl.enableRotate = false;
+
+				//update dragPlane position to the current fanPhysicalObject position
+				dragPlane.position.set(touchFan.fanPhysicalObject.position.x, touchFan.fanPhysicalObject.position.y, touchFan.fanPhysicalObject.position.z);
+
 			} else {
 				orbitControl.enableRotate = true;
 			}
