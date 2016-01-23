@@ -634,7 +634,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 		//TODO (IN ORDER):
 		// - After initial drag to plane, the fan is offset from the mouse position when trying to drag
-		// - It takes a long time for particles to stop spawning in the old position of the fan, try to cut this down (maybe something to do with the pool of particles e.g. the start pos for each aprticle is created before it is spawned in, therefore we have to wait for at least 1 whole go through of the particle pool before it startts to use the new starting pos)
 		// - Drag fans across the plane on the outside of the insideCube
 		// - Be able to drag fans to a different plane and it rotates correctly
 		// - fanAOEObjects should always be "locked" to the same position on the fanPhysicalObject, and always point inside the case
