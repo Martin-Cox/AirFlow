@@ -9,6 +9,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		var particles = [];
 		var availableParticles = [];
 		var insideCase;
+		var dragPlane;
 		var dragFan;
 		var raycaster = new THREE.Raycaster();
 		var mouse = new THREE.Vector2();
@@ -116,6 +117,10 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			scene.add(pointLightB);	
 
 			scene.add(new THREE.AxisHelper(200));
+
+			dragPlane = new THREE.Mesh(new THREE.PlaneBufferGeometry(500, 500, 8, 8), new THREE.MeshBasicMaterial({color: 0xffffff, side: THREE.DoubleSide}));
+			//dragPlane.visible = false;
+			scene.add(dragPlane);
 
 			cullParticles();
 
@@ -471,26 +476,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			}
 		}
 
-		function handleMouseMove(event) {
-			//When a user hovers on a fan change fan color to hover state only if we are NOT editing that fan 
-
-			var touchFan = detectTouchingFan(event);
-
-			//For peace of mind, reset all fans not being edited to normal fan color
-			for (var i = 0; i < scope.fans.length; i++) {
-				if (scope.fans[i].editing == false) {
-					scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
-				}
-			}
-
-			if (touchFan) {
-				//Only change to hover color when we are NOT editing the current fan
-				if (touchFan.editing == false) {
-					touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.highlight));
-				}				
-			}
-
-			//DRAG FANS
+		function handleMouseMove(event) {			
 			if (scope.editFan != null) {
 
 				console.log("Dragging fan");
@@ -508,14 +494,31 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				
 				//var intersects = dragRaycaster.intersectObjects(fanPhysicalObjects);
 
-				var intersects = dragRaycaster.intersectObject(insideCase);
+				var intersects = dragRaycaster.intersectObject(dragPlane);
 
 				if (intersects.length > 0) {
 					scope.editFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
 					scope.$digest();
 				}
-			}
+			} else {
+				//When a user hovers on a fan change fan color to hover state only if we are NOT editing that fan 
 
+				var touchFan = detectTouchingFan(event);
+
+				//For peace of mind, reset all fans not being edited to normal fan color
+				for (var i = 0; i < scope.fans.length; i++) {
+					if (scope.fans[i].editing == false) {
+						scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
+					}
+				}
+
+				if (touchFan) {
+					//Only change to hover color when we are NOT editing the current fan
+					if (touchFan.editing == false) {
+						touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.highlight));
+					}				
+				}
+			}
 		}
 
 		function handleMouseClick(event) {
@@ -544,6 +547,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				orbitControl.enableRotate = true;
 			}
 
+			//If we are editing a fan, do stuff here
 			if (scope.editFan != null) {				
 				//Have to normalise these coords so that they are between -1 and 1
 				var mouseX = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
@@ -556,13 +560,11 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				var dragRaycaster = new THREE.Raycaster();
 				dragRaycaster.set(camera.position, vector.sub(camera.position).normalize());
 				
-				//var intersects = dragRaycaster.intersectObjects(fanPhysicalObjects);
-
-				var intersects = dragRaycaster.intersectObject(insideCase);
+				var intersects = dragRaycaster.intersectObject(dragPlane);
 
 				if (intersects.length > 0) {
 					//scope.editFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
-					offset.copy(intersects[0].point).sub(insideCase.position);
+					offset.copy(intersects[0].point).sub(dragPlane.position);
 				}
 			}
 		}
