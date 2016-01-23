@@ -485,8 +485,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 		function handleMouseMove(event) {			
 			if (scope.dragFan != null) {
-
-				console.log("Dragging fan");
+				//Dragging a fan, we need to get the mouse 3d space coords in relation to a 2d plane and update the fan position
 
 				//Have to normalise these coords so that they are between -1 and 1
 				var mouseX = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
@@ -560,7 +559,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				orbitControl.enableRotate = true;
 			}
 
-			//If we are editing a fan, do stuff here
+			//If we are dragging a fan, do stuff here
 			if (scope.dragFan != null) {				
 				//Have to normalise these coords so that they are between -1 and 1
 				var mouseX = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
@@ -583,13 +582,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 		function handleMouseRelease(event) {
 			if (scope.dragFan != null) {
-				//When a user stops clicking/dragging on a fan, move the fan to the new position if valid
-				console.log("Dropping fan");
-
-				//TODO: Update fan position to offset coords
-
-				scope.dragFan.fanPhysicalObject.position.set(offset.x, offset.y, offset.z);
-
+				//When a user stops clicking/dragging on a fan, set the dragFan object to null
 				scope.dragFan = null;
 				scope.$digest();	
 			}

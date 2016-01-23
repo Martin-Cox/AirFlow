@@ -38,7 +38,6 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
         if ($scope.editFan != null) {
             //User is editing a fan, expand component settigns section here
             //Component settings section will automatically update with values, so we don't need to change anything
-            console.log("Clicked on a fan");
         }
     });
 
