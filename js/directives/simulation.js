@@ -478,7 +478,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				if (collided_with.id === scope.fans[i].fanAOEObject.id) {
 					//Collided with fanAOEObject, apply suitable force
 					this.applyCentralImpulse(scope.fans[i].properties.forceVector);
-				} else if (collided_with.id === scope.fans[i].fanPhysicalObject.id && scope.fans[i].properties.mode === "exhaust") {
+				} 
+				if (collided_with.id === scope.fans[i].fanPhysicalObject.id && scope.fans[i].properties.mode === "exhaust") {
 					//Collided with exhuast fanPhysicalObject, delete the particle
 					for (var j = 0; j < particles.length; j++) {
 						if (particles[j].id === this.id) {
