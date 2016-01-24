@@ -497,8 +497,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				//Update fan position to mouse position
 				if (dragSide.intersects.length > 0) {
 					scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point.sub(offset));
-
-					scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z + (scope.dragFan.fanAOEObject.dimensions.height/2) + (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
+					chooseFanAOEDirection();
+					
 					scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
 					scope.dragFan.fanAOEObject.__dirtyPosition = true;
 
@@ -609,6 +609,33 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			returnObj.tempPlane = tempPlane;
 
 			return returnObj;
+		}
+
+		function chooseFanAOEDirection() {
+			switch(scope.dragFan.properties.position) {
+				case positionsEnum.FRONT:
+					if (scope.dragFan.properties.mode == "intake") {
+						scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z + (scope.dragFan.fanAOEObject.dimensions.height/2) + (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
+					} else if (scope.dragFan.properties.mode == "exhaust") {
+						scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z - (scope.dragFan.fanAOEObject.dimensions.height/2) + (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
+					}
+					break;
+				case positionsEnum.BACK:
+					if (scope.dragFan.properties.mode == "intake") {
+						scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z + (scope.dragFan.fanAOEObject.dimensions.height/2) + (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
+					} else if (scope.dragFan.properties.mode == "exhaust") {
+						scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z - (scope.dragFan.fanAOEObject.dimensions.height/2) - (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
+					}
+					break;
+				case positionsEnum.TOP:
+					break;
+				case positionsEnum.BOTTOM:
+					break;
+				case positionsEnum.VISIBLE_SIDE:
+					break;
+				case positionsEnum.INVISIBLE_SIDE:
+					break;
+			}
 		}
 
 		function handleMouseRelease(event) {
