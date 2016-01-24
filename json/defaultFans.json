@@ -29,6 +29,7 @@
       "rpm": 1800,
       "percentage": 80,
       "mode": "intake",
+      "position": 0,
       "forceVector" : {
         "x": 0,
         "y": 5000,
@@ -71,6 +72,7 @@
       "rpm": 1000,
       "percentage": 100,
       "mode": "exhaust",
+      "position": 1,
       "forceVector" : {
         "x": 0,
         "y": 1000,

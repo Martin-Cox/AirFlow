@@ -9,7 +9,17 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		var particles = [];
 		var availableParticles = [];
 		var insideCase;
-		var dragPlane;
+
+		//Enum of possible fan positions on the case (which part of the case is the fan on)
+		var positionsEnum = Object.freeze({
+			FRONT: 0,
+			BACK: 1,
+			TOP: 2,
+			BOTTOM: 3,
+			VISIBLE_SIDE: 4,
+			INVISIBLE_SIDE: 5
+		});
+
 		var raycaster = new THREE.Raycaster();
 		var mouse = new THREE.Vector2();
 		var offset = new THREE.Vector3();
@@ -116,10 +126,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			scene.add(pointLightB);	
 
 			scene.add(new THREE.AxisHelper(200));
-
-			dragPlane = new THREE.Mesh(new THREE.PlaneBufferGeometry(500, 500, 8, 8), new THREE.MeshBasicMaterial({color: 0xffffff, side: THREE.DoubleSide}));
-			//dragPlane.visible = false;
-			scene.add(dragPlane);
 
 			cullParticles();
 
@@ -370,12 +376,12 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			scene.add(caseFrontPlane);
 			scene.add(insideCase);
 
-			//Add the visible case panels to the scope caseGroup object for use elsewhere
-			scope.caseGroup.push(caseBottomPlane);
-			scope.caseGroup.push(caseTopPlane);
-			scope.caseGroup.push(caseVisibleSidePlane);
-			scope.caseGroup.push(caseBackPlane);
-			scope.caseGroup.push(caseFrontPlane);
+			scope.caseGroup.bottomPlane = caseBottomPlane;
+			scope.caseGroup.topPlane = caseTopPlane;
+			scope.caseGroup.visibleSidePlane = caseVisibleSidePlane;
+			scope.caseGroup.invisibleSidePlane = caseInvisibleSidePlane;
+			scope.caseGroup.backPlane = caseBackPlane;
+			scope.caseGroup.frontPlane = caseFrontPlane;
 		}
 
 		function createDefaultFan(fan) {
@@ -435,6 +441,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			fanObject.properties.size = fan.properties.size;
 			fanObject.properties.maxRPM = fan.properties.rpm;
 			fanObject.properties.percentageRPM = fan.properties.percentage;
+			fanObject.properties.position = fan.properties.position;
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 
 			//Calculate force
@@ -484,24 +491,12 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 		function handleMouseMove(event) {			
 			if (scope.dragFan != null) {
-				//Dragging a fan, we need to get the mouse 3d space coords in relation to a 2d plane and update the fan position
-
-				//Have to normalise these coords so that they are between -1 and 1
-				var mouseX = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
-				var mouseY = - (event.clientY / height) * 2 + 1;
-
-				//Get 3D vector from 3D mouse position using unproject function
-				var vector  = new THREE.Vector3(mouseX, mouseY, 1);
-				vector.unproject(camera);
-
-				var dragRaycaster = new THREE.Raycaster();
-				dragRaycaster.set(camera.position, vector.sub(camera.position).normalize());
+				//Dragging a fan
+				var dragSide = chooseSide(event, scope.dragFan.properties.position);
 				
-				var intersects = dragRaycaster.intersectObject(dragPlane);
-
 				//Update fan position to mouse position
-				if (intersects.length > 0) {
-					scope.dragFan.fanPhysicalObject.position.copy(intersects[0].point.sub(offset));
+				if (dragSide.intersects.length > 0) {
+					scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point.sub(offset));
 
 					scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z + (scope.dragFan.fanAOEObject.dimensions.height/2) + (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
 					scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
@@ -554,33 +549,66 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				scope.dragFan = touchFan;
 				scope.$digest();
 				orbitControl.enableRotate = false;
-
-				//update dragPlane position to the current fanPhysicalObject position
-				dragPlane.position.set(touchFan.fanPhysicalObject.position.x, touchFan.fanPhysicalObject.position.y, touchFan.fanPhysicalObject.position.z);
-
 			} else {
 				orbitControl.enableRotate = true;
 			}
 
 			//If we are dragging a fan, do stuff here
 			if (scope.dragFan != null) {				
-				//Have to normalise these coords so that they are between -1 and 1
-				var mouseX = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
-				var mouseY = - (event.clientY / height) * 2 + 1;
+				var dragSide = chooseSide(event, scope.dragFan.properties.position);
 
-				//Get 3D vector from 3D mouse position using unproject function
-				var vector  = new THREE.Vector3(mouseX, mouseY, 1);
-				vector.unproject(camera);
-
-				var dragRaycaster = new THREE.Raycaster();
-				dragRaycaster.set(camera.position, vector.sub(camera.position).normalize());
-				
-				var intersects = dragRaycaster.intersectObject(dragPlane);
-
-				if (intersects.length > 0) {
-					offset.copy(intersects[0].point).sub(dragPlane.position);
+				if (dragSide.intersects.length > 0) {
+					offset.copy(dragSide.intersects[0].point).sub(dragSide.tempPlane.position);
 				}
 			}
+		}
+
+		function chooseSide(event, position) {			
+			//Determines what side of the case a fan is being dragged on
+
+			//Have to normalise these coords so that they are between -1 and 1
+			var mouseX = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
+			var mouseY = - (event.clientY / height) * 2 + 1;
+
+			//Get 3D vector from 3D mouse position using unproject function
+			var vector  = new THREE.Vector3(mouseX, mouseY, 1);
+			vector.unproject(camera);
+
+			var dragRaycaster = new THREE.Raycaster();
+			dragRaycaster.set(camera.position, vector.sub(camera.position).normalize());
+
+			switch(position) {
+				case positionsEnum.FRONT:
+					var intersects = dragRaycaster.intersectObject(scope.caseGroup.frontPlane);
+					var tempPlane = scope.caseGroup.frontPlane;
+					break;
+				case positionsEnum.BACK:
+					var intersects = dragRaycaster.intersectObject(scope.caseGroup.backPlane);
+					var tempPlane = scope.caseGroup.backPlane;
+					break;
+				case positionsEnum.TOP:
+					var intersects = dragRaycaster.intersectObject(scope.caseGroup.topPlane);
+					var tempPlane = scope.caseGroup.topPlane;
+					break;
+				case positionsEnum.BOTTOM:
+					var intersects = dragRaycaster.intersectObject(scope.caseGroup.bottomPlane);
+					var tempPlane = scope.caseGroup.bottomPlane;
+					break;
+				case positionsEnum.VISIBLE_SIDE:
+					var intersects = dragRaycaster.intersectObject(scope.caseGroup.visibleSidePlane);
+					var tempPlane = scope.caseGroup.visibleSidePlane;
+					break;
+				case positionsEnum.INVISIBLE_SIDE:
+					var intersects = dragRaycaster.intersectObject(scope.caseGroup.invisibleSidePlane);
+					var tempPlane = scope.caseGroup.invisibleSidePlane;
+					break;
+			}
+
+			var returnObj = new Object();
+			returnObj.intersects = intersects;
+			returnObj.tempPlane = tempPlane;
+
+			return returnObj;
 		}
 
 		function handleMouseRelease(event) {
@@ -675,3 +703,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
     }
   }; 
 }]);
+
+
+//TODO SUNDAY 24
+// - Also, use position and fan mode to determine where the fanAOEObject goes and forceVector axis
