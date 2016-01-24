@@ -475,18 +475,21 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			//Event gets called when physics objects (spheres) collide with another object
 
 			for (var i = 0; i < scope.fans.length; i++) {
-				if (collided_with.id === scope.fans[i].fanAOEObject.id) {
-					//Collided with fanAOEObject, apply suitable force
-					this.applyCentralImpulse(scope.fans[i].properties.forceVector);
-				} 
 				if (collided_with.id === scope.fans[i].fanPhysicalObject.id && scope.fans[i].properties.mode === "exhaust") {
 					//Collided with exhuast fanPhysicalObject, delete the particle
 					for (var j = 0; j < particles.length; j++) {
 						if (particles[j].id === this.id) {
 							recycleParticle(particles[j]);
+							break;
 						}
 					}
+					break;
 				}
+				if (collided_with.id === scope.fans[i].fanAOEObject.id) {
+					//Collided with fanAOEObject, apply suitable force
+					this.applyCentralImpulse(scope.fans[i].properties.forceVector);
+					break;
+				} 
 			}
 		}
 
@@ -694,7 +697,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 		//TODO (IN ORDER):
 		// - After initial drag to plane, the fan is offset from the mouse position when trying to drag
-		// - Drag fans across the plane on the outside of the insideCube
 		// - Be able to drag fans to a different plane and it rotates correctly
 		// - fanAOEObjects should always be "locked" to the same position on the fanPhysicalObject, and always point inside the case
 		// - Determine the force axis for a fan by ode of operation and which (biggest!) side of the fan is touching the inside cube 
@@ -731,7 +733,3 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
     }
   }; 
 }]);
-
-
-//TODO SUNDAY 24
-// - Also, use position and fan mode to determine where the fanAOEObject goes and forceVector axis
