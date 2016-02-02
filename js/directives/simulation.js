@@ -85,6 +85,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			createDefaultFan(scope.defaultFans.fanTwo);
 			createDefaultFan(scope.defaultFans.fanThree);
 			createDefaultFan(scope.defaultFans.fanFour);
+			createDefaultFan(scope.defaultFans.fanFive);
+			createDefaultFan(scope.defaultFans.fanSix);
 
 			camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
 
@@ -448,17 +450,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			fanPhysicalObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
 
-			//Checking param mode here to offset positions
-			//TODO: Add support for fans that are neither intake or exhaust (e.g. GPU fan)
-			if (fan.properties.mode != "exhaust") {
-				fanAOEObject.position.set(fan.position.x, fan.position.y, fan.position.z + (fan.fanAOEObject.dimensions.height/2) + (fan.fanObject.dimensions.depth/2));
-			} else {
-				fanAOEObject.position.set(fan.position.x, fan.position.y, fan.position.z - (fan.fanAOEObject.dimensions.height/2) - (fan.fanObject.dimensions.depth/2));
-			}
-
-			scene.add(fanPhysicalObject);
-
-			scene.add(fanAOEObject);
 			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
 
 			var fanObject = new Object();
@@ -477,6 +468,12 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			fanObject.properties.percentageRPM = fan.properties.percentage;
 			fanObject.properties.position = fan.properties.position;
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
+
+			chooseFanAOEDirection(fanObject);
+
+			scene.add(fanPhysicalObject);
+
+			scene.add(fanAOEObject);
 
 			//Calculate force
 			//fanObject.forceVector = new THREE.Vector3(fan.properties.forceVector.x, fan.properties.forceVector.y, fan.properties.forceVector.z);
@@ -672,9 +669,9 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 					break;
 				case positionsEnum.TOP:
 					if (fan.properties.mode == "intake") {
-						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z + (fan.fanAOEObject.dimensions.height/2) + (fan.fanPhysicalObject.dimensions.depth/2));
+						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y + (fan.fanAOEObject.dimensions.height/2) + (fan.fanPhysicalObject.dimensions.depth/2), fan.fanPhysicalObject.position.z);
 					} else if (fan.properties.mode == "exhaust") {
-						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z - (fan.fanAOEObject.dimensions.height/2) - (fan.fanPhysicalObject.dimensions.depth/2));
+						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y - (fan.fanAOEObject.dimensions.height/2) - (fan.fanPhysicalObject.dimensions.depth/2), fan.fanPhysicalObject.position.z);
 					}
 					break;
 				case positionsEnum.BOTTOM:
@@ -741,7 +738,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 		//TODO (IN ORDER):
 		// - Issues with fanAOEObject placement and direction when dragging
-		// - On initial load, all fanAOEObjects spawn at 0,0,0 instead of going to the fan physical position
 		// - After initial drag to plane, the fan is offset from the mouse position when trying to drag
 		// - Be able to drag fans to a different plane and it rotates correctly
 		// - fanAOEObjects should always be "locked" to the same position on the fanPhysicalObject, and always point inside the case

@@ -188,5 +188,103 @@
     "highlight": "0x4D82B3",
     "edit": "0x706598",
     "wireframe": "0x90DAFF"
+  },
+  "fanFive" : {
+    "fanObject": {
+      "material": {
+        "side": "THREE.DoubleSide"
+      },
+      "dimensions": {
+        "width": 120,
+        "height": 120,
+        "depth": 40
+      }
+    },
+    "fanAOEObject": {
+      "material": {
+        "transparent": true,
+        "opacity": 0,
+        "side": "THREE.DoubleSide"
+      },
+      "dimensions": {
+        "radiusTop": 60,
+        "radiusBottom": 60,
+        "height": 90,
+        "radiusSegments": 25,
+        "heightSegments": 25
+      }
+    },
+    "properties": {
+      "size": 120,
+      "rpm": 1000,
+      "percentage": 100,
+      "mode": "exhaust",
+      "position": 5,
+      "forceVector" : {
+        "x": 0,
+        "y": 1000,
+        "z": 60000
+      }
+    },
+    "position" : {
+      "x": 105,
+      "y": 100,
+      "z": 0
+    }
+  },
+  "colors" : {
+    "normal": "0x003566",
+    "highlight": "0x4D82B3",
+    "edit": "0x706598",
+    "wireframe": "0x90DAFF"
+  },
+  "fanSix" : {
+    "fanObject": {
+      "material": {
+        "side": "THREE.DoubleSide"
+      },
+      "dimensions": {
+        "width": 120,
+        "height": 120,
+        "depth": 40
+      }
+    },
+    "fanAOEObject": {
+      "material": {
+        "transparent": true,
+        "opacity": 0,
+        "side": "THREE.DoubleSide"
+      },
+      "dimensions": {
+        "radiusTop": 60,
+        "radiusBottom": 60,
+        "height": 90,
+        "radiusSegments": 25,
+        "heightSegments": 25
+      }
+    },
+    "properties": {
+      "size": 120,
+      "rpm": 1000,
+      "percentage": 100,
+      "mode": "intake",
+      "position": 3,
+      "forceVector" : {
+        "x": 0,
+        "y": 1000,
+        "z": 60000
+      }
+    },
+    "position" : {
+      "x": 0,
+      "y": 0,
+      "z": 50
+    }
+  },
+  "colors" : {
+    "normal": "0x003566",
+    "highlight": "0x4D82B3",
+    "edit": "0x706598",
+    "wireframe": "0x90DAFF"
   }
 }
