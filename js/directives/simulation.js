@@ -83,6 +83,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			createDefaultFan(scope.defaultFans.fanOne);
 			createDefaultFan(scope.defaultFans.fanTwo);
+			createDefaultFan(scope.defaultFans.fanThree);
+			createDefaultFan(scope.defaultFans.fanFour);
 
 			camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
 
@@ -421,7 +423,38 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			var fanPhysicalObject = new Physijs.BoxMesh(new THREE.CubeGeometry(fan.fanObject.dimensions.width, fan.fanObject.dimensions.height, fan.fanObject.dimensions.depth), fanPhysicalMaterial, 0); //Gravity, 0 = weightless
 
+			//If we need to rotate fan and fanAOE object, do it here
+			switch(fan.properties.position) {
+				case positionsEnum.FRONT:
+					//Nothing needed
+					break;
+				case positionsEnum.BACK:
+					//Nothing needed
+					break;
+				case positionsEnum.TOP:
+					//Rotate on X axis
+					fanPhysicalObject.rotation.x = 90 * Math.PI/180;
+					fanAOEObject.rotation.x = 180 * Math.PI/180;
+					break;
+				case positionsEnum.BOTTOM:
+					//Rotate on X axis
+					fanPhysicalObject.rotation.x = 90 * Math.PI/180;
+					fanAOEObject.rotation.x = 180 * Math.PI/180;
+					break;
+				case positionsEnum.VISIBLE_SIDE:
+					//Rotate on Y axis
+					fanPhysicalObject.rotation.y = 90 * Math.PI/180;
+					fanAOEObject.rotation.y = 90 * Math.PI/180;
+					break;
+				case positionsEnum.INVISIBLE_SIDE:
+					//Rotate on Y axis
+					fanPhysicalObject.rotation.y = 90 * Math.PI/180;
+					fanAOEObject.rotation.y = 90 * Math.PI/180;
+					break;
+			}
+
 			fanPhysicalObject.position.set(fan.position.x, fan.position.y, fan.position.z);
+
 			fanPhysicalObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
 
 			scene.add(fanPhysicalObject);
@@ -501,12 +534,14 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				//Update fan position to mouse position
 				if (dragSide.intersects.length > 0) {
 					scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point.sub(offset));
-					chooseFanAOEDirection();
+					
 					
 					scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
 					scope.dragFan.fanAOEObject.__dirtyPosition = true;
 
+
 					scope.$digest();
+					chooseFanAOEDirection();
 				}
 			} else {
 				//When a user hovers on a fan change fan color to hover state only if we are NOT editing that fan 
@@ -571,7 +606,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			//Determines what side of the case a fan is being dragged on
 
 			//Have to normalise these coords so that they are between -1 and 1
-			var mouseX = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
+			var mouseX = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because otherwise it would be included in the normalising to get X in terms of the canvas
 			var mouseY = - (event.clientY / height) * 2 + 1;
 
 			//Get 3D vector from 3D mouse position using unproject function
@@ -632,6 +667,16 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 					}
 					break;
 				case positionsEnum.TOP:
+					if (scope.dragFan.properties.mode == "intake") {
+						//scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180;
+						scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z + (scope.dragFan.fanAOEObject.dimensions.height/2) + (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
+						//scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180; 
+						//WE SHOULDNT HAVE TO DO THIS HERE, JSUT ROTATE IT WHEN WE CREATE THE FAN, THEN JUST DRAG IT ALONG HERE
+					} else if (scope.dragFan.properties.mode == "exhaust") {
+						//scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180;
+						scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z - (scope.dragFan.fanAOEObject.dimensions.height/2) - (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
+						//scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180;
+					}
 					break;
 				case positionsEnum.BOTTOM:
 					break;
