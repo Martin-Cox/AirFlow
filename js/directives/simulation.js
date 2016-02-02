@@ -574,7 +574,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				
 				//Update fan position to mouse position
 				if (dragSide.intersects.length > 0) {
-					scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point.sub(offset));
+					scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point);
 					determineFanAOEPosition();
 					
 					scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
@@ -772,12 +772,11 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		//TODO (IN ORDER):
-		// - Particles not deleting on collision with exhaust fan
-		// - After initial drag to plane, the fan is offset from the mouse position when trying to drag:
-		//		- It seems that the fan position "moves" when we initially start dragging to the center of the plane it is being dragged on
-		//		- When the fan is already close to the center of the plane, there is no/little offset
-		//		- The further away from the center of plane, the bigger the offset
+		// - Stop fans from being able to go off the side of the case
+		// - Disallow fans to "intersect" eachother
+		// - Particles not deleting on collision with exhaust fan, maybe fix see motion clamping https://github.com/chandlerprall/Physijs/wiki/Collisions
 		// - Remove loops performed on particles to prevent "freezing" particles that dont get force applied immediately
+		// - Changing fan properties like size/percentage pwoer changes size of fanPhysicalObject and fanAOEObject
 		// - Be able to drag fans to a different plane and it rotates correctly
 		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation - Fix using intersectsCase in detectTouchingFan
 		// - Add components to defaultCase.json
