@@ -143,13 +143,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			fpsStats.begin();
 
-
-			//Physijs doesn't play nice with draggable objects
-			//So we pause the physics simulation as we drag an object
-			//TODO: unpause simulation in mouse up function
-			//if (scope.editFan == null ) {
-				scene.simulate(); //Run physics simulation
-			//}
+			scene.simulate(); //Run physics simulation
 
 			requestAnimationFrame(scope.animate);
 			var delta = clock.getDelta();
@@ -272,7 +266,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			//cullTime is an integer in ms representing the longest amount of time before the particle should be culled. Will be configurable in project settings
 			//recheckTime is an integer in ms represeting the preiod of time between checking for particles that need to be culled. Will be configurable in sim quality settings
 
-			var recheckTime = 1000; //1 second, debug value
+			var recheckTime = 5000; //1 second, debug value
 
 			if (particles.length > 0) {
 
@@ -495,7 +489,60 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			if (realForce > 300000) { realForce = 300000 }; //Max value is a magic number, will be explained why in documentation
 
-			return new THREE.Vector3(0,0,realForce);
+			//return new THREE.Vector3(0,0,realForce);
+			//determine which axis to apply force depending on fan.properties.mode and fan.properties.position
+			//What about fans which aren't intake/exhaust?
+			//What about a fan that is on the front of the case but is an exahust fan? IT should apply -realForce
+			switch(fan.properties.position) {
+				case positionsEnum.FRONT:
+					//Z axis
+					if (fan.properties.mode == "intake") {
+						return new THREE.Vector3(0,0,realForce);
+					} else if (fan.properties.mode == "exhaust") {
+						return new THREE.Vector3(0,0,-realForce);
+					}
+					break;
+				case positionsEnum.BACK:
+					//Z axis
+					if (fan.properties.mode == "intake") {
+						return new THREE.Vector3(0,0,-realForce);
+					} else if (fan.properties.mode == "exhaust") {
+						return new THREE.Vector3(0,0,realForce);
+					}
+					break;
+				case positionsEnum.TOP:
+					//Y axis
+					if (fan.properties.mode == "intake") {
+						return new THREE.Vector3(0,-realForce,0);
+					} else if (fan.properties.mode == "exhaust") {
+						return new THREE.Vector3(0,realForce,0);
+					}
+					break;
+				case positionsEnum.BOTTOM:
+					//Y axis
+					if (fan.properties.mode == "intake") {
+						return new THREE.Vector3(0,realForce,0);
+					} else if (fan.properties.mode == "exhaust") {
+						return new THREE.Vector3(0,-realForce,0);
+					}
+					break;
+				case positionsEnum.VISIBLE_SIDE:
+					//X axis
+					if (fan.properties.mode == "intake") {
+						return new THREE.Vector3(realForce,0,0);
+					} else if (fan.properties.mode == "exhaust") {
+						return new THREE.Vector3(-realForce,0,0);
+					}
+					break;
+				case positionsEnum.INVISIBLE_SIDE:
+					//X axis
+					if (fan.properties.mode == "intake") {
+						return new THREE.Vector3(-realForce,0,0);
+					} else if (fan.properties.mode == "exhaust") {
+						return new THREE.Vector3(realForce,0,0);
+					}
+					break;
+			}
 		}
 
 		function handleCollision(collided_with, linearVelocity, angularVelocity) {
@@ -725,8 +772,11 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		//TODO (IN ORDER):
-		// - Determine the axis on which a fanAOEObject applies force by its mode of operation and the position it has on the case
-		// - After initial drag to plane, the fan is offset from the mouse position when trying to drag
+		// - Particles not deleting on collision with exhaust fan
+		// - After initial drag to plane, the fan is offset from the mouse position when trying to drag:
+		//		- It seems that the fan position "moves" when we initially start dragging to the center of the plane it is being dragged on
+		//		- When the fan is already close to the center of the plane, there is no/little offset
+		//		- The further away from the center of plane, the bigger the offset
 		// - Remove loops performed on particles to prevent "freezing" particles that dont get force applied immediately
 		// - Be able to drag fans to a different plane and it rotates correctly
 		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation - Fix using intersectsCase in detectTouchingFan

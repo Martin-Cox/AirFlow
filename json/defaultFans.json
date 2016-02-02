@@ -218,7 +218,7 @@
       "size": 120,
       "rpm": 1000,
       "percentage": 100,
-      "mode": "exhaust",
+      "mode": "intake",
       "position": 5,
       "forceVector" : {
         "x": 0,
