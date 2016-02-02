@@ -400,19 +400,10 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			var fanAOEObject = new Physijs.CylinderMesh(new THREE.CylinderGeometry(fan.fanAOEObject.dimensions.radiusTop, fan.fanAOEObject.dimensions.radiusBottom, fan.fanAOEObject.dimensions.height, fan.fanAOEObject.dimensions.radiusSegments, fan.fanAOEObject.dimensions.heightSegments), fanAOEMaterial, 0); //Gravity, 0 = weightless
 
-			fanAOEObject.rotation.x = 90 * Math.PI/180;	//Rotate the cylinder 90 degrees, Three.js uses radians, so convert ot radians first
+			//fanAOEObject.rotation.x = 90 * Math.PI/180;	//Rotate the cylinder 90 degrees, Three.js uses radians, so convert ot radians first
  
 			fanAOEObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
 
-			//Checking param mode here to offset positions
-			//TODO: Add support for fans that are neither intake or exhaust (e.g. GPU fan)
-			if (fan.properties.mode != "exhaust") {
-				fanAOEObject.position.set(fan.position.x, fan.position.y, fan.position.z + (fan.fanAOEObject.dimensions.height/2) + (fan.fanObject.dimensions.depth/2));
-			} else {
-				fanAOEObject.position.set(fan.position.x, fan.position.y, fan.position.z - (fan.fanAOEObject.dimensions.height/2) - (fan.fanObject.dimensions.depth/2));
-			}
-
-			scene.add(fanAOEObject);
 			//------------------------CREATE FAN AOE OBJECT-----------------------//
 
 			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
@@ -427,9 +418,11 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			switch(fan.properties.position) {
 				case positionsEnum.FRONT:
 					//Nothing needed
+					fanAOEObject.rotation.x = 90 * Math.PI/180;
 					break;
 				case positionsEnum.BACK:
 					//Nothing needed
+					fanAOEObject.rotation.x = 90 * Math.PI/180;
 					break;
 				case positionsEnum.TOP:
 					//Rotate on X axis
@@ -458,6 +451,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			fanPhysicalObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
 
 			scene.add(fanPhysicalObject);
+			
+			scene.add(fanAOEObject);
 			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
 
 			var fanObject = new Object();
@@ -476,6 +471,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			fanObject.properties.percentageRPM = fan.properties.percentage;
 			fanObject.properties.position = fan.properties.position;
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
+
+			chooseFanAOEDirection(fanObject); 
 
 			//Calculate force
 			//fanObject.forceVector = new THREE.Vector3(fan.properties.forceVector.x, fan.properties.forceVector.y, fan.properties.forceVector.z);
@@ -534,14 +531,12 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				//Update fan position to mouse position
 				if (dragSide.intersects.length > 0) {
 					scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point.sub(offset));
-					
+					chooseFanAOEDirection();
 					
 					scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
 					scope.dragFan.fanAOEObject.__dirtyPosition = true;
 
-
 					scope.$digest();
-					chooseFanAOEDirection();
 				}
 			} else {
 				//When a user hovers on a fan change fan color to hover state only if we are NOT editing that fan 
@@ -650,32 +645,37 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			return returnObj;
 		}
 
-		function chooseFanAOEDirection() {
-			switch(scope.dragFan.properties.position) {
+		function chooseFanAOEDirection(fan) {
+
+			if (fan == null) {
+				var fan = scope.dragFan;
+			}		
+
+			switch(fan.properties.position) {
 				case positionsEnum.FRONT:
-					if (scope.dragFan.properties.mode == "intake") {
-						scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z + (scope.dragFan.fanAOEObject.dimensions.height/2) + (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
-					} else if (scope.dragFan.properties.mode == "exhaust") {
-						scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z - (scope.dragFan.fanAOEObject.dimensions.height/2) + (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
+					if (fan.properties.mode == "intake") {
+						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z + (fan.fanAOEObject.dimensions.height/2) + (fan.fanPhysicalObject.dimensions.depth/2));
+					} else if (fan.properties.mode == "exhaust") {
+						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z - (fan.fanAOEObject.dimensions.height/2) + (fan.fanPhysicalObject.dimensions.depth/2));
 					}
 					break;
 				case positionsEnum.BACK:
-					if (scope.dragFan.properties.mode == "intake") {
-						scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z + (scope.dragFan.fanAOEObject.dimensions.height/2) + (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
-					} else if (scope.dragFan.properties.mode == "exhaust") {
-						scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z - (scope.dragFan.fanAOEObject.dimensions.height/2) - (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
+					if (fan.properties.mode == "intake") {
+						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z + (fan.fanAOEObject.dimensions.height/2) + (fan.fanPhysicalObject.dimensions.depth/2));
+					} else if (fan.properties.mode == "exhaust") {
+						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z - (fan.fanAOEObject.dimensions.height/2) - (fan.fanPhysicalObject.dimensions.depth/2));
 					}
 					break;
 				case positionsEnum.TOP:
-					if (scope.dragFan.properties.mode == "intake") {
-						//scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180;
-						scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z + (scope.dragFan.fanAOEObject.dimensions.height/2) + (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
-						//scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180; 
+					if (fan.properties.mode == "intake") {
+						//fan.fanAOEObject.rotation.x = 180 * Math.PI/180;
+						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z + (fan.fanAOEObject.dimensions.height/2) + (fan.fanPhysicalObject.dimensions.depth/2));
+						//fan.fanAOEObject.rotation.x = 180 * Math.PI/180; 
 						//WE SHOULDNT HAVE TO DO THIS HERE, JSUT ROTATE IT WHEN WE CREATE THE FAN, THEN JUST DRAG IT ALONG HERE
-					} else if (scope.dragFan.properties.mode == "exhaust") {
-						//scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180;
-						scope.dragFan.fanAOEObject.position.set(scope.dragFan.fanPhysicalObject.position.x, scope.dragFan.fanPhysicalObject.position.y, scope.dragFan.fanPhysicalObject.position.z - (scope.dragFan.fanAOEObject.dimensions.height/2) - (scope.dragFan.fanPhysicalObject.dimensions.depth/2));
-						//scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180;
+					} else if (fan.properties.mode == "exhaust") {
+						//fan.fanAOEObject.rotation.x = 180 * Math.PI/180;
+						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z - (fan.fanAOEObject.dimensions.height/2) - (fan.fanPhysicalObject.dimensions.depth/2));
+						//fan.fanAOEObject.rotation.x = 180 * Math.PI/180;
 					}
 					break;
 				case positionsEnum.BOTTOM:
