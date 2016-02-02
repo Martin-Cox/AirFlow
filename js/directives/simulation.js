@@ -416,7 +416,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			var fanPhysicalObject = new Physijs.BoxMesh(new THREE.CubeGeometry(fan.fanObject.dimensions.width, fan.fanObject.dimensions.height, fan.fanObject.dimensions.depth), fanPhysicalMaterial, 0); //Gravity, 0 = weightless
 
-			//If we need to rotate fan and fanAOE object, do it here
+			//We need to rotate the fanAOEObject (and possibly fanPhysicalObject) in order for them to "point" inside the case
 			switch(fan.properties.position) {
 				case positionsEnum.FRONT:
 					fanAOEObject.rotation.x = 90 * Math.PI/180;
@@ -425,24 +425,20 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 					fanAOEObject.rotation.x = 90 * Math.PI/180;
 					break;
 				case positionsEnum.TOP:
-					//Rotate on X axis
 					fanPhysicalObject.rotation.x = 90 * Math.PI/180;
 					fanAOEObject.rotation.x = 180 * Math.PI/180;
 					break;
 				case positionsEnum.BOTTOM:
-					//Rotate on X axis
 					fanPhysicalObject.rotation.x = 90 * Math.PI/180;
 					fanAOEObject.rotation.x = 180 * Math.PI/180;
 					break;
 				case positionsEnum.VISIBLE_SIDE:
-					//Rotate on Y axis
 					fanPhysicalObject.rotation.y = 90 * Math.PI/180;
-					fanAOEObject.rotation.y = 90 * Math.PI/180;
+					fanAOEObject.rotation.z = 90 * Math.PI/180;
 					break;
 				case positionsEnum.INVISIBLE_SIDE:
-					//Rotate on Y axis
 					fanPhysicalObject.rotation.y = 90 * Math.PI/180;
-					fanAOEObject.rotation.y = 90 * Math.PI/180;
+					fanAOEObject.rotation.z = 90 * Math.PI/180;
 					break;
 			}
 
@@ -469,7 +465,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			fanObject.properties.position = fan.properties.position;
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 
-			chooseFanAOEDirection(fanObject);
+			determineFanAOEPosition(fanObject);
 
 			scene.add(fanPhysicalObject);
 
@@ -532,7 +528,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 				//Update fan position to mouse position
 				if (dragSide.intersects.length > 0) {
 					scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point.sub(offset));
-					chooseFanAOEDirection();
+					determineFanAOEPosition();
 					
 					scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
 					scope.dragFan.fanAOEObject.__dirtyPosition = true;
@@ -646,7 +642,8 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			return returnObj;
 		}
 
-		function chooseFanAOEDirection(fan) {
+		function determineFanAOEPosition(fan) {
+			//When dragging a fan we actually drag the fanPhysicalObject so this function updates the position of the fanAOEObject so that it moves with the fanPhysicalObject we are dragging
 
 			if (fan == null) {
 				var fan = scope.dragFan;
@@ -654,31 +651,22 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			switch(fan.properties.position) {
 				case positionsEnum.FRONT:
-					if (fan.properties.mode == "intake") {
-						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z + (fan.fanAOEObject.dimensions.height/2) + (fan.fanPhysicalObject.dimensions.depth/2));
-					} else if (fan.properties.mode == "exhaust") {
-						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z - (fan.fanAOEObject.dimensions.height/2) + (fan.fanPhysicalObject.dimensions.depth/2));
-					}
+					fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z + (fan.fanAOEObject.dimensions.height/2) + (fan.fanPhysicalObject.dimensions.depth/2));
 					break;
 				case positionsEnum.BACK:
-					if (fan.properties.mode == "intake") {
-						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z + (fan.fanAOEObject.dimensions.height/2) + (fan.fanPhysicalObject.dimensions.depth/2));
-					} else if (fan.properties.mode == "exhaust") {
-						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z - (fan.fanAOEObject.dimensions.height/2) - (fan.fanPhysicalObject.dimensions.depth/2));
-					}
+					fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z - (fan.fanAOEObject.dimensions.height/2) - (fan.fanPhysicalObject.dimensions.depth/2));
 					break;
 				case positionsEnum.TOP:
-					if (fan.properties.mode == "intake") {
-						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y + (fan.fanAOEObject.dimensions.height/2) + (fan.fanPhysicalObject.dimensions.depth/2), fan.fanPhysicalObject.position.z);
-					} else if (fan.properties.mode == "exhaust") {
-						fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y - (fan.fanAOEObject.dimensions.height/2) - (fan.fanPhysicalObject.dimensions.depth/2), fan.fanPhysicalObject.position.z);
-					}
+					fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y - (fan.fanAOEObject.dimensions.height/2) - (fan.fanPhysicalObject.dimensions.depth/2), fan.fanPhysicalObject.position.z);
 					break;
 				case positionsEnum.BOTTOM:
+					fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x, fan.fanPhysicalObject.position.y + (fan.fanAOEObject.dimensions.height/2) + (fan.fanPhysicalObject.dimensions.depth/2), fan.fanPhysicalObject.position.z);
 					break;
 				case positionsEnum.VISIBLE_SIDE:
+					fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x + (fan.fanAOEObject.dimensions.height/2) + (fan.fanPhysicalObject.dimensions.depth/2), fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z);
 					break;
 				case positionsEnum.INVISIBLE_SIDE:
+					fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x - (fan.fanAOEObject.dimensions.height/2) - (fan.fanPhysicalObject.dimensions.depth/2), fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z);
 					break;
 			}
 		}
@@ -737,11 +725,10 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		//TODO (IN ORDER):
-		// - Issues with fanAOEObject placement and direction when dragging
+		// - Determine the axis on which a fanAOEObject applies force by its mode of operation and the position it has on the case
 		// - After initial drag to plane, the fan is offset from the mouse position when trying to drag
+		// - Remove loops performed on particles to prevent "freezing" particles that dont get force applied immediately
 		// - Be able to drag fans to a different plane and it rotates correctly
-		// - fanAOEObjects should always be "locked" to the same position on the fanPhysicalObject, and always point inside the case
-		// - Determine the force axis for a fan by ode of operation and which (biggest!) side of the fan is touching the inside cube 
 		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation - Fix using intersectsCase in detectTouchingFan
 		// - Add components to defaultCase.json
 		// - Color change of particles that have been around for a long time
