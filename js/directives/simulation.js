@@ -183,7 +183,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 				particle = new Physijs.SphereMesh(sphereGeometry, sphereMaterial);	
 
-				particle.addEventListener( 'collision', handleCollision);
+				particle.addEventListener('collision', handleCollision);
 
 				particles.push(particle);
 				availableParticles.push(particle);
