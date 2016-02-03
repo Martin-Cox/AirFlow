@@ -481,8 +481,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		scope.calculateForceVector = function(fan) {
-			//TODO: This only calculates Z axis force, it should change which axis it applies to depending on the placement of the fan
-
 			var maxForce = ((fan.properties.size * 5000) + (fan.properties.maxRPM * 100));
 
 			var realForce = (fan.properties.percentageRPM/1000)*maxForce;
@@ -492,7 +490,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			//return new THREE.Vector3(0,0,realForce);
 			//determine which axis to apply force depending on fan.properties.mode and fan.properties.position
 			//What about fans which aren't intake/exhaust?
-			//What about a fan that is on the front of the case but is an exahust fan? IT should apply -realForce
 			switch(fan.properties.position) {
 				case positionsEnum.FRONT:
 					//Z axis
@@ -544,6 +541,45 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 					break;
 			}
 		}
+
+		scope.resizeFan = function(fan) {
+			//Changes the size of the fanPhysicalObject and fanAOEObject
+			//Threejs has a mesh.scale.axis = _ function that scales an object on one axis
+			//Need to know which axis on which to apply the scale for each fan object (depends on position)
+			//Need a baseline scale of 1 for all fans, e.g. scale 1 = 120mm, therefore 80mm fan scale = 0.6667
+
+			var baselineSize = 120;
+
+
+			switch(fan.properties.position) {
+				case positionsEnum.FRONT:
+					//XY axis
+					console.log("Resizing front fan on XY axis");
+					break;
+				case positionsEnum.BACK:
+					//XY axis
+					console.log("Resizing back fan on XY axis");
+					break;
+				case positionsEnum.TOP:
+					//ZX axis
+					console.log("Resizing top fan on ZX axis");
+					break;
+				case positionsEnum.BOTTOM:
+					//ZX axis
+					console.log("Resizing bottom fan on ZX axis");
+					break;
+				case positionsEnum.VISIBLE_SIDE:
+					//ZY axis
+					console.log("Resizing visible side fan on ZY axis");
+					break;
+				case positionsEnum.INVISIBLE_SIDE:
+					//ZY axis
+					console.log("Resizing invisible side fan on ZY axis");
+					break;
+			}
+
+		}
+
 
 		function handleCollision(collided_with, linearVelocity, angularVelocity) {
 			//Event gets called when physics objects (spheres) collide with another object

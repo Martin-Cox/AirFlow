@@ -44,6 +44,7 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
     $scope.propertiesChange = function(changedProperty) {
         //Called when the user edits a fan property
         $scope.editFan.properties.forceVector = $scope.calculateForceVector($scope.editFan);
+        $scope.resizeFan($scope.editFan);
     }
 
 }]);
