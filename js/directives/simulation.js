@@ -386,21 +386,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			/*A fan is made up a of a fanObject with two sub-objects, a fanAOEObject representing the area of effect for a fan
 			and the fanPhysicalObject, which is the physical fan the user sees*/
 
-			//------------------------CREATE FAN AOE OBJECT-----------------------//
-			var fanAOEMaterial = new THREE.MeshLambertMaterial({
-				opacity: fan.fanAOEObject.material.opacity,
-			    color: parseInt(scope.fanColors.normal),
-			    transparent: fan.fanAOEObject.material.transparent,
-			    side: fan.fanAOEObject.material.side
-			});
-
-			var fanAOEObject = new Physijs.CylinderMesh(new THREE.CylinderGeometry(fan.fanAOEObject.dimensions.radiusTop, fan.fanAOEObject.dimensions.radiusBottom, fan.fanAOEObject.dimensions.height, fan.fanAOEObject.dimensions.radiusSegments, fan.fanAOEObject.dimensions.heightSegments), fanAOEMaterial, 0); //Gravity, 0 = weightless
-
-			//fanAOEObject.rotation.x = 90 * Math.PI/180;	//Rotate the cylinder 90 degrees, Three.js uses radians, so convert ot radians first
- 
-			fanAOEObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
-
-			//------------------------CREATE FAN AOE OBJECT-----------------------//
+ 			var fanAOEObject = createFanAOEObject(fan, true);
 
 			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
 			var fanPhysicalMaterial = new THREE.MeshLambertMaterial ({
@@ -483,6 +469,24 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			scope.fans.push(fanObject);	
 		}
 
+		function createFanAOEObject(fan, defaultCreation) { 
+			var fanAOEMaterial = new THREE.MeshLambertMaterial({
+				opacity: fan.fanAOEObject.material.opacity,
+			    color: parseInt(scope.fanColors.normal),
+			    transparent: fan.fanAOEObject.material.transparent,
+			    side: fan.fanAOEObject.material.side
+			});
+
+			if (defaultCreation == true) {
+				var fanAOEObject = new Physijs.CylinderMesh(new THREE.CylinderGeometry(fan.fanAOEObject.dimensions.radiusTop, fan.fanAOEObject.dimensions.radiusBottom, fan.fanAOEObject.dimensions.height, fan.fanAOEObject.dimensions.radiusSegments, fan.fanAOEObject.dimensions.heightSegments), fanAOEMaterial, 0); //Gravity, 0 = weightless
+			} else {
+				var fanAOEObject = new Physijs.CylinderMesh(new THREE.CylinderGeometry((fan.properties.size/2), (fan.properties.size/2), fan.fanAOEObject.dimensions.height, fan.fanAOEObject.dimensions.radiusSegments, fan.fanAOEObject.dimensions.heightSegments), fanAOEMaterial, 0); //Gravity, 0 = weightless
+			}
+
+			fanAOEObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
+			return fanAOEObject;
+		}
+
 		scope.calculateForceVector = function(fan) {
 			var maxForce = ((fan.properties.size * 5000) + (fan.properties.maxRPM * 100));
 
@@ -555,9 +559,47 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 			fan.fanPhysicalObject.scale.set(newScale, newScale, 1);
 
-			//TODO: resize fanAOEObject
-
 			fan.properties.scale = newScale;
+
+			//Need to recreate the fanAOEObject
+
+			var dimensions = fan.fanAOEObject.dimensions;
+			dimensions.radiusTop = fan.properties.size/2;
+			dimensions.radiusBottom = fan.properties.size/2;
+
+			scene.remove(fan.fanAOEObject);
+			scene.remove(fan.AOEWireframe);
+
+			var fanAOEObject = createFanAOEObject(fan, false);
+
+			switch(fan.properties.position) {
+				case positionsEnum.FRONT:
+					fanAOEObject.rotation.x = 90 * Math.PI/180;
+					break;
+				case positionsEnum.BACK:
+					fanAOEObject.rotation.x = 90 * Math.PI/180;
+					break;
+				case positionsEnum.TOP:
+					fanAOEObject.rotation.x = 180 * Math.PI/180;
+					break;
+				case positionsEnum.BOTTOM:
+					fanAOEObject.rotation.x = 180 * Math.PI/180;
+					break;
+				case positionsEnum.VISIBLE_SIDE:
+					fanAOEObject.rotation.z = 90 * Math.PI/180;
+					break;
+				case positionsEnum.INVISIBLE_SIDE:
+					fanAOEObject.rotation.z = 90 * Math.PI/180;
+					break;
+			}
+
+			fan.fanAOEObject = fanAOEObject;
+			fan.fanAOEObject.dimensions = dimensions;
+			fan.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
+
+			determineFanAOEPosition(fan);
+
+			scene.add(fanAOEObject);
 		}
 
 
@@ -788,6 +830,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		//TODO (IN ORDER):
+		// - Change height offanAOEObject depnding on% power
 		// - Stop fans from being able to go off the side of the case
 		// - Disallow fans to "intersect" eachother
 		// - Particles not deleting on collision with exhaust fan, maybe fix see motion clamping https://github.com/chandlerprall/Physijs/wiki/Collisions
