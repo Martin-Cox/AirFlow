@@ -459,6 +459,9 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			fanObject.properties.position = fan.properties.position;
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 
+
+			fan.properties.scale = 1;
+
 			determineFanAOEPosition(fanObject);
 
 			scene.add(fanPhysicalObject);
@@ -544,40 +547,17 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 
 		scope.resizeFan = function(fan) {
 			//Changes the size of the fanPhysicalObject and fanAOEObject
-			//Threejs has a mesh.scale.axis = _ function that scales an object on one axis
-			//Need to know which axis on which to apply the scale for each fan object (depends on position)
 			//Need a baseline scale of 1 for all fans, e.g. scale 1 = 120mm, therefore 80mm fan scale = 0.6667
 
 			var baselineSize = 120;
 
+			var newScale = fan.properties.size/baselineSize;
 
-			switch(fan.properties.position) {
-				case positionsEnum.FRONT:
-					//XY axis
-					console.log("Resizing front fan on XY axis");
-					break;
-				case positionsEnum.BACK:
-					//XY axis
-					console.log("Resizing back fan on XY axis");
-					break;
-				case positionsEnum.TOP:
-					//ZX axis
-					console.log("Resizing top fan on ZX axis");
-					break;
-				case positionsEnum.BOTTOM:
-					//ZX axis
-					console.log("Resizing bottom fan on ZX axis");
-					break;
-				case positionsEnum.VISIBLE_SIDE:
-					//ZY axis
-					console.log("Resizing visible side fan on ZY axis");
-					break;
-				case positionsEnum.INVISIBLE_SIDE:
-					//ZY axis
-					console.log("Resizing invisible side fan on ZY axis");
-					break;
-			}
+			fan.fanPhysicalObject.scale.set(newScale, newScale, 1);
 
+			//TODO: resize fanAOEObject
+
+			fan.properties.scale = newScale;
 		}
 
 
@@ -811,6 +791,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		// - Stop fans from being able to go off the side of the case
 		// - Disallow fans to "intersect" eachother
 		// - Particles not deleting on collision with exhaust fan, maybe fix see motion clamping https://github.com/chandlerprall/Physijs/wiki/Collisions
+		// - Shouldn't be able to set fan size to 0
 		// - Remove loops performed on particles to prevent "freezing" particles that dont get force applied immediately
 		// - Changing fan properties like size/percentage pwoer changes size of fanPhysicalObject and fanAOEObject
 		// - Be able to drag fans to a different plane and it rotates correctly

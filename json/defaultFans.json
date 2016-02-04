@@ -5,8 +5,8 @@
         "side": "THREE.DoubleSide"
       },
       "dimensions": {
-        "width": 140,
-        "height": 140,
+        "width": 120,
+        "height": 120,
         "depth": 40
       }
     },
@@ -17,9 +17,9 @@
         "side": "THREE.DoubleSide"
       },
       "dimensions": {
-        "radiusTop": 70,
-        "radiusBottom": 70,
-        "height": 125,
+        "radiusTop": 60,
+        "radiusBottom": 60,
+        "height": 90,
         "radiusSegments": 25,
         "heightSegments": 25
       }
