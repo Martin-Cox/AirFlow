@@ -833,13 +833,12 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		//TODO (IN ORDER):
-		// - Change height off anAOEObject depnding on% power
+		// - Determine max height from the RPM and size of a fan for use in createAOEObject
 		// - Stop fans from being able to go off the side of the case
 		// - Disallow fans to "intersect" eachother
 		// - Particles not deleting on collision with exhaust fan, maybe fix see motion clamping https://github.com/chandlerprall/Physijs/wiki/Collisions
 		// - Shouldn't be able to set fan size to 0
 		// - Remove loops performed on particles to prevent "freezing" particles that dont get force applied immediately
-		// - Changing fan properties like size/percentage pwoer changes size of fanPhysicalObject and fanAOEObject
 		// - Be able to drag fans to a different plane and it rotates correctly
 		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation - Fix using intersectsCase in detectTouchingFan
 		// - Add components to defaultCase.json
