@@ -441,7 +441,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			fanObject.properties.mode = fan.properties.mode;
 			fanObject.properties.size = fan.properties.size;
 			fanObject.properties.maxRPM = fan.properties.rpm;
-			fanObject.properties.percentageRPM = fan.properties.percentage;
+			fanObject.properties.percentageRPM = fan.properties.percentageRPM;
 			fanObject.properties.position = fan.properties.position;
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 
@@ -476,6 +476,9 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			    transparent: fan.fanAOEObject.material.transparent,
 			    side: fan.fanAOEObject.material.side
 			});
+
+			//Height changes depending on the percentageRPM defined
+			fan.fanAOEObject.dimensions.height = 90*(fan.properties.percentageRPM/100);	//90 will be determined by RPM and Size at some point, it is the height of the AOEObject at 100% 
 
 			if (defaultCreation == true) {
 				var fanAOEObject = new Physijs.CylinderMesh(new THREE.CylinderGeometry(fan.fanAOEObject.dimensions.radiusTop, fan.fanAOEObject.dimensions.radiusBottom, fan.fanAOEObject.dimensions.height, fan.fanAOEObject.dimensions.radiusSegments, fan.fanAOEObject.dimensions.heightSegments), fanAOEMaterial, 0); //Gravity, 0 = weightless
@@ -594,14 +597,14 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			}
 
 			fan.fanAOEObject = fanAOEObject;
-			fan.fanAOEObject.dimensions = dimensions;
-			fan.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
+			fan.fanAOEObject.dimensions = dimensions;			
 
 			determineFanAOEPosition(fan);
 
+			fan.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 			scene.add(fanAOEObject);
+			scene.add(fan.AOEWireframe);
 		}
-
 
 		function handleCollision(collided_with, linearVelocity, angularVelocity) {
 			//Event gets called when physics objects (spheres) collide with another object
@@ -830,7 +833,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		}
 
 		//TODO (IN ORDER):
-		// - Change height offanAOEObject depnding on% power
+		// - Change height off anAOEObject depnding on% power
 		// - Stop fans from being able to go off the side of the case
 		// - Disallow fans to "intersect" eachother
 		// - Particles not deleting on collision with exhaust fan, maybe fix see motion clamping https://github.com/chandlerprall/Physijs/wiki/Collisions

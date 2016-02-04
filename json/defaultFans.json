@@ -25,9 +25,9 @@
       }
     },
     "properties": {
-      "size": 140,
+      "size": 120,
       "rpm": 1800,
-      "percentage": 80,
+      "percentageRPM": 80,
       "mode": "intake",
       "position": 0,
       "forceVector" : {
@@ -70,7 +70,7 @@
     "properties": {
       "size": 120,
       "rpm": 1000,
-      "percentage": 100,
+      "percentageRPM": 100,
       "mode": "exhaust",
       "position": 1,
       "forceVector" : {
@@ -119,7 +119,7 @@
     "properties": {
       "size": 120,
       "rpm": 1000,
-      "percentage": 100,
+      "percentageRPM": 100,
       "mode": "exhaust",
       "position": 4,
       "forceVector" : {
@@ -168,7 +168,7 @@
     "properties": {
       "size": 120,
       "rpm": 1000,
-      "percentage": 100,
+      "percentageRPM": 100,
       "mode": "exhaust",
       "position": 2,
       "forceVector" : {
@@ -217,7 +217,7 @@
     "properties": {
       "size": 120,
       "rpm": 1000,
-      "percentage": 100,
+      "percentageRPM": 100,
       "mode": "intake",
       "position": 5,
       "forceVector" : {
@@ -266,7 +266,7 @@
     "properties": {
       "size": 120,
       "rpm": 1000,
-      "percentage": 100,
+      "percentageRPM": 100,
       "mode": "intake",
       "position": 3,
       "forceVector" : {
