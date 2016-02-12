@@ -12,10 +12,16 @@ gulp.task('connect', function () {
 
 gulp.task('build', function() {
     // Grabs the app.js file
-    return build('./js/app.js')
+    return browserify('./js/app.js')
         // bundles it and creates a file called build.js
         .bundle()
         .pipe(source('build.js'))
         // saves it the js/ directory
         .pipe(gulp.dest('./js/'));
 })
+
+gulp.task('watch', function() {
+    gulp.watch(['./**/*', '!./js/build.js'], ['build'])
+})
+
+gulp.task('default', ['connect', 'watch'])
