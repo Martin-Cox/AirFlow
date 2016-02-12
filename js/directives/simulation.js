@@ -8,7 +8,12 @@ var simulation = function($http, defaultsService) {
     	var camera, scene, renderer, width, height, clock, orbitControl, fpsStats, intersectedObject;
 		var particles = [];
 		var availableParticles = [];
-		var insideCase;
+		var THREE = require('three');
+		var OrbitControls = require('three-orbit-controls')(THREE);
+		var Physijs = require('physijs-browserify')(THREE);
+		//Physijs.scripts.worker = '/libs/physi-worker.js';
+		//Physijs.scripts.ammo = '/libs/ammo.js';
+
 
 		//Enum of possible fan positions on the case (which part of the case is the fan on)
 		var positionsEnum = Object.freeze({
@@ -54,8 +59,11 @@ var simulation = function($http, defaultsService) {
 		function init() {
 			//Loads physijs files, creates scene etc.
 
-			Physijs.scripts.worker = '/js/external/physijs_worker.js';
-			Physijs.scripts.ammo = '/js/external/ammo.js';
+			//Physijs.scripts.worker = '/js/external/physijs_worker.js';
+			//Physijs.scripts.ammo = '/js/external/ammo.js';
+
+			Physijs.scripts.worker = '/libs/physijs_worker.js';
+			Physijs.scripts.ammo = '/libs/ammo.js';
 
 			window.addEventListener( 'resize', onWindowResize, false);
 
@@ -96,7 +104,7 @@ var simulation = function($http, defaultsService) {
 
 			scene.add(camera);
 
-			orbitControl = new THREE.OrbitControls(camera, document.getElementById('simulationContainer'));
+			orbitControl = new OrbitControls(camera, document.getElementById('simulationContainer'));
 			//orbitControl.enablePan = false;
 			orbitControl.constraint.minDistance = 600;
 			orbitControl.constraint.maxDistance = 2200;
@@ -348,10 +356,6 @@ var simulation = function($http, defaultsService) {
 			var caseBackPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseHeight, caseThickness), caseMaterial, 0); //Gravity, 0 = weightless
 			var caseFrontPlane = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseHeight, caseThickness), caseMaterial, 0); //Gravity, 0 = weightless
 
-			//Create an invisible mesh that fills the inside of the case, it will be used to detect the difference between the inside/outside of a case
-			insideCase = new Physijs.BoxMesh(new THREE.CubeGeometry(caseWidth, caseHeight, caseDepth), insideBoxMaterial, 0); //Gravity, 0 = weightless
-			insideCase._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
-
 			caseBottomPlane.position.set(0, 0, 0);
 
 			caseTopPlane.position.set(0, caseHeight, 0);
@@ -364,15 +368,12 @@ var simulation = function($http, defaultsService) {
 
 			caseFrontPlane.position.set(0, caseHeight/2, -caseDepth/2);
 
-			insideCase.position.set(0, caseHeight/2, 0);
-
 			scene.add(caseBottomPlane);
 			scene.add(caseTopPlane);
 			scene.add(caseVisibleSidePlane);
 			scene.add(caseInvisibleSidePlane);
 			scene.add(caseBackPlane);
 			scene.add(caseFrontPlane);
-			scene.add(insideCase);
 
 			scope.caseGroup.bottomPlane = caseBottomPlane;
 			scope.caseGroup.topPlane = caseTopPlane;
@@ -389,10 +390,15 @@ var simulation = function($http, defaultsService) {
  			var fanAOEObject = createFanAOEObject(fan, true);
 
 			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
-			var fanPhysicalMaterial = new THREE.MeshLambertMaterial ({
-				color: parseInt(scope.fanColors.normal),
-				side: fan.fanObject.material.side
-			});
+			var fanPhysicalMaterial = Physijs.createMaterial(
+				new THREE.MeshLambertMaterial({
+					color: parseInt(scope.fanColors.normal),
+					side: fan.fanObject.material.side
+				}),
+				0.3,
+				1
+			);
+
 
 			var fanPhysicalObject = new Physijs.BoxMesh(new THREE.CubeGeometry(fan.fanObject.dimensions.width, fan.fanObject.dimensions.height, fan.fanObject.dimensions.depth), fanPhysicalMaterial, 0); //Gravity, 0 = weightless
 
@@ -470,12 +476,16 @@ var simulation = function($http, defaultsService) {
 		}
 
 		function createFanAOEObject(fan, defaultCreation) { 
-			var fanAOEMaterial = new THREE.MeshLambertMaterial({
-				opacity: fan.fanAOEObject.material.opacity,
-			    color: parseInt(scope.fanColors.normal),
-			    transparent: fan.fanAOEObject.material.transparent,
-			    side: fan.fanAOEObject.material.side
-			});
+			var fanAOEMaterial = Physijs.createMaterial(
+				new THREE.MeshLambertMaterial({
+					opacity: fan.fanAOEObject.material.opacity,
+				    color: parseInt(scope.fanColors.normal),
+				    transparent: fan.fanAOEObject.material.transparent,
+				    side: fan.fanAOEObject.material.side
+				}),
+				0.3,
+				1
+			);
 
 			//Height changes depending on the percentageRPM defined
 			fan.fanAOEObject.dimensions.height = 90*(fan.properties.percentageRPM/100);	//90 will be determined by RPM and Size at some point, it is the height of the AOEObject at 100% 
