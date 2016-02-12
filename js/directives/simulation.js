@@ -1,4 +1,4 @@
-app.directive('simulation', ['$http', 'defaultsService', function($http, defaultsService) { 
+var simulation = function($http, defaultsService) {
   return { 
     restrict: 'E', 
     scope: false,
@@ -266,7 +266,7 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 			//cullTime is an integer in ms representing the longest amount of time before the particle should be culled. Will be configurable in project settings
 			//recheckTime is an integer in ms represeting the preiod of time between checking for particles that need to be culled. Will be configurable in sim quality settings
 
-			var recheckTime = 5000; //1 second, debug value
+			var recheckTime = 10000; //10 seconds, debug value
 
 			if (particles.length > 0) {
 
@@ -872,4 +872,6 @@ app.directive('simulation', ['$http', 'defaultsService', function($http, default
 		// - Because of the way angular works, I don't need to add methods to update the sim when the user changes values in the component section!
     }
   }; 
-}]);
+};
+
+module.exports = simulation;

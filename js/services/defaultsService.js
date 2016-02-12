@@ -1,4 +1,4 @@
-app.service('defaultsService', function($http) {
+var defaultsService = function($http) {
 	this.getCaseDefaults = function() {
 			return $http({
 				method: 'GET',
@@ -47,4 +47,6 @@ app.service('defaultsService', function($http) {
 		        console.log("failure");
 			});
 	}
-});
+};
+
+module.exports = defaultsService;

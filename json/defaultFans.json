@@ -19,7 +19,7 @@
       "dimensions": {
         "radiusTop": 60,
         "radiusBottom": 60,
-        "height": 90,
+        "height": 60,
         "radiusSegments": 25,
         "heightSegments": 25
       }

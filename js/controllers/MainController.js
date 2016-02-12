@@ -1,4 +1,4 @@
-app.controller('MainController', ['$scope', '$http', function($scope, $http) {
+var MainController = function($scope, $http) {
 
     $scope.ajaxComplete = false;
 
@@ -47,4 +47,6 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
         $scope.resizeFan($scope.editFan);
     }
 
-}]);
+};
+
+module.exports = MainController;

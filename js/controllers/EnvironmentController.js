@@ -1,3 +1,5 @@
-app.controller('EnvironmentController', ['$scope', function($scope) {
+var EnvironmentController = function($scope) {
 
-}]);
+};
+
+module.exports = EnvironmentController;

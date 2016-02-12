@@ -1,3 +1,5 @@
-app.controller('ComponentController', ['$scope', function($scope) {
+var ComponentController = function($scope) {
 
-}]);
+};
+
+module.exports = ComponentController;

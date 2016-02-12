@@ -1,0 +1,35 @@
+{
+  "name": "airflow",
+  "version": "0.0.1",
+  "description": "A web app to visualise airflow in a computer case",
+  "main": "index.html",
+  "dependencies": {
+    "ammo.js": "0.0.9",
+    "angular": "^1.5.0",
+    "physijs-browserify": "0.0.2",
+    "three": "^0.73.2"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "gulp": "^3.9.1",
+    "gulp-connect": "^2.3.1",
+    "http-server": "^0.8.5",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Martin-Cox/AirFlow.git"
+  },
+  "keywords": [
+    "AirFlow"
+  ],
+  "author": "Martin Cox",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Martin-Cox/AirFlow/issues"
+  },
+  "homepage": "https://github.com/Martin-Cox/AirFlow#readme"
+}

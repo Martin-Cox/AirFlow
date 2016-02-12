@@ -1,4 +1,4 @@
-app.controller('ProjectSettingsController', ['$scope', function($scope) {
+var ProjectSettingsController = function($scope) {
 	$scope.master = {};
 
 	  $scope.update = function(settings) {
@@ -10,4 +10,6 @@ app.controller('ProjectSettingsController', ['$scope', function($scope) {
 	  };
 
 	  $scope.reset();
-}]);
+};
+
+module.exports = ProjectSettingsController;
