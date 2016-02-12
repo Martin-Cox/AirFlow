@@ -10,9 +10,9 @@ gulp.task('connect', function () {
     })
 })
 
-gulp.task('browserify', function() {
+gulp.task('build', function() {
     // Grabs the app.js file
-    return browserify('./js/app.js')
+    return build('./js/app.js')
         // bundles it and creates a file called build.js
         .bundle()
         .pipe(source('build.js'))
