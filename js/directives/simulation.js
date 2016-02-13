@@ -426,7 +426,7 @@ var simulation = function($http, defaultsService) {
 			fanObject.editing = false;
 			fanObject.properties.mode = fan.properties.mode;
 			fanObject.properties.size = fan.properties.size;
-			fanObject.properties.maxRPM = fan.properties.rpm;
+			fanObject.properties.maxRPM = fan.properties.maxRPM;
 			fanObject.properties.percentageRPM = fan.properties.percentageRPM;
 			fanObject.properties.position = fan.properties.position;
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
@@ -467,8 +467,11 @@ var simulation = function($http, defaultsService) {
 				1
 			);
 
+			//Determine height at max usage
+			var maxHeight = ((fan.properties.size * fan.properties.maxRPM) * fan.properties.percentageRPM/100000)/2.25;
+
 			//Height changes depending on the percentageRPM defined
-			fan.fanAOEObject.dimensions.height = 90*(fan.properties.percentageRPM/100);	//90 will be determined by RPM and Size at some point, it is the height of the AOEObject at 100% 
+			fan.fanAOEObject.dimensions.height = maxHeight * (fan.properties.percentageRPM/100);
 
 			if (defaultCreation == true) {
 				var fanAOEObject = new Physijs.CylinderMesh(new THREE.CylinderGeometry(fan.fanAOEObject.dimensions.radiusTop, fan.fanAOEObject.dimensions.radiusBottom, fan.fanAOEObject.dimensions.height, fan.fanAOEObject.dimensions.radiusSegments, fan.fanAOEObject.dimensions.heightSegments), fanAOEMaterial, 0); //Gravity, 0 = weightless
@@ -823,7 +826,6 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - Determine max height from the RPM and size of a fan for use in createAOEObject
 		// - Stop fans from being able to go off the side of the case
 		// - Disallow fans to "intersect" eachother
 		// - Particles not deleting on collision with exhaust fan, maybe fix see motion clamping https://github.com/chandlerprall/Physijs/wiki/Collisions
