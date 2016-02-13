@@ -13,14 +13,6 @@
       "opacity": 0.2,
       "side": "THREE.DoubleSide"
     },
-    "insideBoxMaterial": {
-      "color": "0x5F6E7D",
-      "friction": 0.3,
-      "restitution": 0.1,
-      "transparent": true,
-      "opacity": 0,
-      "side": "THREE.DoubleSide"
-    },
     "componentMaterial": {
       "color": "0xD5D3D0",
       "friction": 0.3,

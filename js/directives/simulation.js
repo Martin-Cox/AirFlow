@@ -303,20 +303,6 @@ var simulation = function($http, defaultsService) {
 		      	caseDefaults.materials.caseMaterial.restitution
 		    );
 
-			var insideBoxMaterial = Physijs.createMaterial(
-				/*new THREE.MeshBasicMaterial({ 
-				    opacity: caseDefaults.materials.insideBoxMaterial.opacity,
-				    color: parseInt(caseDefaults.materials.insideBoxMaterial.color),
-				    transparent: caseDefaults.materials.insideBoxMaterial.transparent,
-				    side: caseDefaults.materials.insideBoxMaterial.side
-				}),*/
-				new THREE.MeshBasicMaterial({ 
-				    visible: false
-				}),
-				caseDefaults.materials.insideBoxMaterial.friction,
-				caseDefaults.materials.insideBoxMaterial.restitution
-		    );
-
 			var transparentMaterial = Physijs.createMaterial(
 				new THREE.MeshBasicMaterial({ 
 				    opacity: caseDefaults.materials.transparentMaterial.opacity,
