@@ -468,7 +468,11 @@ var simulation = function($http, defaultsService) {
 			);
 
 			//Determine height at max usage
-			var maxHeight = ((fan.properties.size * fan.properties.maxRPM) * fan.properties.percentageRPM/100000)/2.25;
+			var maxHeight = ((fan.properties.size * fan.properties.maxRPM) * fan.properties.percentageRPM/100000)/2;
+
+			if (maxHeight > 180) {
+				maxHeight = 180;
+			}
 
 			//Height changes depending on the percentageRPM defined
 			fan.fanAOEObject.dimensions.height = maxHeight * (fan.properties.percentageRPM/100);
