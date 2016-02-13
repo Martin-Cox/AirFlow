@@ -11,9 +11,6 @@ var simulation = function($http, defaultsService) {
 		var THREE = require('three');
 		var OrbitControls = require('three-orbit-controls')(THREE);
 		var Physijs = require('physijs-browserify')(THREE);
-		//Physijs.scripts.worker = '/libs/physi-worker.js';
-		//Physijs.scripts.ammo = '/libs/ammo.js';
-
 
 		//Enum of possible fan positions on the case (which part of the case is the fan on)
 		var positionsEnum = Object.freeze({
@@ -59,11 +56,8 @@ var simulation = function($http, defaultsService) {
 		function init() {
 			//Loads physijs files, creates scene etc.
 
-			//Physijs.scripts.worker = '/js/external/physijs_worker.js';
-			//Physijs.scripts.ammo = '/js/external/ammo.js';
-
-			Physijs.scripts.worker = '/libs/physijs_worker.js';
-			Physijs.scripts.ammo = '/libs/ammo.js';
+			Physijs.scripts.worker = '/js/external/physijs_worker.js';
+			Physijs.scripts.ammo = '/js/external/ammo.js';
 
 			window.addEventListener( 'resize', onWindowResize, false);
 
