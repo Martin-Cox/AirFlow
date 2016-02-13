@@ -19,7 +19,6 @@
       "dimensions": {
         "radiusTop": 60,
         "radiusBottom": 60,
-        "height": 60,
         "radiusSegments": 25,
         "heightSegments": 25
       }
@@ -62,7 +61,6 @@
       "dimensions": {
         "radiusTop": 60,
         "radiusBottom": 60,
-        "height": 90,
         "radiusSegments": 25,
         "heightSegments": 25
       }
@@ -111,7 +109,6 @@
       "dimensions": {
         "radiusTop": 60,
         "radiusBottom": 60,
-        "height": 90,
         "radiusSegments": 25,
         "heightSegments": 25
       }
@@ -160,7 +157,6 @@
       "dimensions": {
         "radiusTop": 60,
         "radiusBottom": 60,
-        "height": 90,
         "radiusSegments": 25,
         "heightSegments": 25
       }
@@ -209,7 +205,6 @@
       "dimensions": {
         "radiusTop": 60,
         "radiusBottom": 60,
-        "height": 90,
         "radiusSegments": 25,
         "heightSegments": 25
       }
@@ -258,7 +253,6 @@
       "dimensions": {
         "radiusTop": 60,
         "radiusBottom": 60,
-        "height": 90,
         "radiusSegments": 25,
         "heightSegments": 25
       }
