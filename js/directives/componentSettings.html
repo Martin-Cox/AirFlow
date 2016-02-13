@@ -7,15 +7,15 @@
     </div>
     <div class="editorProperty">
     	<p>Max RPM: </p>
-    	<input type="number" ng-model="editFan.properties.maxRPM" ng-change="propertiesChange(editFan.properties.maxRPM)"/>
+    	<input type="number" ng-model="editFan.properties.maxRPM" ng-change="propertiesChange(editFan.properties.maxRPM)" min="0" max="3000"/>
     </div>
     <div class="editorProperty">
     	<p>Size (mm): </p>
-    	<input type="number" ng-model="editFan.properties.size" ng-change="propertiesChange(editFan.properties.size)"/>
+    	<input type="number" ng-model="editFan.properties.size" ng-change="propertiesChange(editFan.properties.size)" min="80" max="140"/>
     </div>
     <div class="editorProperty">
       <p>Current RPM (%): </p>
-      <input type="number" ng-model="editFan.properties.percentageRPM" ng-change="propertiesChange(editFan.properties.percentageRPM)"/>
+      <input type="number" ng-model="editFan.properties.percentageRPM" ng-change="propertiesChange(editFan.properties.percentageRPM)" min="0" max="100"/>
     </div>
     <div class="editorProperty">
       <p>FORCE X: </p>
