@@ -833,19 +833,18 @@ var simulation = function($http, defaultsService) {
 		// - Stop fans from being able to go off the side of the case
 		// - Disallow fans to "intersect" eachother
 		// - Particles not deleting on collision with exhaust fan, maybe fix see motion clamping https://github.com/chandlerprall/Physijs/wiki/Collisions
-		// - Shouldn't be able to set fan size to 0
 		// - Remove loops performed on particles to prevent "freezing" particles that dont get force applied immediately
 		// - Be able to drag fans to a different plane and it rotates correctly
+		// - "Add Fan" button where you click the button then can click on any case face to "plop" a fan there, you should also be given the fan outline so you can see exactly where you are placing the fan
 		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation - Fix using intersectsCase in detectTouchingFan
-		// - Add components to defaultCase.json
+		// - Add components to defaultCase.json e.g. GPU, Hard drives, CPU etc.
 		// - Color change of particles that have been around for a long time
 		// - Move global variables to scope objects (see notes)
-		// - Create component settings controller <component-Settings id="fan.id" for each fan
-		// - Write algorithm to determine forceVector for a fan bvased upon: size, rpm, position in world etc.
+		// - Create component settings controller <component-Settings id="fan.id" for each fan OR just keep a single component settings controller but make it look more presentable
 		// - User configurable environment settings 												- AND UNIT TESTS
 		// - User configurable project settings 													- AND UNIT TESTS
 		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS
-		// - Input validation on ALL user enterable data (using Angular)
+		// - Input validation on ALL user enterable data (using Angular) 							- AND UNIT TESTS
 		// - Change rate of spawning in particles dependant on the number of intake fans
 		// - Simulation quality settings (AA on/off) 
 		// - How to use overlay
@@ -853,7 +852,8 @@ var simulation = function($http, defaultsService) {
 		// - Standardised error messages
 		// - Clean up code, optimisation, proper documentation etc. SEE quality standards in interim report
 		// - Testing on multiple devices
-		// - Fan model and animations
+		// - Be able to import a computer case 3D model and smartly generate physics planes based off 3D geometry (OPTIONAL)
+		// - Fan model and animations (OPTIONAL)
 		// - Save information to a .airflow file (OPTIONAL)
 		// - Upload project from .airflow file (OPTIONAL)
 		// - User defined case settings (OPTIONAL)
