@@ -102,6 +102,19 @@ html, body {
   width: 55%;
 }
 
+tabs {
+  width: 100%;
+  display: inline;
+  text-align: center;
+  background: blue;
+}
+
+.activeTab {
+  background: red;
+  width: 50%;
+  text-align: center;
+}
+
 .editorForm input.ng-dirty::after {
   /*Not working on input text boxes, seems to do something on gender radio select*/
   content: "*";
