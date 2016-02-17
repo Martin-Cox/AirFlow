@@ -15,6 +15,8 @@ var tabs = function() {
 
         if(self.tabs.length === 1) {
             tab.active = true
+        } else {
+            tab.inactive = true;
         }
       }
 
@@ -22,6 +24,7 @@ var tabs = function() {
         angular.forEach(self.tabs, function(tab) {
           if(tab.active && tab !== selectedTab) {
             tab.active = false;
+            tab.inactive = true;
           }
         });
 

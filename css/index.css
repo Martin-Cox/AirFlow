@@ -18,6 +18,8 @@ html, body {
   display: flex;
 }
 
+
+
 #tabbedPaneContainer {
   background: #F5F5F5;
   height: 100%;
@@ -104,15 +106,38 @@ html, body {
 
 tabs {
   width: 100%;
-  display: inline;
+}
+
+.inactiveTab {
+  background: #939393;
+  width: 50%;
   text-align: center;
-  background: blue;
+  float: left;
+  text-decoration: none;
+  color: black;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  font-size: 1.4em;
 }
 
 .activeTab {
-  background: red;
+  background: #F5F5F5;
   width: 50%;
   text-align: center;
+  float: left;
+  text-decoration: none;
+  color: black;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  font-size: 1.4em;
+}
+
+.activeTab a {
+  text-decoration: none;
+  color: black;
+}
+
+.inactiveTab a {
+  text-decoration: none;
+  color: black;
 }
 
 .editorForm input.ng-dirty::after {
