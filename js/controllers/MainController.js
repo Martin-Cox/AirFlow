@@ -16,6 +16,8 @@ var MainController = function($scope, $http) {
 
     $scope.stats = [];
 
+    $scope.overrideCompSettings = false;
+
 	angular.element(document).ready(function() {
         document.getElementById('loadingSplashLoadingText').innerHTML = 'Click anywhere to begin';
     });
@@ -37,8 +39,11 @@ var MainController = function($scope, $http) {
     };
 
     $scope.$watch('editFan', function() {
-        if ($scope.editFan === null) {
-            //TODO: Disable all component settings fields
+        //Angular doesn't like it when we set scope.editFan to null in deleteFan() so we have to set it to an empty array and use an override to disable component settings form
+        if ($scope.editFan != null && $scope.editFan.length === 0) {
+            $scope.overrideCompSettings = true;
+        } else {
+            $scope.overrideCompSettings = false;
         }
     });
 

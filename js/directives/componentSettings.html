@@ -1,7 +1,7 @@
 <div class="editorSection" ng-controller="ComponentController">
   <form novalidate class="editorForm">
   	<p class="sectionHeader">Component Settings</p>
-    <fieldset ng-disabled="!editFan">
+    <fieldset ng-disabled="!editFan || overrideCompSettings">
       <div class="editorProperty">
       	<p>Mode: </p>
       	<input type="text" ng-model="editFan.properties.mode" ng-change="propertiesChange(editFan.properties.mode)"/>

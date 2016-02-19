@@ -751,10 +751,9 @@ var simulation = function($http, defaultsService) {
 			var index = scope.fans.indexOf(scope.editFan);
 			scope.fans.splice(index, 1);
 			
-			//Angular isn't playing nice when scope.editFan is set to null, this is a workaround
+			//Angular doesn't play nice setting scope.editFan to null here, this is a workaround
 			scope.editFan = [];
 			scope.dragFan = null;
-			document.getElementById('deleteFanBtn').disabled = true;
 		}
 
 		scope.addNewFan = function() {
