@@ -88,6 +88,10 @@ html, body {
   text-shadow: 0 1px 1px rgba(0,0,0,.2);
 }
 
+fieldset {
+  border: none;
+}
+
 #tabbedPaneContainer .editorProperty {
   width: 100%;
 }
