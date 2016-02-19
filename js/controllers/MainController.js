@@ -37,9 +37,8 @@ var MainController = function($scope, $http) {
     };
 
     $scope.$watch('editFan', function() {
-        if ($scope.editFan != null) {
-            //User is editing a fan, expand component settigns section here
-            //Component settings section will automatically update with values, so we don't need to change anything
+        if ($scope.editFan === null) {
+            //TODO: Disable all component settings fields
         }
     });
 

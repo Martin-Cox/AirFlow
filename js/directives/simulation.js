@@ -698,14 +698,15 @@ var simulation = function($http, defaultsService) {
 
 			var touchFan = detectTouchingFan(event);
 
+			scope.editFan = null;
+			scope.dragFan = null;
+			scope.$digest();
+
 			//For peace of mind, reset all fans to not editing when we click
 			for (var i = 0; i < scope.fans.length; i++) {
 				scope.fans[i].editing = false;
 				scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
 				scene.remove(scope.fans[i].AOEWireframe); 
-				scope.editFan = null;
-				scope.dragFan = null;
-				scope.$digest();
 			}
 
 			//If we clicked on a fan, do stuff here
@@ -729,6 +730,31 @@ var simulation = function($http, defaultsService) {
 					offset.copy(dragSide.intersects[0].point).sub(dragSide.tempPlane.position);
 				}
 			}
+		}
+
+		scope.deleteFan = function() {
+
+			scope.editFan.editing = false;
+
+			scene.remove(scope.editFan.fanPhysicalObject);
+			scene.remove(scope.editFan.fanAOEObject);
+			scene.remove(scope.editFan.AOEWireframe);
+
+			if (scope.editFan.properties.mode === "intake") {
+				var index = scope.intakeFans.indexOf(scope.editFan);
+				scope.intakeFans.splice(index, 1);
+			} else if (scope.editFan.properties.mode === "exhaust") {
+				var index = scope.exhaustFans.indexOf(scope.editFan);
+				scope.exhaustFans.splice(index, 1);
+			}
+
+			var index = scope.fans.indexOf(scope.editFan);
+			scope.fans.splice(index, 1);
+			
+			//Angular isn't playing nice when scope.editFan is set to null, this is a workaround
+			scope.editFan = [];
+			scope.dragFan = null;
+			document.getElementById('deleteFanBtn').disabled = true;
 		}
 
 		scope.addNewFan = function() {
