@@ -111,6 +111,13 @@ var simulation = function($http, defaultsService) {
 
 			scene.add(skybox);
 
+			scope.stats.spawnedParticles = 0;
+			scope.stats.culledParticles = 0;
+			scope.stats.removedParticles = 0;
+			scope.stats.particleSuccessPercentage = 0;
+			scope.stats.particleFailurePercentage = 0;
+			scope.updateStats();
+
 			createParticles(100);
 
 			var topLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -154,6 +161,15 @@ var simulation = function($http, defaultsService) {
 			renderer.render(scene, camera);
 
 			fpsStats.end();
+		}
+
+		scope.updateStats = function() {
+			scope.stats.particleRatio = 100;
+			scope.stats.particleSuccessPercentage = (scope.stats.removedParticles/scope.stats.spawnedParticles)*100;
+			scope.stats.particleFailurePercentage = (scope.stats.culledParticles/scope.stats.spawnedParticles)*100;
+			setTimeout(function() {
+	        	scope.updateStats();
+	        }, 5000);
 		}
 
 		function createParticles(numToCreate) {
@@ -210,6 +226,9 @@ var simulation = function($http, defaultsService) {
 
 				//Remove from pool of available particles
 				availableParticles.splice(0, 1);
+
+				//Add to total no. spawned particles
+				scope.stats.spawnedParticles += 1;
 
 				setTimeout(function() {
 		        	scope.spawnParticles();
@@ -279,6 +298,8 @@ var simulation = function($http, defaultsService) {
 				for (var i = 0; i < particles.length; i++) {
 					if (particles[i].spawnTime != null && unixTime - particles[i].spawnTime >= cullTime) {
 						recycleParticle(particles[i]);
+						scope.stats.culledParticles += 1;
+						scope.$digest();
 					}
 				}
 
@@ -612,6 +633,8 @@ var simulation = function($http, defaultsService) {
 					for (var j = 0; j < particles.length; j++) {
 						if (particles[j].id === this.id) {
 							recycleParticle(particles[j]);
+							scope.stats.removedParticles += 1;
+							scope.$digest();
 							break;
 						}
 					}

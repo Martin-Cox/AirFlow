@@ -14,6 +14,8 @@ var MainController = function($scope, $http) {
 
     $scope.caseGroup= [];
 
+    $scope.stats = [];
+
 	angular.element(document).ready(function() {
         document.getElementById('loadingSplashLoadingText').innerHTML = 'Click anywhere to begin';
     });

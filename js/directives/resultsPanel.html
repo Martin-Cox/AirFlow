@@ -1,0 +1,12 @@
+<div class="editorSection" ng-controller="ResultsController">
+  <form novalidate class="editorForm">
+  	<p class="sectionHeader">Results</p>
+    <div class="editorProperty">
+      <p>Successful Pa(%): </p>
+      <input type="text" ng-readonly="true" ng-model="stats.particleSuccessPercentage"/>
+    </div>
+        <div class="editorProperty">
+      <p>Culled Pa(%): </p>
+      <input type="text" ng-readonly="true" ng-model="stats.particleFailurePercentage"/>
+    </div>
+</div>
