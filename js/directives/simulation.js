@@ -476,6 +476,15 @@ var simulation = function($http, defaultsService) {
 			scope.fans.push(fanObject);	
 		}
 
+		function createNewFan() {
+			/*A fan is made up a of a fanObject with two sub-objects, a fanAOEObject representing the area of effect for a fan
+			and the fanPhysicalObject, which is the physical fan the user sees*/
+
+			//Create a new fan using default properties from newFanDefaults.json
+			//Much the same as createDefaultFan
+
+		}
+
 		function createFanAOEObject(fan, defaultCreation) { 
 			var fanAOEMaterial = Physijs.createMaterial(
 				new THREE.MeshLambertMaterial({
@@ -722,6 +731,37 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
+		scope.addNewFan = function() {
+			createNewFan();
+
+
+
+
+			/*var fanPhysicalMaterial = Physijs.createMaterial(
+				new THREE.MeshLambertMaterial({
+					color: parseInt(scope.fanColors.normal),
+					opacity: 0,
+					transparent: true,
+					side: THREE.DoubleSide
+				}),
+				0.3,
+				1
+			);
+
+
+			var fanPhysicalObject = new Physijs.BoxMesh(new THREE.CubeGeometry(120, 120, 40), fanPhysicalMaterial, 0); //Gravity, 0 = weightless
+
+			//Add it to scene
+
+			AOEWireframe = new THREE.EdgesHelper(fanPhysicalObject, parseInt(scope.fanColors.wireframe));
+
+			fanPhysicalObject.position.set(0, 300, -248);
+
+			scene.add(fanPhysicalObject);
+			scene.add(AOEWireframe);*/
+
+		}
+
 		function chooseSide(event, position) {			
 			//Determines what side of the case a fan is being dragged on
 
@@ -855,7 +895,6 @@ var simulation = function($http, defaultsService) {
 		//TODO (IN ORDER):
 		// - Stop fans from being able to go off the side of the case
 		// - Disallow fans to "intersect" eachother
-		// - Particles not deleting on collision with exhaust fan, maybe fix see motion clamping https://github.com/chandlerprall/Physijs/wiki/Collisions
 		// - Remove loops performed on particles to prevent "freezing" particles that dont get force applied immediately
 		// - Be able to drag fans to a different plane and it rotates correctly
 		// - "Add Fan" button where you click the button then can click on any case face to "plop" a fan there, you should also be given the fan outline so you can see exactly where you are placing the fan
