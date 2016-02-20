@@ -686,28 +686,40 @@ var simulation = function($http, defaultsService) {
 				switch(touchSide) {
 					case scope.caseGroup.bottomPlane:
 						position = positionsEnum.BOTTOM;
+						scope.newFanPlaceholderObject.rotation.x = 0;
+						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.rotation.x = 90 * Math.PI/180;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						break;
 					case scope.caseGroup.topPlane:
 						position = positionsEnum.TOP;
+						scope.newFanPlaceholderObject.rotation.x = 0;
+						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.rotation.x = 90 * Math.PI/180;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						break;
 					case scope.caseGroup.visibleSidePlane:
 						position = positionsEnum.VISIBLE_SIDE;
+						scope.newFanPlaceholderObject.rotation.x = 0;
+						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.rotation.y = 90 * Math.PI/180;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						break;
 					case scope.caseGroup.invisibleSidePlane:
 						position = positionsEnum.INVISIBLE_SIDE;
+						scope.newFanPlaceholderObject.rotation.x = 0;
+						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.rotation.y = 90 * Math.PI/180;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						break;
 					case scope.caseGroup.backPlane:
+						scope.newFanPlaceholderObject.rotation.x = 0;
+						scope.newFanPlaceholderObject.rotation.y = 0;
 						position = positionsEnum.BACK;
 						break;
 					case scope.caseGroup.frontPlane:
+						scope.newFanPlaceholderObject.rotation.x = 0;
+						scope.newFanPlaceholderObject.rotation.y = 0;
 						position = positionsEnum.FRONT;
 						break;
 				}
@@ -717,14 +729,7 @@ var simulation = function($http, defaultsService) {
 
 					if (dragSide.intersects.length > 0) {
 						scope.newFanPlaceholderObject.position.copy(dragSide.intersects[0].point);
-
-						if (scope.newFanPlaceholderObjectAdded === false && scope.newFanPlaceholderWireframeAdded === false) {
-							scene.add(scope.newFanPlaceholderObject);
-							scene.add(scope.newFanPlaceholderWireframe);
-							scope.newFanPlaceholderObjectAdded = true;
-							scope.newFanPlaceholderWireframeAdded = true;
-						}
-
+						
 						scope.newFanPlaceholderObject.__dirtyPosition = true;
 
 						scope.$digest();
@@ -827,7 +832,7 @@ var simulation = function($http, defaultsService) {
 		}
 
 		scope.addNewFan = function() {
-			//createNewFan();
+			//Creates a placeholder fan object that follows the users mouse so the user can decide where to place the fan
 
 			var fanPhysicalMaterial = Physijs.createMaterial(
 				new THREE.MeshLambertMaterial({
@@ -844,11 +849,10 @@ var simulation = function($http, defaultsService) {
 			scope.newFanPlaceholderObject = new Physijs.BoxMesh(new THREE.CubeGeometry(120, 120, 40), fanPhysicalMaterial, 0); //Gravity, 0 = weightless
 			scope.newFanPlaceholderWireframe = new THREE.EdgesHelper(scope.newFanPlaceholderObject, parseInt(scope.fanColors.wireframe));
 			
-
-			//Only add them to the scene in mouveMouse event in a valid pos, set position to mouse position
-			//scope.newFanPlaceholderObject.position.set(0, 300, -248);
-			//scene.add(scope.newFanPlaceholderObject);
-			//scene.add(scope.newFanPlaceholderWireframe);
+			//Add them to the scene
+			scope.newFanPlaceholderObject.position.set(0, 300, -248);
+			scene.add(scope.newFanPlaceholderObject);
+			scene.add(scope.newFanPlaceholderWireframe);
 
 			scope.addingFan = true;
 
@@ -979,10 +983,6 @@ var simulation = function($http, defaultsService) {
 
 			//Isolate case planes into array
 			var casePlanes = [];
-			//for (var i = 0; i < scope.caseGroup.length; i++) {
-			//	casePlanes.push(scope.caseGroup[i]);
-			//}
-
 			for(var key in scope.caseGroup) {
 			    casePlanes.push(scope.caseGroup[key]);
 			}
@@ -1015,6 +1015,8 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
+		// - When move mouse and adding new fan, check if current pos is valid. Turn fanPlaceholderAOE wire frame turn green in valid pos, red in invalid pos
+		// - When click and adding new fan and in valid pos, create a new fan, otherwise, if in invalid pos, show error
 		// - Stop fans from being able to go off the side of the case
 		// - Disallow fans to "intersect" eachother
 		// - Remove loops performed on particles to prevent "freezing" particles that dont get force applied immediately
