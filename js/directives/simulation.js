@@ -659,7 +659,7 @@ var simulation = function($http, defaultsService) {
 		function handleMouseMove(event) {			
 			if (scope.dragFan != null) {
 				//Dragging a fan
-				var dragSide = chooseSide(event, scope.dragFan.properties.position);
+				/*var dragSide = chooseSide(event, scope.dragFan.properties.position);
 				
 				//Update fan position to mouse position
 				if (dragSide.intersects.length > 0) {
@@ -670,7 +670,90 @@ var simulation = function($http, defaultsService) {
 					scope.dragFan.fanAOEObject.__dirtyPosition = true;
 
 					scope.$digest();
+				}*/
+
+				var touchSide = detectTouchingCase(event);
+				var position = null;
+
+				if (touchSide != null) {
+
+					switch(touchSide) {
+						case scope.caseGroup.bottomPlane:
+							position = positionsEnum.BOTTOM;
+							scope.dragFan.fanPhysicalObject.rotation.x = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 0;
+							scope.dragFan.fanPhysicalObject.rotation.x = 90 * Math.PI/180;
+							scope.dragFan.fanAOEObject.rotation.x = 0;
+							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180;
+							scope.dragFan.fanPhysicalObject.__dirtyRotation = true;
+							scope.dragFan.fanAOEObject.__dirtyRotation = true;
+							break;
+						case scope.caseGroup.topPlane:
+							position = positionsEnum.TOP;
+							scope.dragFan.fanPhysicalObject.rotation.x = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 0;
+							scope.dragFan.fanPhysicalObject.rotation.x = 90 * Math.PI/180;
+							scope.dragFan.fanAOEObject.rotation.x = 0;
+							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180;
+							scope.dragFan.fanPhysicalObject.__dirtyRotation = true;
+							scope.dragFan.fanAOEObject.__dirtyRotation = true;
+							break;
+						case scope.caseGroup.visibleSidePlane:
+							position = positionsEnum.VISIBLE_SIDE;
+							scope.dragFan.fanPhysicalObject.rotation.x = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 90 * Math.PI/180;
+							scope.dragFan.fanAOEObject.rotation.x = 0;
+							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 90 * Math.PI/180;
+							scope.dragFan.fanPhysicalObject.__dirtyRotation = true;
+							scope.dragFan.fanAOEObject.__dirtyRotation = true;
+							break;
+						case scope.caseGroup.invisibleSidePlane:
+							position = positionsEnum.INVISIBLE_SIDE;
+							scope.dragFan.fanPhysicalObject.rotation.x = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 90 * Math.PI/180;
+							scope.dragFan.fanAOEObject.rotation.x = 0;
+							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 90 * Math.PI/180;
+							scope.dragFan.fanPhysicalObject.__dirtyRotation = true;
+							scope.dragFan.fanAOEObject.__dirtyRotation = true;
+							break;
+						case scope.caseGroup.backPlane:
+							scope.dragFan.fanPhysicalObject.rotation.x = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.x = 0;
+							scope.dragFan.fanAOEObject.rotation.y = 0;
+							position = positionsEnum.BACK;
+							break;
+						case scope.caseGroup.frontPlane:
+							scope.dragFan.fanPhysicalObject.rotation.x = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.x = 0;
+							scope.dragFan.fanAOEObject.rotation.y = 0;
+							position = positionsEnum.FRONT;
+							break;
+					}
+
+					if (position != null) {
+						var dragSide = chooseSide(event, position);
+
+						if (dragSide.intersects.length > 0) {
+							scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point);
+
+							determineFanAOEPosition();
+							scope.dragFan.fanAOEObject.__dirtyPosition = true;
+							scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
+
+							scope.$digest();
+						}
+					}
 				}
+
+
 			} else if (scope.addingFan === true) {
 				
 				var touchSide = detectTouchingCase(event);
