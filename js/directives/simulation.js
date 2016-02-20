@@ -714,6 +714,13 @@ var simulation = function($http, defaultsService) {
 					if (dragSide.intersects.length > 0) {
 						scope.newFanPlaceholderObject.position.copy(dragSide.intersects[0].point);
 
+						if (scope.newFanPlaceholderObjectAdded === false && scope.newFanPlaceholderWireframeAdded === false) {
+							scene.add(scope.newFanPlaceholderObject);
+							scene.add(scope.newFanPlaceholderWireframe);
+							scope.newFanPlaceholderObjectAdded = true;
+							scope.newFanPlaceholderWireframeAdded = true;
+						}
+
 						scope.newFanPlaceholderObject.__dirtyPosition = true;
 
 						scope.$digest();
@@ -835,8 +842,7 @@ var simulation = function($http, defaultsService) {
 
 			//Only add them to the scene in mouveMouse event in a valid pos, set position to mouse position
 			//scope.newFanPlaceholderObject.position.set(0, 300, -248);
-			scene.add(scope.newFanPlaceholderObject);
-			scene.add(scope.newFanPlaceholderWireframe);
+
 
 			scope.addingFan = true;
 
