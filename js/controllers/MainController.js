@@ -12,9 +12,14 @@ var MainController = function($scope, $http) {
     $scope.dragFan = null;
     $scope.editFan = null;
 
-    $scope.caseGroup= [];
+    $scope.caseGroup= new Object();
 
     $scope.stats = [];
+
+    $scope.addingFan = false;
+    $scope.addingFanValidPos = false;
+    $scope.newFanPlaceholderObject = null;
+    $scope.newFanPlaceholderWireframe = null;
 
     $scope.overrideCompSettings = false;
 

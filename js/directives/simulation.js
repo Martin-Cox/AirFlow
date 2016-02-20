@@ -343,7 +343,6 @@ var simulation = function($http, defaultsService) {
 		      	caseDefaults.materials.componentMaterial.restitution
 		    );
 
-			//Increase size of case TODO:Maybe remove this and change zoom levels and speed of orbit camera
 			var caseWidth = caseDefaults.dimensions.width;
 			var caseHeight = caseDefaults.dimensions.height;
 			var caseDepth = caseDefaults.dimensions.depth;
@@ -672,6 +671,56 @@ var simulation = function($http, defaultsService) {
 
 					scope.$digest();
 				}
+			} else if (scope.addingFan === true) {
+
+				//When mouse over a case plane return case plane object
+				//See detectTouchingFan(event)
+				//Create an outline of a fanPhysicalObject at mouse pos on case plane
+				//Using switch to rotate depending on case plane position
+				//After add fan outline to scene, set scope.addingFanValidPos = true
+
+				
+				var touchSide = detectTouchingCase(event);
+				var position = null;
+
+				switch(touchSide) {
+					case scope.caseGroup.bottomPlane:
+						position = positionsEnum.BOTTOM;
+						scope.newFanPlaceholderObject.rotation.x = 90 * Math.PI/180;
+						break;
+					case scope.caseGroup.topPlane:
+						position = positionsEnum.TOP;
+						scope.newFanPlaceholderObject.rotation.x = 90 * Math.PI/180;
+						break;
+					case scope.caseGroup.visibleSidePlane:
+						position = positionsEnum.VISIBLE_SIDE;
+						scope.newFanPlaceholderObject.rotation.y = 90 * Math.PI/180;
+						break;
+					case scope.caseGroup.invisibleSidePlane:
+						position = positionsEnum.INVISIBLE_SIDE;
+						scope.newFanPlaceholderObject.rotation.y = 90 * Math.PI/180;
+						break;
+					case scope.caseGroup.backPlane:
+						position = positionsEnum.BACK;
+						break;
+					case scope.caseGroup.frontPlane:
+						position = positionsEnum.FRONT;
+						break;
+				}
+
+				if (position != null) {
+					var dragSide = chooseSide(event, position);
+
+					if (dragSide.intersects.length > 0) {
+						scope.newFanPlaceholderObject.position.copy(dragSide.intersects[0].point);
+
+						scope.newFanPlaceholderObject.__dirtyPosition = true;
+
+						scope.$digest();
+					}
+				}
+
+
 			} else {
 				//When a user hovers on a fan change fan color to hover state only if we are NOT editing that fan 
 
@@ -730,6 +779,15 @@ var simulation = function($http, defaultsService) {
 					offset.copy(dragSide.intersects[0].point).sub(dragSide.tempPlane.position);
 				}
 			}
+
+			if (scope.addingFan === true && scope.addingFanValidPos === true) {
+
+				//Create a new fan using default properties at position
+				//Remove placeholder fan outline
+				//Set scope.addingFan = false
+				//Set scope.addingFanValidPos = false;
+
+			}
 		}
 
 		scope.deleteFan = function() {
@@ -757,12 +815,9 @@ var simulation = function($http, defaultsService) {
 		}
 
 		scope.addNewFan = function() {
-			createNewFan();
+			//createNewFan();
 
-
-
-
-			/*var fanPhysicalMaterial = Physijs.createMaterial(
+			var fanPhysicalMaterial = Physijs.createMaterial(
 				new THREE.MeshLambertMaterial({
 					color: parseInt(scope.fanColors.normal),
 					opacity: 0,
@@ -773,17 +828,17 @@ var simulation = function($http, defaultsService) {
 				1
 			);
 
+			//Create placeholder fan objects
+			scope.newFanPlaceholderObject = new Physijs.BoxMesh(new THREE.CubeGeometry(120, 120, 40), fanPhysicalMaterial, 0); //Gravity, 0 = weightless
+			scope.newFanPlaceholderWireframe = new THREE.EdgesHelper(scope.newFanPlaceholderObject, parseInt(scope.fanColors.wireframe));
+			
 
-			var fanPhysicalObject = new Physijs.BoxMesh(new THREE.CubeGeometry(120, 120, 40), fanPhysicalMaterial, 0); //Gravity, 0 = weightless
+			//Only add them to the scene in mouveMouse event in a valid pos, set position to mouse position
+			//scope.newFanPlaceholderObject.position.set(0, 300, -248);
+			scene.add(scope.newFanPlaceholderObject);
+			scene.add(scope.newFanPlaceholderWireframe);
 
-			//Add it to scene
-
-			AOEWireframe = new THREE.EdgesHelper(fanPhysicalObject, parseInt(scope.fanColors.wireframe));
-
-			fanPhysicalObject.position.set(0, 300, -248);
-
-			scene.add(fanPhysicalObject);
-			scene.add(AOEWireframe);*/
+			scope.addingFan = true;
 
 		}
 
@@ -887,16 +942,46 @@ var simulation = function($http, defaultsService) {
 				fanPhysicalObjects.push(scope.fans[i].fanPhysicalObject);
 			}
 
-			var x = scope.caseGroup;
-
 			var intersectsFans = raycaster.intersectObjects(fanPhysicalObjects, true);
-			var intersectsCase = raycaster.intersectObjects(scope.caseGroup, true);
 
 			//If we have touched a fanPhysicalObject, return the root fanObject it belongs to
 			if (intersectsFans.length > 0) {;
 				for (var i = 0; i < scope.fans.length; i++) {
 					if (scope.fans[i].fanPhysicalObject.id == intersectsFans[0].object.id) {
 						return scope.fans[i];
+					}
+				}
+			} else {
+				return null;
+			}
+		}
+
+		function detectTouchingCase(event) {
+			//Returns a case plane if the mouse is touching one, else nothing is returned
+
+			//Have to normalise these coords so that they are between -1 and 1
+			mouse.x = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
+			mouse.y = - (event.clientY / height) * 2 + 1;
+
+			raycaster.setFromCamera( mouse, camera );
+
+			//Isolate case planes into array
+			var casePlanes = [];
+			//for (var i = 0; i < scope.caseGroup.length; i++) {
+			//	casePlanes.push(scope.caseGroup[i]);
+			//}
+
+			for(var key in scope.caseGroup) {
+			    casePlanes.push(scope.caseGroup[key]);
+			}
+
+			var intersectsCase = raycaster.intersectObjects(casePlanes, true);
+
+			//If we have touched a case plane return it
+			if (intersectsCase.length > 0) {;
+				for (var i = 0; i < casePlanes.length; i++) {
+					if (casePlanes[i].id == intersectsCase[0].object.id) {
+						return casePlanes[i];
 					}
 				}
 			} else {
@@ -921,7 +1006,7 @@ var simulation = function($http, defaultsService) {
 		// - Stop fans from being able to go off the side of the case
 		// - Disallow fans to "intersect" eachother
 		// - Remove loops performed on particles to prevent "freezing" particles that dont get force applied immediately
-		// - Be able to drag fans to a different plane and it rotates correctly
+		// - Be able to drag fans to a different plane and it rotates correctly (SEE CODE FOR ADDING NEW FAN!)
 		// - "Add Fan" button where you click the button then can click on any case face to "plop" a fan there, you should also be given the fan outline so you can see exactly where you are placing the fan
 		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation - Fix using intersectsCase in detectTouchingFan
 		// - Add components to defaultCase.json e.g. GPU, Hard drives, CPU etc.
