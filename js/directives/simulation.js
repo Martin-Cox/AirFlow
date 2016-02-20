@@ -714,13 +714,6 @@ var simulation = function($http, defaultsService) {
 					if (dragSide.intersects.length > 0) {
 						scope.newFanPlaceholderObject.position.copy(dragSide.intersects[0].point);
 
-						if (scope.newFanPlaceholderObjectAdded === false && scope.newFanPlaceholderWireframeAdded === false) {
-							scene.add(scope.newFanPlaceholderObject);
-							scene.add(scope.newFanPlaceholderWireframe);
-							scope.newFanPlaceholderObjectAdded = true;
-							scope.newFanPlaceholderWireframeAdded = true;
-						}
-
 						scope.newFanPlaceholderObject.__dirtyPosition = true;
 
 						scope.$digest();
@@ -750,40 +743,41 @@ var simulation = function($http, defaultsService) {
 		}
 
 		function handleMouseClick(event) {
-			//When a user clicks on a fan, open the component control panel section and change fan color
+			if (scope.addingFan === false) {
+				//When a user clicks on a fan, open the component control panel section and change fan color
+				var touchFan = detectTouchingFan(event);
 
-			var touchFan = detectTouchingFan(event);
-
-			scope.editFan = null;
-			scope.dragFan = null;
-			scope.$digest();
-
-			//For peace of mind, reset all fans to not editing when we click
-			for (var i = 0; i < scope.fans.length; i++) {
-				scope.fans[i].editing = false;
-				scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
-				scene.remove(scope.fans[i].AOEWireframe); 
-			}
-
-			//If we clicked on a fan, do stuff here
-			if (touchFan) {
-				touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.edit));
-				touchFan.editing = true;
-				scene.add(touchFan.AOEWireframe);
-				scope.editFan = touchFan;
-				scope.dragFan = touchFan;
+				scope.editFan = null;
+				scope.dragFan = null;
 				scope.$digest();
-				orbitControl.enableRotate = false;
-			} else {
-				orbitControl.enableRotate = true;
-			}
 
-			//If we are dragging a fan, do stuff here
-			if (scope.dragFan != null) {				
-				var dragSide = chooseSide(event, scope.dragFan.properties.position);
+				//For peace of mind, reset all fans to not editing when we click
+				for (var i = 0; i < scope.fans.length; i++) {
+					scope.fans[i].editing = false;
+					scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
+					scene.remove(scope.fans[i].AOEWireframe); 
+				}
 
-				if (dragSide.intersects.length > 0) {
-					offset.copy(dragSide.intersects[0].point).sub(dragSide.tempPlane.position);
+				//If we clicked on a fan, do stuff here
+				if (touchFan) {
+					touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.edit));
+					touchFan.editing = true;
+					scene.add(touchFan.AOEWireframe);
+					scope.editFan = touchFan;
+					scope.dragFan = touchFan;
+					scope.$digest();
+					orbitControl.enableRotate = false;
+				} else {
+					orbitControl.enableRotate = true;
+				}
+
+				//If we are dragging a fan, do stuff here
+				if (scope.dragFan != null) {				
+					var dragSide = chooseSide(event, scope.dragFan.properties.position);
+
+					if (dragSide.intersects.length > 0) {
+						offset.copy(dragSide.intersects[0].point).sub(dragSide.tempPlane.position);
+					}
 				}
 			}
 
@@ -842,7 +836,8 @@ var simulation = function($http, defaultsService) {
 
 			//Only add them to the scene in mouveMouse event in a valid pos, set position to mouse position
 			//scope.newFanPlaceholderObject.position.set(0, 300, -248);
-
+			scene.add(scope.newFanPlaceholderObject);
+			scene.add(scope.newFanPlaceholderWireframe);
 
 			scope.addingFan = true;
 
