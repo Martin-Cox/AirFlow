@@ -727,6 +727,8 @@ var simulation = function($http, defaultsService) {
 							scope.dragFan.fanPhysicalObject.rotation.y = 0;
 							scope.dragFan.fanAOEObject.rotation.x = 0;
 							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanPhysicalObject.__dirtyRotation = true;
+							scope.dragFan.fanAOEObject.__dirtyRotation = true;
 							position = positionsEnum.BACK;
 							break;
 						case scope.caseGroup.frontPlane:
@@ -734,6 +736,8 @@ var simulation = function($http, defaultsService) {
 							scope.dragFan.fanPhysicalObject.rotation.y = 0;
 							scope.dragFan.fanAOEObject.rotation.x = 0;
 							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanPhysicalObject.__dirtyRotation = true;
+							scope.dragFan.fanAOEObject.__dirtyRotation = true;
 							position = positionsEnum.FRONT;
 							break;
 					}
