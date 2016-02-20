@@ -687,18 +687,22 @@ var simulation = function($http, defaultsService) {
 					case scope.caseGroup.bottomPlane:
 						position = positionsEnum.BOTTOM;
 						scope.newFanPlaceholderObject.rotation.x = 90 * Math.PI/180;
+						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						break;
 					case scope.caseGroup.topPlane:
 						position = positionsEnum.TOP;
 						scope.newFanPlaceholderObject.rotation.x = 90 * Math.PI/180;
+						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						break;
 					case scope.caseGroup.visibleSidePlane:
 						position = positionsEnum.VISIBLE_SIDE;
 						scope.newFanPlaceholderObject.rotation.y = 90 * Math.PI/180;
+						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						break;
 					case scope.caseGroup.invisibleSidePlane:
 						position = positionsEnum.INVISIBLE_SIDE;
 						scope.newFanPlaceholderObject.rotation.y = 90 * Math.PI/180;
+						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						break;
 					case scope.caseGroup.backPlane:
 						position = positionsEnum.BACK;
@@ -713,6 +717,13 @@ var simulation = function($http, defaultsService) {
 
 					if (dragSide.intersects.length > 0) {
 						scope.newFanPlaceholderObject.position.copy(dragSide.intersects[0].point);
+
+						if (scope.newFanPlaceholderObjectAdded === false && scope.newFanPlaceholderWireframeAdded === false) {
+							scene.add(scope.newFanPlaceholderObject);
+							scene.add(scope.newFanPlaceholderWireframe);
+							scope.newFanPlaceholderObjectAdded = true;
+							scope.newFanPlaceholderWireframeAdded = true;
+						}
 
 						scope.newFanPlaceholderObject.__dirtyPosition = true;
 
@@ -836,8 +847,8 @@ var simulation = function($http, defaultsService) {
 
 			//Only add them to the scene in mouveMouse event in a valid pos, set position to mouse position
 			//scope.newFanPlaceholderObject.position.set(0, 300, -248);
-			scene.add(scope.newFanPlaceholderObject);
-			scene.add(scope.newFanPlaceholderWireframe);
+			//scene.add(scope.newFanPlaceholderObject);
+			//scene.add(scope.newFanPlaceholderWireframe);
 
 			scope.addingFan = true;
 
