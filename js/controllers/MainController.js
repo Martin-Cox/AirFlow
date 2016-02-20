@@ -20,8 +20,6 @@ var MainController = function($scope, $http) {
     $scope.addingFanValidPos = false;
     $scope.newFanPlaceholderObject = null;
     $scope.newFanPlaceholderWireframe = null;
-    $scope.newFanPlaceholderObjectAdded = false;
-    $scope.newFanPlaceholderWireframeAdded = false;
 
     $scope.overrideCompSettings = false;
 

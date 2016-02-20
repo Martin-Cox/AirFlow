@@ -672,13 +672,6 @@ var simulation = function($http, defaultsService) {
 					scope.$digest();
 				}
 			} else if (scope.addingFan === true) {
-
-				//When mouse over a case plane return case plane object
-				//See detectTouchingFan(event)
-				//Create an outline of a fanPhysicalObject at mouse pos on case plane
-				//Using switch to rotate depending on case plane position
-				//After add fan outline to scene, set scope.addingFanValidPos = true
-
 				
 				var touchSide = detectTouchingCase(event);
 				var position = null;
@@ -729,10 +722,14 @@ var simulation = function($http, defaultsService) {
 
 					if (dragSide.intersects.length > 0) {
 						scope.newFanPlaceholderObject.position.copy(dragSide.intersects[0].point);
-						
+
 						scope.newFanPlaceholderObject.__dirtyPosition = true;
 
 						scope.$digest();
+
+						//TODO: Check if fanPlaceholder is in a valid position
+						scope.addingFanValidPos = true;
+
 					}
 				}
 
@@ -799,11 +796,16 @@ var simulation = function($http, defaultsService) {
 
 			if (scope.addingFan === true && scope.addingFanValidPos === true) {
 
-				//Create a new fan using default properties at position
-				//Remove placeholder fan outline
-				//Set scope.addingFan = false
-				//Set scope.addingFanValidPos = false;
+				//TODO: We can't rotate using left click and drag if we remove from the scene the objects and set everything to null
+				//Maybe ctrl + left click to place fan or something?
 
+				createNewFan();
+				/*scene.remove(scope.newFanPlaceholderObject);
+				scene.remove(scope.newFanPlaceholderWireframe);
+				scope.addingFan = false;
+				scope.addingFanValidPos = false;
+			    scope.newFanPlaceholderObject = null;
+			    scope.newFanPlaceholderWireframe = null;*/
 			}
 		}
 
