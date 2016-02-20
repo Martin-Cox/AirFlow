@@ -21,7 +21,7 @@ gulp.task('build', function() {
 })
 
 gulp.task('watch', function() {
-    gulp.watch(['./**/*', '!./js/build.js'], ['build'])
+    gulp.watch(['./**/*', '!./js/build.js'], { interval: 500 }, ['build'])
 })
 
 gulp.task('default', ['connect', 'watch'])
