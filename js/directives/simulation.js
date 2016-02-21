@@ -946,7 +946,8 @@ var simulation = function($http, defaultsService) {
 			//Create placeholder fan objects
 			scope.newFanPlaceholderObject = new Physijs.BoxMesh(new THREE.CubeGeometry(120, 120, 40), fanPhysicalMaterial, 0); //Gravity, 0 = weightless
 			scope.newFanPlaceholderWireframe = new THREE.EdgesHelper(scope.newFanPlaceholderObject, parseInt(scope.fanColors.wireframe));
-			
+			scope.newFanPlaceholderObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
+
 			//Add them to the scene
 			scope.newFanPlaceholderObject.position.set(0, 300, -248);
 			scene.add(scope.newFanPlaceholderObject);
