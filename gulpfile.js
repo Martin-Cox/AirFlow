@@ -27,7 +27,14 @@ gulp.task('watch', function() {
 })
 
 gulp.task('test', function() {
-    return gulp.src('./test/test.js').pipe(mocha());
+    connect.server({
+        root: '',
+        port: 4000
+    });
+    return gulp.src('./test/test.js').pipe(mocha())
+    .once('end', function () {
+      process.exit();
+    });
 })
 
 gulp.task('default', ['connect', 'watch'])

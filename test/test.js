@@ -1,35 +1,15 @@
 var expect = require("chai").expect;
+var request = require("request");
 
-/*describe("AirFlow", function () {
+var url = "http://localhost:4000";
+
+describe("AirFlow", function () {
 	describe("Server", function() {
-		it("should respond OK", function() {
-
+		it("should respond OK", function(done) {
+			request.get(url, function(error, response, body) {
+	        	expect(response.statusCode).to.be.equal(200);
+	        	done();
+	     	});
 		});
-	});
-});*/
-
-
-describe("Testing Mocha", function() {
-	it("should add numbers together", function() {
-		var a = 5;
-		var b = 2;
-		var c = a + b;
-		expect(c).to.equal(7);
-	});
-	it("should test the length of array", function() {
-		var a = [1, 2, 3, 4];
-		expect(a).to.have.length(4);
-	});
-	it("should fail", function() {
-		var a = [1, 2, 3, 4];
-		expect(a).to.have.length(8);
-	});
-	it("should be type string", function() {
-		var a = "Hello World!";
-		expect(a).to.be.a('string');
-	});
-	it("should also fail", function() {
-		var a = "Hello World!";
-		expect(a).to.be.a('integer');
 	});
 });
