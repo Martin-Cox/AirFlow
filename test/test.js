@@ -24,4 +24,12 @@ describe("Testing Mocha", function() {
 		var a = [1, 2, 3, 4];
 		expect(a).to.have.length(8);
 	});
+	it("should be type string", function() {
+		var a = "Hello World!";
+		expect(a).to.be.a('string');
+	});
+	it("should also fail", function() {
+		var a = "Hello World!";
+		expect(a).to.be.a('integer');
+	});
 });

@@ -1,7 +1,9 @@
 var gulp = require('gulp')
 var connect = require('gulp-connect')
 var browserify = require('browserify')
-var source = require('vinyl-source-stream')
+var source = require('vinyl-source-stream');
+var gulp = require('gulp');
+var mocha = require('gulp-mocha');
 
 gulp.task('connect', function () {
     connect.server({
@@ -22,6 +24,10 @@ gulp.task('build', function() {
 
 gulp.task('watch', function() {
     gulp.watch(['./**/*', '!./js/build.js'], { interval: 500 }, ['build'])
+})
+
+gulp.task('test', function() {
+    return gulp.src('./test/test.js').pipe(mocha());
 })
 
 gulp.task('default', ['connect', 'watch'])
