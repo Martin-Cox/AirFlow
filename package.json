@@ -12,9 +12,12 @@
   },
   "devDependencies": {
     "browserify": "^13.0.0",
+    "chai": "^3.5.0",
     "gulp": "^3.9.1",
     "gulp-connect": "^2.3.1",
+    "gulp-mocha": "^2.2.0",
     "http-server": "^0.8.5",
+    "mocha": "^2.4.5",
     "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
