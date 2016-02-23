@@ -27,6 +27,7 @@ gulp.task('watch', function() {
 })
 
 gulp.task('test', function() {
+    //Creates local server, runs mocha tests, then exits process (therefore killing server)
     connect.server({
         root: '',
         port: 4000
