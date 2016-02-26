@@ -676,74 +676,81 @@ var simulation = function($http, defaultsService) {
 				var position = null;
 
 				if (touchSide != null) {
-
 					switch(touchSide) {
 						case scope.caseGroup.bottomPlane:
-							position = positionsEnum.BOTTOM;
+							scope.dragFan.properties.position = positionsEnum.BOTTOM;
 							scope.dragFan.fanPhysicalObject.rotation.x = 0;
 							scope.dragFan.fanPhysicalObject.rotation.y = 0;
 							scope.dragFan.fanPhysicalObject.rotation.x = 90 * Math.PI/180;
 							scope.dragFan.fanAOEObject.rotation.x = 0;
 							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 0;
 							scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180;
 							scope.dragFan.fanPhysicalObject.__dirtyRotation = true;
 							scope.dragFan.fanAOEObject.__dirtyRotation = true;
 							break;
 						case scope.caseGroup.topPlane:
-							position = positionsEnum.TOP;
+							scope.dragFan.properties.position = positionsEnum.TOP;
 							scope.dragFan.fanPhysicalObject.rotation.x = 0;
 							scope.dragFan.fanPhysicalObject.rotation.y = 0;
 							scope.dragFan.fanPhysicalObject.rotation.x = 90 * Math.PI/180;
 							scope.dragFan.fanAOEObject.rotation.x = 0;
 							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 0;
 							scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180;
 							scope.dragFan.fanPhysicalObject.__dirtyRotation = true;
 							scope.dragFan.fanAOEObject.__dirtyRotation = true;
 							break;
 						case scope.caseGroup.visibleSidePlane:
-							position = positionsEnum.VISIBLE_SIDE;
+							scope.dragFan.properties.position = positionsEnum.VISIBLE_SIDE;
 							scope.dragFan.fanPhysicalObject.rotation.x = 0;
 							scope.dragFan.fanPhysicalObject.rotation.y = 0;
 							scope.dragFan.fanPhysicalObject.rotation.y = 90 * Math.PI/180;
 							scope.dragFan.fanAOEObject.rotation.x = 0;
 							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 0;
 							scope.dragFan.fanAOEObject.rotation.z = 90 * Math.PI/180;
 							scope.dragFan.fanPhysicalObject.__dirtyRotation = true;
 							scope.dragFan.fanAOEObject.__dirtyRotation = true;
 							break;
 						case scope.caseGroup.invisibleSidePlane:
-							position = positionsEnum.INVISIBLE_SIDE;
+							scope.dragFan.properties.position = positionsEnum.INVISIBLE_SIDE;
 							scope.dragFan.fanPhysicalObject.rotation.x = 0;
 							scope.dragFan.fanPhysicalObject.rotation.y = 0;
 							scope.dragFan.fanPhysicalObject.rotation.y = 90 * Math.PI/180;
 							scope.dragFan.fanAOEObject.rotation.x = 0;
 							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 0;
 							scope.dragFan.fanAOEObject.rotation.z = 90 * Math.PI/180;
 							scope.dragFan.fanPhysicalObject.__dirtyRotation = true;
 							scope.dragFan.fanAOEObject.__dirtyRotation = true;
 							break;
 						case scope.caseGroup.backPlane:
+							scope.dragFan.properties.position = positionsEnum.BACK;
 							scope.dragFan.fanPhysicalObject.rotation.x = 0;
 							scope.dragFan.fanPhysicalObject.rotation.y = 0;
 							scope.dragFan.fanAOEObject.rotation.x = 0;
 							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 0;
+							scope.dragFan.fanAOEObject.rotation.x = 90 * Math.PI/180;
 							scope.dragFan.fanPhysicalObject.__dirtyRotation = true;
 							scope.dragFan.fanAOEObject.__dirtyRotation = true;
-							position = positionsEnum.BACK;
 							break;
 						case scope.caseGroup.frontPlane:
+							scope.dragFan.properties.position = positionsEnum.FRONT;
 							scope.dragFan.fanPhysicalObject.rotation.x = 0;
 							scope.dragFan.fanPhysicalObject.rotation.y = 0;
 							scope.dragFan.fanAOEObject.rotation.x = 0;
 							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 0;
+							scope.dragFan.fanAOEObject.rotation.x = 90 * Math.PI/180;
 							scope.dragFan.fanPhysicalObject.__dirtyRotation = true;
 							scope.dragFan.fanAOEObject.__dirtyRotation = true;
-							position = positionsEnum.FRONT;
 							break;
 					}
 
-					if (position != null) {
-						var dragSide = chooseSide(event, position);
+					if (scope.dragFan.properties.position != null) {
+						var dragSide = chooseSide(event, scope.dragFan.properties.position);
 
 						if (dragSide.intersects.length > 0) {
 							scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point);
@@ -751,7 +758,6 @@ var simulation = function($http, defaultsService) {
 							determineFanAOEPosition();
 							scope.dragFan.fanAOEObject.__dirtyPosition = true;
 							scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
-
 							scope.$digest();
 						}
 					}
