@@ -13,13 +13,14 @@ var MainController = function($scope, $http) {
     $scope.dragFan = null;
     $scope.editFan = null;
 
-    $scope.caseGroup= new Object();
+    $scope.caseGroup = new Object();
 
     $scope.stats = [];
 
     $scope.addingFan = false;
     $scope.addingFanValidPos = false;
-    $scope.newFanPlaceholderObject = null;
+    $scope.newFanPlaceholderObject = new Object();
+    $scope.newFanPlaceholderObjectPosition = [];
     $scope.newFanPlaceholderWireframe = null;
 
     $scope.overrideCompSettings = false;

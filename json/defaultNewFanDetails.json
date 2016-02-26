@@ -27,7 +27,8 @@
   },
   "properties": {
     "size": 120,
-    "rpm": 1200,
+    "maxRPM": 1000,
+    "percentageRPM": 100,
     "mode": "intake"
   }
 }

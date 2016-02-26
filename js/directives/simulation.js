@@ -44,7 +44,7 @@ var simulation = function($http, defaultsService) {
 					var newFanDefaultsPromise = defaultsService.getNewFanDefaults();
 					newFanDefaultsPromise.then(function(result) {
 						scope.defaultNewFan = result;
-						
+
 						//Need to change this value after all AJAX calls have completed to notify controller that loading has completed
 						scope.ajaxComplete = true;
 
@@ -456,6 +456,7 @@ var simulation = function($http, defaultsService) {
 
 
 			fan.properties.scale = 1;
+			fanObject.properties.scale = 1;
 
 			determineFanAOEPosition(fanObject);
 
@@ -485,6 +486,91 @@ var simulation = function($http, defaultsService) {
 			//Create a new fan using default properties from newFanDefaults.json
 			//Much the same as createDefaultFan
 
+			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
+			var fanPhysicalMaterial = Physijs.createMaterial(
+				new THREE.MeshLambertMaterial({
+					color: parseInt(scope.fanColors.normal),
+					side: scope.defaultNewFan.fanObject.material.side
+				}),
+				0.3,
+				1
+			);
+
+			var fanPhysicalObject = new Physijs.BoxMesh(new THREE.CubeGeometry(scope.defaultNewFan.fanObject.dimensions.width, scope.defaultNewFan.fanObject.dimensions.height, scope.defaultNewFan.fanObject.dimensions.depth), fanPhysicalMaterial, 0); //Gravity, 0 = weightless
+
+			var fanAOEObject = createFanAOEObject(scope.defaultNewFan, true);
+
+			//We need to rotate the fanAOEObject (and possibly fanPhysicalObject) in order for them to "point" inside the case
+			switch(scope.newFanPlaceholderObjectPosition) {
+				case positionsEnum.FRONT:
+					fanAOEObject.rotation.x = 90 * Math.PI/180;
+					break;
+				case positionsEnum.BACK:
+					fanAOEObject.rotation.x = 90 * Math.PI/180;
+					break;
+				case positionsEnum.TOP:
+					fanPhysicalObject.rotation.x = 90 * Math.PI/180;
+					fanAOEObject.rotation.x = 180 * Math.PI/180;
+					break;
+				case positionsEnum.BOTTOM:
+					fanPhysicalObject.rotation.x = 90 * Math.PI/180;
+					fanAOEObject.rotation.x = 180 * Math.PI/180;
+					break;
+				case positionsEnum.VISIBLE_SIDE:
+					fanPhysicalObject.rotation.y = 90 * Math.PI/180;
+					fanAOEObject.rotation.z = 90 * Math.PI/180;
+					break;
+				case positionsEnum.INVISIBLE_SIDE:
+					fanPhysicalObject.rotation.y = 90 * Math.PI/180;
+					fanAOEObject.rotation.z = 90 * Math.PI/180;
+					break;
+			}
+
+			fanPhysicalObject.position.set(scope.newFanPlaceholderObject.position.x, scope.newFanPlaceholderObject.position.y, scope.newFanPlaceholderObject.position.z);
+
+			fanPhysicalObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
+
+			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
+
+			var fanObject = new Object();
+
+			fanObject.properties = new Object();
+
+			fanObject.fanAOEObject = fanAOEObject;
+			fanObject.fanAOEObject.dimensions = scope.defaultNewFan.fanAOEObject.dimensions;
+			fanObject.fanPhysicalObject = fanPhysicalObject;
+			fanObject.fanPhysicalObject.dimensions = scope.defaultNewFan.fanObject.dimensions;
+			fanObject.id = fanPhysicalObject.id;
+			fanObject.editing = false;
+			fanObject.properties.mode = scope.defaultNewFan.properties.mode;
+			fanObject.properties.size = scope.defaultNewFan.properties.size;
+			fanObject.properties.maxRPM = scope.defaultNewFan.properties.maxRPM;
+			fanObject.properties.percentageRPM = scope.defaultNewFan.properties.percentageRPM;
+			fanObject.properties.position = scope.newFanPlaceholderObjectPosition;
+			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
+
+
+			fanObject.properties.scale = 1;
+
+			determineFanAOEPosition(fanObject);
+
+			scene.add(fanPhysicalObject);
+
+			scene.add(fanAOEObject);
+
+			//Calculate force
+			//fanObject.forceVector = new THREE.Vector3(fan.properties.forceVector.x, fan.properties.forceVector.y, fan.properties.forceVector.z);
+			fanObject.properties.forceVector =  scope.calculateForceVector(fanObject);
+
+			//Checking param mode here to offset positions
+			//TODO: Add support for fans that are neither intake or exhaust (e.g. GPU fan)
+			if (scope.defaultNewFan.properties.mode != "exhaust") {
+				scope.intakeFans.push(fanObject);
+			} else {
+				scope.exhaustFans.push(fanObject);
+			}
+
+			scope.fans.push(fanObject);	
 		}
 
 		function createFanAOEObject(fan, defaultCreation) { 
@@ -771,44 +857,45 @@ var simulation = function($http, defaultsService) {
 			} else if (scope.addingFan === true) {
 				
 				var touchSide = detectTouchingCase(event);
-				var position = null;
 
 				switch(touchSide) {
 					case scope.caseGroup.bottomPlane:
-						position = positionsEnum.BOTTOM;
+						scope.newFanPlaceholderObjectPosition = positionsEnum.BOTTOM;
 						scope.newFanPlaceholderObject.rotation.x = 0;
 						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.rotation.x = 90 * Math.PI/180;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						break;
 					case scope.caseGroup.topPlane:
-						position = positionsEnum.TOP;
+						scope.newFanPlaceholderObjectPosition= positionsEnum.TOP;
 						scope.newFanPlaceholderObject.rotation.x = 0;
 						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.rotation.x = 90 * Math.PI/180;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						break;
 					case scope.caseGroup.visibleSidePlane:
-						position = positionsEnum.VISIBLE_SIDE;
+						scope.newFanPlaceholderObjectPosition = positionsEnum.VISIBLE_SIDE;
 						scope.newFanPlaceholderObject.rotation.x = 0;
 						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.rotation.y = 90 * Math.PI/180;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						break;
 					case scope.caseGroup.invisibleSidePlane:
-						position = positionsEnum.INVISIBLE_SIDE;
+						scope.newFanPlaceholderObjectPosition = positionsEnum.INVISIBLE_SIDE;
 						scope.newFanPlaceholderObject.rotation.x = 0;
 						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.rotation.y = 90 * Math.PI/180;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						break;
 					case scope.caseGroup.backPlane:
+						scope.newFanPlaceholderObjectPosition = positionsEnum.BACK;
 						scope.newFanPlaceholderObject.rotation.x = 0;
 						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						position = positionsEnum.BACK;
 						break;
 					case scope.caseGroup.frontPlane:
+						scope.newFanPlaceholderObjectPosition = positionsEnum.FRONT;
 						scope.newFanPlaceholderObject.rotation.x = 0;
 						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
@@ -816,19 +903,20 @@ var simulation = function($http, defaultsService) {
 						break;
 				}
 
-				if (position != null) {
-					var dragSide = chooseSide(event, position);
+				if (scope.newFanPlaceholderObjectPosition != null) {
+					var dragSide = chooseSide(event, scope.newFanPlaceholderObjectPosition);
 
-					if (dragSide.intersects.length > 0) {
-						scope.newFanPlaceholderObject.position.copy(dragSide.intersects[0].point);
+					if (dragSide.intersects != undefined) {
+							if (dragSide.intersects.length > 0) {
+							scope.newFanPlaceholderObject.position.copy(dragSide.intersects[0].point);
 
-						scope.newFanPlaceholderObject.__dirtyPosition = true;
+							scope.newFanPlaceholderObject.__dirtyPosition = true;
 
-						scope.$digest();
+							scope.$digest();
 
-						//TODO: Check if fanPlaceholder is in a valid position
-						scope.addingFanValidPos = true;
-
+							//TODO: Check if fanPlaceholder is in a valid position
+							scope.addingFanValidPos = true;
+						}
 					}
 				}
 
