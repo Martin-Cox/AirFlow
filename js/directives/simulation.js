@@ -802,11 +802,13 @@ var simulation = function($http, defaultsService) {
 					case scope.caseGroup.backPlane:
 						scope.newFanPlaceholderObject.rotation.x = 0;
 						scope.newFanPlaceholderObject.rotation.y = 0;
+						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						position = positionsEnum.BACK;
 						break;
 					case scope.caseGroup.frontPlane:
 						scope.newFanPlaceholderObject.rotation.x = 0;
 						scope.newFanPlaceholderObject.rotation.y = 0;
+						scope.newFanPlaceholderObject.__dirtyRotation = true;
 						position = positionsEnum.FRONT;
 						break;
 				}
@@ -851,7 +853,21 @@ var simulation = function($http, defaultsService) {
 
 		function handleMouseClick(event) {
 
-			orbitControl.enableRotate = true;
+			if (scope.addingFan === true) {
+				orbitControl.enableRotate = false;
+				if (scope.addingFanValidPos === true) {
+				createNewFan();
+				scene.remove(scope.newFanPlaceholderObject);
+				scene.remove(scope.newFanPlaceholderWireframe);
+				scope.addingFan = false;
+				scope.addingFanValidPos = false;
+			    scope.newFanPlaceholderObject = null;
+			    scope.newFanPlaceholderWireframe = null;
+			    orbitControl.enableRotate = true;
+				}
+			} else {
+				orbitControl.enableRotate = true;
+			}			
 
 			//When a user clicks on a fan, open the component control panel section and change fan color
 			var touchFan = detectTouchingFan(event);
@@ -886,20 +902,7 @@ var simulation = function($http, defaultsService) {
 					offset.copy(dragSide.intersects[0].point).sub(dragSide.tempPlane.position);
 				}
 			}
-	
-			if (scope.addingFan === true && scope.addingFanValidPos === true) {
 
-				//TODO: We can't rotate using left click and drag if we remove from the scene the objects and set everything to null
-				//Maybe ctrl + left click to place fan or something?
-
-				createNewFan();
-				/*scene.remove(scope.newFanPlaceholderObject);
-				scene.remove(scope.newFanPlaceholderWireframe);
-				scope.addingFan = false;
-				scope.addingFanValidPos = false;
-			    scope.newFanPlaceholderObject = null;
-			    scope.newFanPlaceholderWireframe = null;*/
-			}
 		}
 
 		scope.deleteFan = function() {
@@ -961,7 +964,7 @@ var simulation = function($http, defaultsService) {
 			scene.add(scope.newFanPlaceholderWireframe);
 
 			scope.addingFan = true;
-
+		
 		}
 
 		function chooseSide(event, position) {			
