@@ -1215,7 +1215,6 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - Create new fan then mouse over plane that is not front or back then try to move fan to front or back it doesnt rotate properly
 		// - When move mouse and adding new fan, check if current pos is valid. Turn fanPlaceholderAOE wire frame turn green in valid pos, red in invalid pos
 		// - When click and adding new fan and in valid pos, create a new fan, otherwise, if in invalid pos, show error
 		// - Stop fans from being able to go off the side of the case
