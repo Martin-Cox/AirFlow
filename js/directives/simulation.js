@@ -145,6 +145,7 @@ var simulation = function($http, defaultsService) {
 
 			cullParticles();
 
+			renderer.domElement.addEventListener( 'touchmove', handleMouseMove, false );
 			renderer.domElement.addEventListener( 'mousemove', handleMouseMove, false );
 			renderer.domElement.addEventListener( 'mousedown', handleMouseClick, false );
 			renderer.domElement.addEventListener( 'mouseup', handleMouseRelease, false );
