@@ -216,7 +216,7 @@ var simulation = function($http, defaultsService) {
 
 			var spawnRate = 300;
 
-			if (availableParticles.length > 0) {
+			if (availableParticles.length > 0 && scope.intakeFans.length > 0) {
 
 				//Set spawn position as the particle is created
 				setParticleStartingPosition(availableParticles[0]);
@@ -947,14 +947,14 @@ var simulation = function($http, defaultsService) {
 			if (scope.addingFan === true) {
 				orbitControl.enableRotate = false;
 				if (scope.addingFanValidPos === true) {
-				createNewFan();
-				scene.remove(scope.newFanPlaceholderObject);
-				scene.remove(scope.newFanPlaceholderWireframe);
-				scope.addingFan = false;
-				scope.addingFanValidPos = false;
-			    scope.newFanPlaceholderObject = null;
-			    scope.newFanPlaceholderWireframe = null;
-			    orbitControl.enableRotate = true;
+					createNewFan();
+					scene.remove(scope.newFanPlaceholderObject);
+					scene.remove(scope.newFanPlaceholderWireframe);
+					scope.addingFan = false;
+					scope.addingFanValidPos = false;
+				    scope.newFanPlaceholderObject = null;
+				    scope.newFanPlaceholderWireframe = null;
+				    orbitControl.enableRotate = true;
 				}
 			} else {
 				orbitControl.enableRotate = true;
