@@ -18,11 +18,10 @@
       "side": "THREE.DoubleSide"
     },
     "dimensions": {
-      "radiusTop": 120,
-      "radiusBottom": 120,
-      "height": 200,
-      "radiusSegments": 50,
-      "heightSegments": 50
+      "radiusTop": 60,
+      "radiusBottom": 60,
+      "radiusSegments": 25,
+      "heightSegments": 25
     }
   },
   "properties": {
