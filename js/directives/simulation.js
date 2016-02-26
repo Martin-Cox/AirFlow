@@ -39,16 +39,19 @@ var simulation = function($http, defaultsService) {
 				fanDefaultsPromise.then(function(result) {
 					//Function run only after service AJAX call has completed
 					//TODO: Handle if error returned, create error message dialog
-
-					//Need to change this value after all AJAX calls have completed to notify controller that loading has completed
-					scope.ajaxComplete = true;
-
-					//Store default values in the scope variables
 					scope.fanColors = result.colors;
 					scope.defaultFans = result;
+					var newFanDefaultsPromise = defaultsService.getNewFanDefaults();
+					newFanDefaultsPromise.then(function(result) {
+						scope.defaultNewFan = result;
+						
+						//Need to change this value after all AJAX calls have completed to notify controller that loading has completed
+						scope.ajaxComplete = true;
 
-					//Create the 3D scene
-					init();
+						//Create the 3D scene
+						init();
+					});
+
 				});
 			});
 		}

@@ -4,6 +4,7 @@ var MainController = function($scope, $http) {
 
     $scope.defaultCase = null;
     $scope.defaultFans = null;
+    $scope.defaultNewFan = null;
     $scope.fanColors = null;
 
     $scope.fans = [];
