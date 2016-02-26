@@ -755,9 +755,10 @@ var simulation = function($http, defaultsService) {
 						if (dragSide.intersects.length > 0) {
 							scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point);
 
-							determineFanAOEPosition();
+							determineFanAOEPosition(scope.dragFan);
 							scope.dragFan.fanAOEObject.__dirtyPosition = true;
 							scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
+							scope.dragFan.properties.forceVector = scope.calculateForceVector(scope.dragFan);
 							scope.$digest();
 						}
 					}
