@@ -1217,6 +1217,7 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
+		// - Finish new project function
 		// - When move mouse and adding new fan, check if current pos is valid. Turn fanPlaceholderAOE wire frame turn green in valid pos, red in invalid pos
 		// - When click and adding new fan and in valid pos, create a new fan, otherwise, if in invalid pos, show error
 		// - Stop fans from being able to go off the side of the case
