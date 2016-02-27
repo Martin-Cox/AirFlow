@@ -45,13 +45,18 @@ var simulation = function($http, defaultsService) {
 					newFanDefaultsPromise.then(function(result) {
 						scope.defaultNewFan = result;
 
-						//Need to change this value after all AJAX calls have completed to notify controller that loading has completed
-						scope.ajaxComplete = true;
+						var projectDetailsDefaultsPromise = defaultsService.getProjectDetailsDefaults();
+						projectDetailsDefaultsPromise.then(function(result) {
+							scope.projectDetails = result;
 
-						//Create the 3D scene
-						init();
+							//Need to change this value after all AJAX calls have completed to notify controller that loading has completed
+							scope.ajaxComplete = true;
+
+							//Create the 3D scene
+							init();
+
+						});
 					});
-
 				});
 			});
 		}

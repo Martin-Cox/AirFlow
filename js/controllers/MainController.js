@@ -2,6 +2,8 @@ var MainController = function($scope, $http) {
 
     $scope.ajaxComplete = false;
 
+    $scope.projectDetails = null;
+
     $scope.defaultCase = null;
     $scope.defaultFans = null;
     $scope.defaultNewFan = null;
