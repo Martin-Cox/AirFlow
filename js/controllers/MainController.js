@@ -84,6 +84,11 @@ var MainController = function($scope, $http) {
         return formattedDate;
     };
 
+    $scope.$watch('projectDetails', function() {
+        //The project details have been changed, update the modified date
+        $scope.projectDetails.dateModified = $scope.getCurrentDate();
+    });
+
     $scope.$watch('editFan', function() {
         //Angular doesn't like it when we set scope.editFan to null in deleteFan() so we have to set it to an empty array and use an override to disable component settings form
         if ($scope.editFan != null && $scope.editFan.length === 0) {
