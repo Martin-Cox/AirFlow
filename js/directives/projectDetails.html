@@ -1,0 +1,26 @@
+<div class="editorSection" ng-controller="ProjectDetailsController">
+  <form novalidate class="editorForm">
+  	<p class="sectionHeader">Project Details</p>
+    <fieldset>
+      <div class="editorProperty">
+      	<p>Project Name: </p>
+      	<input type="text" ng-model="projectDetails.projectName"/>
+      </div>
+      <div class="editorProperty">
+      	<p>Author: </p>
+      	<input type="text" ng-model="projectDetails.author"/>
+      </div>
+      <div class="editorProperty">
+      	<p>Version: </p>
+      	<input type="number" ng-model="projectDetails.version"/>
+      </div>
+      <div class="editorProperty">
+        <p>Date created: </p>
+        <input type="date" ng-readonly="true" ng-model="projectDetails.dateCreated"/>
+      </div>
+          <div class="editorProperty">
+        <p>Date modified: </p>
+        <input class="123" type="date" ng-readonly="true" ng-model="projectDetails.dateModified"/>
+      </div>
+    <fieldset>
+</div>
