@@ -29,7 +29,7 @@ var simulation = function($http, defaultsService) {
 		getDefaults();
 
 		function getDefaults() {
-			//Get defaults using defaultsService, then when all promises are fulfilled, run init and anim functions
+			//Get defaults using defaultsService, then when all promises are fulfilled notify main controller
 			var caseDefaultsPromise = defaultsService.getCaseDefaults();
 			caseDefaultsPromise.then(function(result) {
 				//Function run only after service AJAX call has completed
@@ -51,17 +51,13 @@ var simulation = function($http, defaultsService) {
 
 							//Need to change this value after all AJAX calls have completed to notify controller that loading has completed
 							scope.ajaxComplete = true;
-
-							//Create the 3D scene
-							init();
-
 						});
 					});
 				});
 			});
 		}
 
-		function init() {
+		scope.init = function() {
 			//Loads physijs files, creates scene etc.
 
 			Physijs.scripts.worker = '/js/external/physijs_worker.js';
