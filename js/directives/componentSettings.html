@@ -4,19 +4,19 @@
     <fieldset ng-disabled="!editFan || overrideCompSettings">
       <div class="editorProperty">
       	<p>Mode: </p>
-      	<input type="text" ng-model="editFan.properties.mode" ng-change="propertiesChange(editFan.properties.mode)"/>
+      	<input type="text" ng-model="editFan.properties.mode" ng-change="fanPropertiesChange(editFan.properties.mode)"/>
       </div>
       <div class="editorProperty">
       	<p>Max RPM: </p>
-      	<input type="number" ng-model="editFan.properties.maxRPM" ng-change="propertiesChange(editFan.properties.maxRPM)" min="0" max="3000"/>
+      	<input type="number" ng-model="editFan.properties.maxRPM" ng-change="fanPropertiesChange(editFan.properties.maxRPM)" min="0" max="3000"/>
       </div>
       <div class="editorProperty">
       	<p>Size (mm): </p>
-      	<input type="number" ng-model="editFan.properties.size" ng-change="propertiesChange(editFan.properties.size)" min="80" max="140"/>
+      	<input type="number" ng-model="editFan.properties.size" ng-change="fanPropertiesChange(editFan.properties.size)" min="80" max="140"/>
       </div>
       <div class="editorProperty">
         <p>Current RPM (%): </p>
-        <input type="number" ng-model="editFan.properties.percentageRPM" ng-change="propertiesChange(editFan.properties.percentageRPM)" min="0" max="100"/>
+        <input type="number" ng-model="editFan.properties.percentageRPM" ng-change="fanPropertiesChange(editFan.properties.percentageRPM)" min="0" max="100"/>
       </div>
       <div class="editorProperty">
         <p>FORCE X: </p>
@@ -32,11 +32,11 @@
       </div>
       <div class="editorProperty">
         <p>Date created: </p>
-        <input type="date" ng-readonly="true" ng-model="editFan.dateCreated"/>
+        <input type="date" ng-readonly="true" ng-model="editFan.properties.dateCreated"/>
       </div>
           <div class="editorProperty">
         <p>Date modified: </p>
-        <input class="123" type="date" ng-readonly="true" ng-model="editFan.dateModified"/>
+        <input class="123" type="date" ng-readonly="true" ng-model="editFan.properties.dateModified"/>
       </div>
     </fieldset>
 </div>

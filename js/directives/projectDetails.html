@@ -4,15 +4,15 @@
     <fieldset>
       <div class="editorProperty">
       	<p>Project Name: </p>
-      	<input type="text" ng-model="projectDetails.projectName"/>
+      	<input type="text" ng-model="projectDetails.projectName" ng-change="projectDetailsChange()"/>
       </div>
       <div class="editorProperty">
       	<p>Author: </p>
-      	<input type="text" ng-model="projectDetails.author"/>
+      	<input type="text" ng-model="projectDetails.author" ng-change="projectDetailsChange()"/>
       </div>
       <div class="editorProperty">
       	<p>Version: </p>
-      	<input type="number" ng-model="projectDetails.version"/>
+      	<input type="number" ng-model="projectDetails.version" ng-change="projectDetailsChange()"/>
       </div>
       <div class="editorProperty">
         <p>Date created: </p>
