@@ -4,6 +4,7 @@ var MainController = function($scope, $http) {
 
     $scope.projectDetails = null;
 
+    $scope.defaultProjectDetails = null;
     $scope.defaultCase = null;
     $scope.defaultFans = null;
     $scope.defaultNewFan = null;
@@ -42,9 +43,45 @@ var MainController = function($scope, $http) {
             	document.getElementsByClassName("main")[0].removeChild(splashElement);
             }, 800);
 
+            $scope.newProject();
             $scope.animate();
             $scope.spawnParticles();
         }
+    };
+
+    $scope.newProject = function() {
+        //Starts a new project using the default values
+
+        $scope.projectDetails = $scope.defaultProjectDetails;
+
+        $scope.projectDetails.dateCreated = $scope.getCurrentDate();
+        $scope.projectDetails.dateModified = $scope.getCurrentDate();
+
+        //TODO: Reset Three.js scene
+        //TODO: Reset stats
+
+    };
+
+    $scope.getCurrentDate = function() {
+        //Gets formatted date
+
+        var today = new Date();
+        var day = today.getDate();
+        var month = today.getMonth() + 1; //Months start counting at 0
+        var year = today.getFullYear();
+
+        if (day < 10) {
+            //Append a 0 for nicer formatting
+            day = "0" + day;
+        }
+
+        if (month < 10) {
+            //Append a 0 for nicer formatting
+            month = "0" + month;
+        }
+
+        var formattedDate = day + "/" + month + "/" + year;
+        return formattedDate;
     };
 
     $scope.$watch('editFan', function() {

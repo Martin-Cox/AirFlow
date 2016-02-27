@@ -47,7 +47,7 @@ var simulation = function($http, defaultsService) {
 
 						var projectDetailsDefaultsPromise = defaultsService.getProjectDetailsDefaults();
 						projectDetailsDefaultsPromise.then(function(result) {
-							scope.projectDetails = result;
+							scope.defaultProjectDetails = result;
 
 							//Need to change this value after all AJAX calls have completed to notify controller that loading has completed
 							scope.ajaxComplete = true;

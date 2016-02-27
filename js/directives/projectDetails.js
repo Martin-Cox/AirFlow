@@ -1,9 +1,7 @@
 var projectDetails = function() {
   return { 
     restrict: 'E', 
-    scope: { 
-      settings: '=' 
-    }, 
+    scope: false, 
     templateUrl: 'js/directives/projectDetails.html'
   }; 
 };
