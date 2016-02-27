@@ -100,6 +100,7 @@ var MainController = function($scope, $http) {
 
     $scope.propertiesChange = function(changedProperty) {
         //Called when the user edits a fan property
+        $scope.projectDetails.dateModified = $scope.getCurrentDate();
         $scope.editFan.properties.forceVector = $scope.calculateForceVector($scope.editFan);
         $scope.resizeFan($scope.editFan);
     }
