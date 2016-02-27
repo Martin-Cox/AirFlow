@@ -96,7 +96,6 @@ var MainController = function($scope, $http) {
     $scope.projectDetailsChange = function() {
         //The project details have been changed, update the modified date
         $scope.projectDetails.dateModified = $scope.getCurrentDate();
-        console.log("update project mod date");
     }
 
     $scope.fanPropertiesChange = function(changedProperty) {

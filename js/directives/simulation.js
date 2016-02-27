@@ -455,7 +455,8 @@ var simulation = function($http, defaultsService) {
 			fanObject.properties.percentageRPM = fan.properties.percentageRPM;
 			fanObject.properties.position = fan.properties.position;
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
-
+			fanObject.properties.dateCreated = scope.getCurrentDate();
+			fanObject.properties.dateModified = scope.getCurrentDate();
 
 			fan.properties.scale = 1;
 			fanObject.properties.scale = 1;
@@ -550,7 +551,8 @@ var simulation = function($http, defaultsService) {
 			fanObject.properties.percentageRPM = scope.defaultNewFan.properties.percentageRPM;
 			fanObject.properties.position = scope.newFanPlaceholderObjectPosition;
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
-
+			fanObject.properties.dateCreated = scope.getCurrentDate();
+			fanObject.properties.dateModified = scope.getCurrentDate();
 
 			fanObject.properties.scale = 1;
 
