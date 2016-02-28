@@ -5,7 +5,8 @@ var simulation = function($http, defaultsService) {
     templateUrl: 'js/directives/simulation.html',
     link: function(scope, elem, attr) {
 
-    	var camera, scene, renderer, width, height, clock, orbitControl, fpsStats, intersectedObject;
+    	var camera, scene, width, height, clock, orbitControl, fpsStats, intersectedObject;
+    	var renderer = null;
 		var particles = [];
 		var availableParticles = [];
 		var THREE = require('three');
@@ -57,33 +58,66 @@ var simulation = function($http, defaultsService) {
 			});
 		}
 
+		scope.emptyScene = function() {
+			if (scene) {
+	            /*scene.children.forEach(function(object){
+	                scene.remove(object);
+	            });*/
+				var obj = null;
+				for(var i = scene.children.length - 1; i >= 0; i--) { 
+					obj = scene.children[i];
+    				scene.remove(obj);
+				}
+	        }
+		}
+
 		scope.init = function() {
 			//Loads physijs files, creates scene etc.
+			if (renderer === null) {
+				//First time calling init, need to create renderer, scene, attach scripts etc.
 
-			Physijs.scripts.worker = '/js/external/physijs_worker.js';
-			Physijs.scripts.ammo = '/js/external/ammo.js';
+				Physijs.scripts.worker = '/js/external/physijs_worker.js';
+				Physijs.scripts.ammo = '/js/external/ammo.js';
 
-			window.addEventListener( 'resize', onWindowResize, false);
+				window.addEventListener( 'resize', onWindowResize, false);
 
-			width = document.getElementById('simulationContainer').offsetWidth;
-			height = document.getElementById('simulationContainer').offsetHeight;
+				width = document.getElementById('simulationContainer').offsetWidth;
+				height = document.getElementById('simulationContainer').offsetHeight;
 
-			fpsStats = new Stats();
-			fpsStats.setMode(0);
+				fpsStats = new Stats();
+				fpsStats.setMode(0);
 
-			fpsStats.domElement.style.position = 'absolute';
-			fpsStats.domElement.style.right = '0px';
-			fpsStats.domElement.style.top = '0px';
+				fpsStats.domElement.style.position = 'absolute';
+				fpsStats.domElement.style.right = '0px';
+				fpsStats.domElement.style.top = '0px';
 
-			document.getElementById("simulationContainer").appendChild(fpsStats.domElement);
+				document.getElementById("simulationContainer").appendChild(fpsStats.domElement);
 
-			renderer = new THREE.WebGLRenderer ( { antialias: true});
-			renderer.setSize(width, height);
-			document.getElementById("simulationContainer").appendChild(renderer.domElement);
+			
+				renderer = new THREE.WebGLRenderer ( { antialias: true});
+				renderer.setSize(width, height);
+				document.getElementById("simulationContainer").appendChild(renderer.domElement);
 
-			scene = new Physijs.Scene;
+				scene = new Physijs.Scene;
 
-			scene.setGravity(new THREE.Vector3( 0, 12, 0));
+				scene.setGravity(new THREE.Vector3( 0, 12, 0));
+
+				camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
+
+				camera.position.x = 800;
+				camera.position.y = 800;
+				camera.position.z = -800;
+
+				scene.add(camera);
+
+				orbitControl = new OrbitControls(camera, document.getElementById('simulationContainer'));
+				//orbitControl.enablePan = false;
+				orbitControl.constraint.minDistance = 600;
+				orbitControl.constraint.maxDistance = 2200;
+				clock = new THREE.Clock();
+				createParticles(100);
+				cullParticles();
+			}
 
 			createDefaultCase(scope.defaultCase);
 
@@ -93,21 +127,6 @@ var simulation = function($http, defaultsService) {
 			createDefaultFan(scope.defaultFans.fanFour);
 			createDefaultFan(scope.defaultFans.fanFive);
 			createDefaultFan(scope.defaultFans.fanSix);
-
-			camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
-
-			camera.position.x = 800;
-			camera.position.y = 800;
-			camera.position.z = -800;
-
-			scene.add(camera);
-
-			orbitControl = new OrbitControls(camera, document.getElementById('simulationContainer'));
-			//orbitControl.enablePan = false;
-			orbitControl.constraint.minDistance = 600;
-			orbitControl.constraint.maxDistance = 2200;
-			clock = new THREE.Clock();
-
 
 			var skyboxGeometry = new THREE.CubeGeometry(9000, 9000, 9000);
 			var skyboxMaterial = new THREE.MeshBasicMaterial({ color: 0x262B30, side: THREE.BackSide });
@@ -121,8 +140,6 @@ var simulation = function($http, defaultsService) {
 			scope.stats.particleSuccessPercentage = 0;
 			scope.stats.particleFailurePercentage = 0;
 			scope.updateStats();
-
-			createParticles(100);
 
 			var topLight = new THREE.DirectionalLight(0xffffff, 1);
 			topLight.position.set(0, 1, 0);
@@ -144,12 +161,10 @@ var simulation = function($http, defaultsService) {
 
 			scene.add(new THREE.AxisHelper(200));
 
-			cullParticles();
-
-			renderer.domElement.addEventListener( 'touchmove', handleMouseMove, false );
-			renderer.domElement.addEventListener( 'mousemove', handleMouseMove, false );
-			renderer.domElement.addEventListener( 'mousedown', handleMouseClick, false );
-			renderer.domElement.addEventListener( 'mouseup', handleMouseRelease, false );
+				renderer.domElement.addEventListener( 'touchmove', handleMouseMove, false );
+				renderer.domElement.addEventListener( 'mousemove', handleMouseMove, false );
+				renderer.domElement.addEventListener( 'mousedown', handleMouseClick, false );
+				renderer.domElement.addEventListener( 'mouseup', handleMouseRelease, false );
 		}
 
 		scope.animate = function() {
@@ -1220,6 +1235,8 @@ var simulation = function($http, defaultsService) {
 
 		//TODO (IN ORDER):
 		// - Finish new project function
+		// - Style input boxes
+		// - Use string tokens instead of hardcodes strings for i18n
 		// - Update modified date when we change something other than a project details property e.g. move a fan, change fan property, add fan etc.
 		// - Will loading a project change the modified date just becasue we loaded it? It shouldn't, I need to test this
 		// - When move mouse and adding new fan, check if current pos is valid. Turn fanPlaceholderAOE wire frame turn green in valid pos, red in invalid pos
@@ -1238,6 +1255,7 @@ var simulation = function($http, defaultsService) {
 		// - User configurable project settings 													- AND UNIT TESTS
 		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS
 		// - Input validation on ALL user enterable data (using Angular) 							- AND UNIT TESTS
+		// - Implement WEB-ARIA roles and support a11y
 		// - Change rate of spawning in particles dependant on the number of intake fans
 		// - Simulation quality settings (AA on/off) 
 		// - How to use overlay

@@ -44,9 +44,6 @@ var MainController = function($scope, $http) {
             }, 800);
 
             $scope.newProject();
-            $scope.init();
-            $scope.animate();
-            $scope.spawnParticles();
         }
     };
 
@@ -60,6 +57,11 @@ var MainController = function($scope, $http) {
 
         //TODO: Reset Three.js scene
         $scope.stats = [];
+
+        $scope.emptyScene();
+        $scope.init();                    
+        $scope.animate();
+        $scope.spawnParticles();
     };
 
     $scope.getCurrentDate = function() {
