@@ -161,10 +161,10 @@ var simulation = function($http, defaultsService) {
 
 			scene.add(new THREE.AxisHelper(200));
 
-				renderer.domElement.addEventListener( 'touchmove', handleMouseMove, false );
-				renderer.domElement.addEventListener( 'mousemove', handleMouseMove, false );
-				renderer.domElement.addEventListener( 'mousedown', handleMouseClick, false );
-				renderer.domElement.addEventListener( 'mouseup', handleMouseRelease, false );
+			renderer.domElement.addEventListener('touchmove', handleMouseMove, false);
+			renderer.domElement.addEventListener('mousemove', handleMouseMove, false);
+			renderer.domElement.addEventListener('mousedown', handleMouseClick, false);
+			renderer.domElement.addEventListener('mouseup', handleMouseRelease, false);
 		}
 
 		scope.animate = function() {
