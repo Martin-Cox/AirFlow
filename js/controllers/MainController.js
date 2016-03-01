@@ -15,6 +15,7 @@ var MainController = function($scope, $http) {
     $scope.intakeFans = [];
     $scope.dragFan = null;
     $scope.editFan = null;
+    $scope.originalFanPos = new Object();
 
     $scope.caseGroup = new Object();
 

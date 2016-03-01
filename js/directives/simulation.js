@@ -862,10 +862,12 @@ var simulation = function($http, defaultsService) {
 						var dragSide = chooseSide(event, scope.dragFan.properties.position);
 
 						if (dragSide.intersects.length > 0) {
+							//console.log("Is fan at valid pos: " + scope.dragFan.)
 							scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point);
 							determineFanAOEPosition(scope.dragFan);
 							scope.dragFan.fanAOEObject.__dirtyPosition = true;
 							scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
+							//scope.dragFan.properties.isValidPos = true;
 							scope.dragFan.properties.forceVector = scope.calculateForceVector(scope.dragFan);
 							scope.$digest();
 						}
@@ -977,44 +979,126 @@ var simulation = function($http, defaultsService) {
 				}
 			} else {
 				orbitControl.enableRotate = true;
-			}			
+			}		
 
-			if(scope.dragFan != null && scope.dragFan.properties.isValidPos == false) {
+			//When a user clicks on a fan, open the component control panel section and change fan color
+			var touchFan = detectTouchingFan(event);
 
+			scope.editFan = null;
+			scope.dragFan = null;
+			scope.$digest();
 
-			} else {
-				//When a user clicks on a fan, open the component control panel section and change fan color
-				var touchFan = detectTouchingFan(event);
+			//For peace of mind, reset all fans to not editing when we click
+			for (var i = 0; i < scope.fans.length; i++) {
+				scope.fans[i].editing = false;
+				scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
+				scene.remove(scope.fans[i].AOEWireframe); 
+			}
 
-				scope.editFan = null;
-				scope.dragFan = null;
+			//If we clicked on a fan, do stuff here
+			if (touchFan && scope.addingFan != true) {
+				touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.validEdit));
+				touchFan.editing = true;
+				scene.add(touchFan.AOEWireframe);
+				scope.editFan = touchFan;
+				scope.dragFan = touchFan;
+				scope.originalFanPos.x = touchFan.fanPhysicalObject.position.x;
+				scope.originalFanPos.y = touchFan.fanPhysicalObject.position.y;
+				scope.originalFanPos.z = touchFan.fanPhysicalObject.position.z;
+				scope.originalFanPos.position = touchFan.properties.position;
 				scope.$digest();
+				orbitControl.enableRotate = false;
+			}
 
-				//For peace of mind, reset all fans to not editing when we click
-				for (var i = 0; i < scope.fans.length; i++) {
-					scope.fans[i].editing = false;
-					scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
-					scene.remove(scope.fans[i].AOEWireframe); 
+			//If we are dragging a fan, do stuff here
+			if (scope.dragFan != null && scope.addingFan != true) {				
+				var dragSide = chooseSide(event, scope.dragFan.properties.position);
+
+				if (dragSide.intersects.length > 0) {
+					offset.copy(dragSide.intersects[0].point).sub(dragSide.tempPlane.position);
 				}
+			}
+		}
 
-				//If we clicked on a fan, do stuff here
-				if (touchFan && scope.addingFan != true) {
-					touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.validEdit));
-					touchFan.editing = true;
-					scene.add(touchFan.AOEWireframe);
-					scope.editFan = touchFan;
-					scope.dragFan = touchFan;
-					scope.$digest();
-					orbitControl.enableRotate = false;
-				}
 
-				//If we are dragging a fan, do stuff here
-				if (scope.dragFan != null && scope.addingFan != true) {				
-					var dragSide = chooseSide(event, scope.dragFan.properties.position);
-
-					if (dragSide.intersects.length > 0) {
-						offset.copy(dragSide.intersects[0].point).sub(dragSide.tempPlane.position);
+		function handleMouseRelease(event) {
+			if (scope.dragFan != null) {
+				if (scope.dragFan.properties.isValidPos == true) {
+					scope.dragFan = null;
+					scope.$digest();	
+				} else {;
+					scope.dragFan.fanPhysicalObject.position.set(scope.originalFanPos.x, scope.originalFanPos.y, scope.originalFanPos.z);
+					scope.dragFan.properties.position = scope.originalFanPos.position;
+					switch(scope.dragFan.properties.position) {
+						case positionsEnum.FRONT:
+							scope.dragFan.fanPhysicalObject.rotation.x = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.x = 0;
+							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 0;
+							scope.dragFan.fanAOEObject.rotation.x = 90 * Math.PI/180;
+							break;
+						case positionsEnum.BACK:
+							scope.dragFan.fanPhysicalObject.rotation.x = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.x = 0;
+							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 0;
+							scope.dragFan.fanAOEObject.rotation.x = 90 * Math.PI/180;
+							break;
+						case positionsEnum.TOP:
+							scope.dragFan.fanPhysicalObject.rotation.x = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 0;
+							scope.dragFan.fanPhysicalObject.rotation.x = 90 * Math.PI/180;
+							scope.dragFan.fanAOEObject.rotation.x = 0;
+							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 0;
+							scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180;
+							break;
+						case positionsEnum.BOTTOM:
+							scope.dragFan.fanPhysicalObject.rotation.x = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 0;
+							scope.dragFan.fanPhysicalObject.rotation.x = 90 * Math.PI/180;
+							scope.dragFan.fanAOEObject.rotation.x = 0;
+							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 0;
+							scope.dragFan.fanAOEObject.rotation.x = 180 * Math.PI/180;
+							break;
+						case positionsEnum.VISIBLE_SIDE:
+							scope.dragFan.fanPhysicalObject.rotation.x = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 90 * Math.PI/180;
+							scope.dragFan.fanAOEObject.rotation.x = 0;
+							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 90 * Math.PI/180;
+							break;
+						case positionsEnum.INVISIBLE_SIDE:
+							scope.dragFan.fanPhysicalObject.rotation.x = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 0;
+							scope.dragFan.fanPhysicalObject.rotation.y = 90 * Math.PI/180;
+							scope.dragFan.fanAOEObject.rotation.x = 0;
+							scope.dragFan.fanAOEObject.rotation.y = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 0;
+							scope.dragFan.fanAOEObject.rotation.z = 90 * Math.PI/180;
+							break;
 					}
+					scope.dragFan.fanPhysicalObject.__dirtyRotation = true;
+					scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
+					scope.dragFan.fanAOEObject.__dirtyRotation = true;
+					scope.$digest();
+					for (var i = 0; i < scope.fans.length; i++) {
+						scope.fans[i].editing = false;
+						scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
+						scene.remove(scope.fans[i].AOEWireframe); 
+					}
+					determineFanAOEPosition();
+					scope.dragFan.fanAOEObject.__dirtyPosition = true;
+					scope.dragFan.properties.isValidPos = true;
+					scope.dragFan.properties.forceVector = scope.calculateForceVector(scope.dragFan);
+					scope.editFan = null;
+					scope.dragFan = null;
+					scope.$digest();					
 				}
 			}
 		}
@@ -1155,15 +1239,6 @@ var simulation = function($http, defaultsService) {
 				case positionsEnum.INVISIBLE_SIDE:
 					fan.fanAOEObject.position.set(fan.fanPhysicalObject.position.x - (fan.fanAOEObject.dimensions.height/2) - (fan.fanPhysicalObject.dimensions.depth/2), fan.fanPhysicalObject.position.y, fan.fanPhysicalObject.position.z);
 					break;
-			}
-		}
-
-		function handleMouseRelease(event) {
-			if (scope.dragFan != null) {
-				//TODO: Only release if dragFan is in a valid pos
-				//When a user stops clicking/dragging on a fan, set the dragFan object to null
-				scope.dragFan = null;
-				scope.$digest();	
 			}
 		}
 
