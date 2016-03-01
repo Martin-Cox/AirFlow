@@ -83,12 +83,6 @@
       "z": 248
     }
   },
-  "colors" : {
-    "normal": "0x003566",
-    "highlight": "0x4D82B3",
-    "edit": "0x706598",
-    "wireframe": "0x90DAFF"
-  },
   "fanThree" : {
     "fanObject": {
       "material": {
@@ -130,12 +124,6 @@
       "y": 100,
       "z": 0
     }
-  },
-  "colors" : {
-    "normal": "0x003566",
-    "highlight": "0x4D82B3",
-    "edit": "0x706598",
-    "wireframe": "0x90DAFF"
   },
   "fanFour" : {
     "fanObject": {
@@ -179,12 +167,6 @@
       "z": 50
     }
   },
-  "colors" : {
-    "normal": "0x003566",
-    "highlight": "0x4D82B3",
-    "edit": "0x706598",
-    "wireframe": "0x90DAFF"
-  },
   "fanFive" : {
     "fanObject": {
       "material": {
@@ -226,12 +208,6 @@
       "y": 100,
       "z": 0
     }
-  },
-  "colors" : {
-    "normal": "0x003566",
-    "highlight": "0x4D82B3",
-    "edit": "0x706598",
-    "wireframe": "0x90DAFF"
   },
   "fanSix" : {
     "fanObject": {
@@ -278,7 +254,8 @@
   "colors" : {
     "normal": "0x003566",
     "highlight": "0x4D82B3",
-    "edit": "0x706598",
+    "validEdit": "0x519C52",
+    "invalidEdit": "0xCF5157",
     "wireframe": "0x90DAFF"
   }
 }

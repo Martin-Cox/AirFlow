@@ -766,20 +766,6 @@ var simulation = function($http, defaultsService) {
 
 		function handleMouseMove(event) {			
 			if (scope.dragFan != null) {
-				//Dragging a fan
-				/*var dragSide = chooseSide(event, scope.dragFan.properties.position);
-				
-				//Update fan position to mouse position
-				if (dragSide.intersects.length > 0) {
-					scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point);
-					determineFanAOEPosition();
-					
-					scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
-					scope.dragFan.fanAOEObject.__dirtyPosition = true;
-
-					scope.$digest();
-				}*/
-
 				var touchSide = detectTouchingCase(event);
 				var position = null;
 
@@ -862,6 +848,9 @@ var simulation = function($http, defaultsService) {
 
 						if (dragSide.intersects.length > 0) {
 							scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point);
+
+							//Determine fan valid pos
+							//If valid pos, set fan to valid color, else set to invalid color
 
 							determineFanAOEPosition(scope.dragFan);
 							scope.dragFan.fanAOEObject.__dirtyPosition = true;
@@ -995,7 +984,7 @@ var simulation = function($http, defaultsService) {
 
 			//If we clicked on a fan, do stuff here
 			if (touchFan && scope.addingFan != true) {
-				touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.edit));
+				touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.validEdit));
 				touchFan.editing = true;
 				scene.add(touchFan.AOEWireframe);
 				scope.editFan = touchFan;
@@ -1156,6 +1145,7 @@ var simulation = function($http, defaultsService) {
 
 		function handleMouseRelease(event) {
 			if (scope.dragFan != null) {
+				//TODO: Only release if dragFan is in a valid pos
 				//When a user stops clicking/dragging on a fan, set the dragFan object to null
 				scope.dragFan = null;
 				scope.$digest();	
