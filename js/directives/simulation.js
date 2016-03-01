@@ -221,7 +221,7 @@ var simulation = function($http, defaultsService) {
 
 				particle = new Physijs.SphereMesh(sphereGeometry, sphereMaterial);	
 
-				particle.addEventListener('collision', handleCollision);
+				particle.addEventListener('collision', handleParticleToFanCollision);
 
 				particles.push(particle);
 				availableParticles.push(particle);
@@ -472,6 +472,7 @@ var simulation = function($http, defaultsService) {
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 			fanObject.properties.dateCreated = scope.getCurrentDate();
 			fanObject.properties.dateModified = scope.getCurrentDate();
+			fanObject.properties.isValidPos = true;
 
 			fan.properties.scale = 1;
 			fanObject.properties.scale = 1;
@@ -481,6 +482,8 @@ var simulation = function($http, defaultsService) {
 			scene.add(fanPhysicalObject);
 
 			scene.add(fanAOEObject);
+
+			fanObject.fanPhysicalObject.addEventListener('collision', handleFanToFanCollision);
 
 			//Calculate force
 			//fanObject.forceVector = new THREE.Vector3(fan.properties.forceVector.x, fan.properties.forceVector.y, fan.properties.forceVector.z);
@@ -740,7 +743,7 @@ var simulation = function($http, defaultsService) {
 			scene.add(fan.AOEWireframe);
 		}
 
-		function handleCollision(collided_with, linearVelocity, angularVelocity) {
+		function handleParticleToFanCollision(collided_with, linearVelocity, angularVelocity) {
 			//Event gets called when physics objects (spheres) collide with another object
 
 			for (var i = 0; i < scope.fans.length; i++) {
@@ -761,6 +764,18 @@ var simulation = function($http, defaultsService) {
 					this.applyCentralImpulse(scope.fans[i].properties.forceVector);
 					break;
 				} 
+			}
+		}
+
+		function handleFanToFanCollision(collided_with, linearVelocity, angularVelocity) {
+			//Event gets called when a fan collides with/is moved to the same position as another fan
+
+			for (var i = 0; i < scope.fans.length; i++) {
+				if (collided_with.id === scope.fans[i].fanPhysicalObject.id) {
+					//Change to invalid pos color
+					scope.dragFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.invalidEdit));
+					scope.dragFan.properties.isValidPos = false;
+				}
 			}
 		}
 
@@ -848,10 +863,6 @@ var simulation = function($http, defaultsService) {
 
 						if (dragSide.intersects.length > 0) {
 							scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point);
-
-							//Determine fan valid pos
-							//If valid pos, set fan to valid color, else set to invalid color
-
 							determineFanAOEPosition(scope.dragFan);
 							scope.dragFan.fanAOEObject.__dirtyPosition = true;
 							scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
@@ -968,40 +979,44 @@ var simulation = function($http, defaultsService) {
 				orbitControl.enableRotate = true;
 			}			
 
-			//When a user clicks on a fan, open the component control panel section and change fan color
-			var touchFan = detectTouchingFan(event);
+			if(scope.dragFan != null && scope.dragFan.properties.isValidPos == false) {
 
-			scope.editFan = null;
-			scope.dragFan = null;
-			scope.$digest();
 
-			//For peace of mind, reset all fans to not editing when we click
-			for (var i = 0; i < scope.fans.length; i++) {
-				scope.fans[i].editing = false;
-				scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
-				scene.remove(scope.fans[i].AOEWireframe); 
-			}
+			} else {
+				//When a user clicks on a fan, open the component control panel section and change fan color
+				var touchFan = detectTouchingFan(event);
 
-			//If we clicked on a fan, do stuff here
-			if (touchFan && scope.addingFan != true) {
-				touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.validEdit));
-				touchFan.editing = true;
-				scene.add(touchFan.AOEWireframe);
-				scope.editFan = touchFan;
-				scope.dragFan = touchFan;
+				scope.editFan = null;
+				scope.dragFan = null;
 				scope.$digest();
-				orbitControl.enableRotate = false;
-			}
 
-			//If we are dragging a fan, do stuff here
-			if (scope.dragFan != null && scope.addingFan != true) {				
-				var dragSide = chooseSide(event, scope.dragFan.properties.position);
+				//For peace of mind, reset all fans to not editing when we click
+				for (var i = 0; i < scope.fans.length; i++) {
+					scope.fans[i].editing = false;
+					scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
+					scene.remove(scope.fans[i].AOEWireframe); 
+				}
 
-				if (dragSide.intersects.length > 0) {
-					offset.copy(dragSide.intersects[0].point).sub(dragSide.tempPlane.position);
+				//If we clicked on a fan, do stuff here
+				if (touchFan && scope.addingFan != true) {
+					touchFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.validEdit));
+					touchFan.editing = true;
+					scene.add(touchFan.AOEWireframe);
+					scope.editFan = touchFan;
+					scope.dragFan = touchFan;
+					scope.$digest();
+					orbitControl.enableRotate = false;
+				}
+
+				//If we are dragging a fan, do stuff here
+				if (scope.dragFan != null && scope.addingFan != true) {				
+					var dragSide = chooseSide(event, scope.dragFan.properties.position);
+
+					if (dragSide.intersects.length > 0) {
+						offset.copy(dragSide.intersects[0].point).sub(dragSide.tempPlane.position);
+					}
 				}
 			}
-
 		}
 
 		scope.deleteFan = function() {
