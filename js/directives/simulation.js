@@ -6,6 +6,7 @@ var simulation = function($http, defaultsService) {
     link: function(scope, elem, attr) {
 
     	var camera, scene, width, height, clock, orbitControl, fpsStats, intersectedObject;
+    	var simPaused = false;
     	var renderer = null;
 		var particles = [];
 		var availableParticles = [];
@@ -165,6 +166,19 @@ var simulation = function($http, defaultsService) {
 			renderer.domElement.addEventListener('mousemove', handleMouseMove, false);
 			renderer.domElement.addEventListener('mousedown', handleMouseClick, false);
 			renderer.domElement.addEventListener('mouseup', handleMouseRelease, false);
+
+			document.addEventListener("visibilitychange", handleVisibilityChange, false);
+		}
+
+		function handleVisibilityChange() {
+			if (document.hidden) {
+				simPaused = true;
+				console.log("Pause the sim");
+			} else  {
+				simPaused = false;
+				console.log("Resume the sim");
+				scene.onSimulationResume();
+			}
 		}
 
 		scope.animate = function() {
@@ -172,7 +186,10 @@ var simulation = function($http, defaultsService) {
 
 			fpsStats.begin();
 
-			scene.simulate(); //Run physics simulation
+			//Pause simulation
+			if (simPaused != true) {
+				scene.simulate(); //Run physics simulation
+			}			
 
 			requestAnimationFrame(scope.animate);
 			var delta = clock.getDelta();
