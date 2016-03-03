@@ -172,11 +172,9 @@ var simulation = function($http, defaultsService) {
 
 		function handleVisibilityChange() {
 			if (document.hidden) {
-				simPaused = true;
-				console.log("Pause the sim");
+				simPaused = true;				
 			} else  {
 				simPaused = false;
-				console.log("Resume the sim");
 				scene.onSimulationResume();
 			}
 		}
@@ -189,7 +187,7 @@ var simulation = function($http, defaultsService) {
 			//Pause simulation
 			if (simPaused != true) {
 				scene.simulate(); //Run physics simulation
-			}			
+			}		
 
 			requestAnimationFrame(scope.animate);
 			var delta = clock.getDelta();
