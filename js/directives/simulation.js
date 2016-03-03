@@ -1363,15 +1363,6 @@ var simulation = function($http, defaultsService) {
 		// - Save information to a .airflow file (OPTIONAL)
 		// - Upload project from .airflow file (OPTIONAL)
 		// - User defined case settings (OPTIONAL)
-
-		//OTHER NOTES:
-		// - Maybe use an eventListener for when $scope changes instead of checking every update frame -> better for perfomance
-		// - Not all fans will be intake or exhaust, e.g. GPU/CPU fan will be neither
-		// - For performance reason, it may be beneficial to keep track of a particles original spawn position, and just move it there on recycle, instead of calculating a new one each time)
-		// - fanAOEObject radius should be 1/2 fan size
-		// - Global vars should be scope objects e.g. fanNormalColor should be stored in $scope.fan, user defined fan properties in $scope.fans.0.rpm
-		// - ^ Doing that we can use $scope.watch() to watch for changes to these variables which measn that we can easily notify the sim code of any updates.
-		// - Because of the way angular works, I don't need to add methods to update the sim when the user changes values in the component section!
     }
   }; 
 };
