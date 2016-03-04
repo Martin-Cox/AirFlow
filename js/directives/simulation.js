@@ -489,9 +489,6 @@ var simulation = function($http, defaultsService) {
 			fanObject.properties.dateModified = scope.getCurrentDate();
 			fanObject.properties.isValidPos = true;
 
-			fan.properties.scale = 1;
-			fanObject.properties.scale = 1;
-
 			determineFanAOEPosition(fanObject);
 
 			scene.add(fanPhysicalObject);
@@ -586,8 +583,6 @@ var simulation = function($http, defaultsService) {
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 			fanObject.properties.dateCreated = scope.getCurrentDate();
 			fanObject.properties.dateModified = scope.getCurrentDate();
-
-			fanObject.properties.scale = 1;
 
 			determineFanAOEPosition(fanObject);
 
@@ -705,57 +700,42 @@ var simulation = function($http, defaultsService) {
 		}
 
 		scope.resizeFan = function(fan) {
-			//Changes the size of the fanPhysicalObject and fanAOEObject
-			//Need a baseline scale of 1 for all fans, e.g. scale 1 = 120mm, therefore 80mm fan scale = 0.6667
+			//We can't resize objects with physijs, so we have to create a new fan whenever we resize
 
-			var baselineSize = 120;
+			var resizedFan = fan;
+			resizedFan.fanObject = resizedFan.fanPhysicalObject;
+			resizedFan.fanObject.dimensions.width = resizedFan.properties.size;
+			resizedFan.fanObject.dimensions.height = resizedFan.properties.size;
+			resizedFan.fanAOEObject.dimensions.radiusTop = resizedFan.properties.size/2;
+			resizedFan.fanAOEObject.dimensions.radiusBottom = resizedFan.properties.size/2;
+			resizedFan.position = resizedFan.fanPhysicalObject.position;
 
-			var newScale = fan.properties.size/baselineSize;
+			createDefaultFan(resizedFan);
 
-			fan.fanPhysicalObject.scale.set(newScale, newScale, 1);
+			var length = scope.fans.length;
 
-			fan.properties.scale = newScale;
+			var index = 0;
 
-			//Need to recreate the fanAOEObject
+			scope.editFan = scope.fans[length-1];
 
-			var dimensions = fan.fanAOEObject.dimensions;
-			dimensions.radiusTop = fan.properties.size/2;
-			dimensions.radiusBottom = fan.properties.size/2;
+			scope.editFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.validEdit));
+			scope.editFan.editing = true;
+			scene.add(scope.editFan.AOEWireframe);
 
-			scene.remove(fan.fanAOEObject);
-			scene.remove(fan.AOEWireframe);
-
-			var fanAOEObject = createFanAOEObject(fan, false);
-
-			switch(fan.properties.position) {
-				case positionsEnum.FRONT:
-					fanAOEObject.rotation.x = 90 * Math.PI/180;
-					break;
-				case positionsEnum.BACK:
-					fanAOEObject.rotation.x = 90 * Math.PI/180;
-					break;
-				case positionsEnum.TOP:
-					fanAOEObject.rotation.x = 180 * Math.PI/180;
-					break;
-				case positionsEnum.BOTTOM:
-					fanAOEObject.rotation.x = 180 * Math.PI/180;
-					break;
-				case positionsEnum.VISIBLE_SIDE:
-					fanAOEObject.rotation.z = 90 * Math.PI/180;
-					break;
-				case positionsEnum.INVISIBLE_SIDE:
-					fanAOEObject.rotation.z = 90 * Math.PI/180;
-					break;
+			if (fan.properties.mode === "intake") {
+				index = scope.intakeFans.indexOf(fan);
+				scope.intakeFans.splice(index, 1);
+			} else {
+				index = scope.exhaustFans.indexOf(fan);
+				scope.exhaustFans.splice(index, 1);
 			}
 
-			fan.fanAOEObject = fanAOEObject;
-			fan.fanAOEObject.dimensions = dimensions;			
+			index = scope.fans.indexOf(fan);
+			scope.fans.splice(index, 1);
 
-			determineFanAOEPosition(fan);
-
-			fan.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
-			scene.add(fanAOEObject);
-			scene.add(fan.AOEWireframe);
+			scene.remove(fan.fanPhysicalObject);
+			scene.remove(fan.fanAOEObject);
+			scene.remove(fan.AOEWireframe);
 		}
 
 		function handleParticleToFanCollision(collided_with, linearVelocity, angularVelocity) {
@@ -877,12 +857,10 @@ var simulation = function($http, defaultsService) {
 						var dragSide = chooseSide(event, scope.dragFan.properties.position);
 
 						if (dragSide.intersects.length > 0) {
-							//console.log("Is fan at valid pos: " + scope.dragFan.)
 							scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point);
 							determineFanAOEPosition(scope.dragFan);
 							scope.dragFan.fanAOEObject.__dirtyPosition = true;
 							scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
-							//scope.dragFan.properties.isValidPos = true;
 							scope.dragFan.properties.forceVector = scope.calculateForceVector(scope.dragFan);
 							scope.$digest();
 						}
