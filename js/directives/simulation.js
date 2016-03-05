@@ -13,6 +13,7 @@ var simulation = function($http, defaultsService) {
 		var THREE = require('three');
 		var OrbitControls = require('three-orbit-controls')(THREE);
 		var Physijs = require('physijs-browserify')(THREE);
+		var Chart = require('chart.js');
 
 		//Enum of possible fan positions on the case (which part of the case is the fan on)
 		var positionsEnum = Object.freeze({
@@ -57,6 +58,33 @@ var simulation = function($http, defaultsService) {
 					});
 				});
 			});
+		}
+
+		scope.drawParticleSuccessRatioChart = function() {
+	 		var ctx = document.getElementById("myChart").getContext("2d");
+
+	        var data = [
+	            {
+	                value: 300,
+	                color:"#F7464A",
+	                highlight: "#FF5A5E",
+	                label: "Red"
+	            },
+	            {
+	                value: 50,
+	                color: "#46BFBD",
+	                highlight: "#5AD3D1",
+	                label: "Green"
+	            },
+	            {
+	                value: 100,
+	                color: "#FDB45C",
+	                highlight: "#FFC870",
+	                label: "Yellow"
+	            }
+	        ]   
+
+	        var myDoughnutChart = new Chart(ctx).Doughnut(data);
 		}
 
 		scope.emptyScene = function() {
@@ -1314,7 +1342,8 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - Get Chart.js working - Need to know when the results panel is active, then call drawCharts function that actually draws the charts
+		// - Continue work with Chart.js
+		// - Move draw charts functions to results panel directive
 		// - Finish new project function
 		// - Style input boxes
 		// - Use string tokens instead of hardcodes strings for i18n

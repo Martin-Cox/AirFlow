@@ -3,6 +3,7 @@ var angular = require('angular');
 var THREE = require('three');
 var OrbitControls = require('three-orbit-controls')(THREE);
 var Physijs = require('physijs-browserify')(THREE);
+var Chart = require('chart.js');
 
 var ComponentController = require('./controllers/ComponentController');
 var EnvironmentController = require('./controllers/EnvironmentController');

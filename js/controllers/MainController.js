@@ -48,8 +48,10 @@ var MainController = function($scope, $http) {
         }
     };
 
-    $scope.drawCharts = function() {
-        console.log("You have selected a new tab");
+    $scope.drawCharts = function() {        
+        setTimeout(function() {
+            $scope.drawParticleSuccessRatioChart();
+        }, 200);
     }
 
     $scope.newProject = function() {
