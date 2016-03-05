@@ -48,6 +48,10 @@ var MainController = function($scope, $http) {
         }
     };
 
+    $scope.drawCharts = function() {
+        console.log("You have selected a new tab");
+    }
+
     $scope.newProject = function() {
         //Starts a new project using the default values
 

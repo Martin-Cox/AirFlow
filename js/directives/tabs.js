@@ -29,6 +29,9 @@ var tabs = function() {
         });
 
         selectedTab.active = true;
+        if (selectedTab.heading === "Results") {
+          selectedTab.$parent.$parent.$parent.drawCharts();
+        }
       }
 
     }
