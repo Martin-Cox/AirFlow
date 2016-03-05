@@ -76,7 +76,7 @@ var simulation = function($http, defaultsService) {
 	            }
 	        ]   
 
-	        scope.charts.particleSuccessRatioChart = new Chart(context).Doughnut(data, {segmentStrokeColor : "#F5F5F5", animateRotate : false, animateScale : true});
+	        scope.charts.particleSuccessRatioChart = new Chart(context).Doughnut(data, {segmentStrokeColor : "#F5F5F5", animationEasing: "easeOutQuint", animateRotate : false, animateScale : true});
 		}
 
 		scope.emptyScene = function() {
@@ -1343,6 +1343,7 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
+		// - Should be able to press delete key to remove a fan etc.
 		// - Continue work with Chart.js
 		// - Move draw charts functions to results panel directive
 		// - Finish new project function
