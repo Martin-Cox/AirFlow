@@ -770,8 +770,13 @@ var simulation = function($http, defaultsService) {
 			for (var i = 0; i < scope.fans.length; i++) {
 				if (collided_with.id === scope.fans[i].fanPhysicalObject.id) {
 					//Change to invalid pos color
-					scope.dragFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.invalidEdit));
-					scope.dragFan.properties.isValidPos = false;
+					if (scope.dragFan != null) {
+						scope.dragFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.invalidEdit));
+						scope.dragFan.properties.isValidPos = false;
+					} else if (scope.addingFan == true) {
+						scope.newFanPlaceholderWireframe.material.color.setHex(parseInt(scope.fanColors.invalidEdit));
+						scope.addingFanValidPos = false;
+					}
 				}
 			}
 		}
@@ -929,9 +934,6 @@ var simulation = function($http, defaultsService) {
 							scope.newFanPlaceholderObject.__dirtyPosition = true;
 
 							scope.$digest();
-
-							//TODO: Check if fanPlaceholder is in a valid position
-							scope.addingFanValidPos = true;
 						}
 					}
 				}
@@ -1148,13 +1150,16 @@ var simulation = function($http, defaultsService) {
 
 			//Create placeholder fan objects
 			scope.newFanPlaceholderObject = new Physijs.BoxMesh(new THREE.CubeGeometry(120, 120, 40), fanPhysicalMaterial, 0); //Gravity, 0 = weightless
-			scope.newFanPlaceholderWireframe = new THREE.EdgesHelper(scope.newFanPlaceholderObject, parseInt(scope.fanColors.wireframe));
+			scope.newFanPlaceholderWireframe = new THREE.EdgesHelper(scope.newFanPlaceholderObject, parseInt(scope.fanColors.validEdit));
 			scope.newFanPlaceholderObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
+			scope.addingFanValidPos = true;
 
 			//Add them to the scene
 			scope.newFanPlaceholderObject.position.set(0, 300, -248);
 			scene.add(scope.newFanPlaceholderObject);
 			scene.add(scope.newFanPlaceholderWireframe);
+
+			scope.newFanPlaceholderObject.addEventListener('collision', handleFanToFanCollision);
 
 			scope.addingFan = true;
 		
