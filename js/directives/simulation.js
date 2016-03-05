@@ -590,6 +590,8 @@ var simulation = function($http, defaultsService) {
 
 			scene.add(fanAOEObject);
 
+			fanObject.fanPhysicalObject.addEventListener('collision', handleFanToFanCollision);
+
 			//Calculate force
 			//fanObject.forceVector = new THREE.Vector3(fan.properties.forceVector.x, fan.properties.forceVector.y, fan.properties.forceVector.z);
 			fanObject.properties.forceVector =  scope.calculateForceVector(fanObject);
@@ -1307,6 +1309,7 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
+		// - Get Chart.js working - Need to know when the results panel is active, then call drawCharts function that actually draws the charts
 		// - Finish new project function
 		// - Style input boxes
 		// - Use string tokens instead of hardcodes strings for i18n
