@@ -21,6 +21,7 @@ var MainController = function($scope, $http) {
 
     $scope.stats = [];
     $scope.charts = new Object();
+    $scope.charts.drewCharts = false;
 
     $scope.addingFan = false;
     $scope.addingFanValidPos = false;
@@ -49,10 +50,13 @@ var MainController = function($scope, $http) {
         }
     };
 
-    $scope.drawCharts = function() {        
-        setTimeout(function() {
-            $scope.drawParticleSuccessRatioChart();
-        }, 200);
+    $scope.drawCharts = function() {     
+        if ($scope.charts.drewCharts === false) {   
+            setTimeout(function() {
+                $scope.drawParticleSuccessRatioChart();
+                $scope.charts.drewCharts = true;
+            }, 500);    //TODO: This should really be done using a promise and not a simple timer
+        }
     }
 
     $scope.newProject = function() {
