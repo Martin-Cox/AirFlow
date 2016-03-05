@@ -20,6 +20,7 @@ var MainController = function($scope, $http) {
     $scope.caseGroup = new Object();
 
     $scope.stats = [];
+    $scope.charts = new Object();
 
     $scope.addingFan = false;
     $scope.addingFanValidPos = false;

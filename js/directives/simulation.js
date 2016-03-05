@@ -61,30 +61,22 @@ var simulation = function($http, defaultsService) {
 		}
 
 		scope.drawParticleSuccessRatioChart = function() {
-	 		var ctx = document.getElementById("myChart").getContext("2d");
+	 		var context = document.getElementById("myChart").getContext("2d");
 
 	        var data = [
 	            {
-	                value: 300,
-	                color:"#F7464A",
-	                highlight: "#FF5A5E",
-	                label: "Red"
+	                value: scope.stats.removedParticles,
+	                color: "#519C52",
+	                highlight: "#519C52",
 	            },
 	            {
-	                value: 50,
-	                color: "#46BFBD",
-	                highlight: "#5AD3D1",
-	                label: "Green"
-	            },
-	            {
-	                value: 100,
-	                color: "#FDB45C",
-	                highlight: "#FFC870",
-	                label: "Yellow"
+	                value: scope.stats.culledParticles,
+	                color: "#CF5157",
+	                highlight: "#CF5157",
 	            }
 	        ]   
 
-	        var myDoughnutChart = new Chart(ctx).Doughnut(data);
+	        scope.charts.particleSuccessRatioChart = new Chart(context).Doughnut(data, {segmentStrokeColor : "#F5F5F5", animateRotate : false, animateScale : true});
 		}
 
 		scope.emptyScene = function() {
@@ -164,6 +156,7 @@ var simulation = function($http, defaultsService) {
 			scene.add(skybox);
 
 			scope.stats.spawnedParticles = 0;
+			scope.stats.activeParticles = 0;
 			scope.stats.culledParticles = 0;
 			scope.stats.removedParticles = 0;
 			scope.stats.particleSuccessPercentage = 0;
@@ -230,12 +223,17 @@ var simulation = function($http, defaultsService) {
 			scope.stats.particleRatio = 100;
 			scope.stats.particleSuccessPercentage = (scope.stats.removedParticles/scope.stats.spawnedParticles)*100;
 			scope.stats.particleFailurePercentage = (scope.stats.culledParticles/scope.stats.spawnedParticles)*100;
+			if (scope.charts.particleSuccessRatioChart != null || scope.charts.particleSuccessRatioChart != undefined) {
+				scope.charts.particleSuccessRatioChart.segments[0].value = scope.stats.removedParticles;
+				scope.charts.particleSuccessRatioChart.segments[1].value = scope.stats.culledParticles;
+				scope.charts.particleSuccessRatioChart.update();
+			}
 			setTimeout(function() {
 	        	scope.updateStats();
-	        }, 5000);
+	        }, 1000);
 		}
 
-		function createParticles(numToCreate) {
+		function createParticles(numToCreate) { 
 			//Creates the pool of particles that will be added to the scene
 
 			for (var i = 0; i < numToCreate; i++) {
@@ -292,6 +290,7 @@ var simulation = function($http, defaultsService) {
 
 				//Add to total no. spawned particles
 				scope.stats.spawnedParticles += 1;
+				scope.stats.activeParticles += 1;
 
 				setTimeout(function() {
 		        	scope.spawnParticles();
@@ -362,6 +361,7 @@ var simulation = function($http, defaultsService) {
 					if (particles[i].spawnTime != null && unixTime - particles[i].spawnTime >= cullTime) {
 						recycleParticle(particles[i]);
 						scope.stats.culledParticles += 1;
+						scope.stats.activeParticles -= 1;
 						scope.$digest();
 					}
 				}
@@ -778,6 +778,7 @@ var simulation = function($http, defaultsService) {
 						if (particles[j].id === this.id) {
 							recycleParticle(particles[j]);
 							scope.stats.removedParticles += 1;
+							scope.stats.activeParticles -= 1;
 							scope.$digest();
 							break;
 						}
