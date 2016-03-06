@@ -349,7 +349,7 @@ var simulation = function($http, defaultsService) {
 			//cullTime is an integer in ms representing the longest amount of time before the particle should be culled. Will be configurable in project settings
 			//recheckTime is an integer in ms represeting the preiod of time between checking for particles that need to be culled. Will be configurable in sim quality settings
 
-			var recheckTime = 10000; //10 seconds, debug value
+			var recheckTime = 1000; //1 second, debug value
 
 			if (particles.length > 0) {
 
