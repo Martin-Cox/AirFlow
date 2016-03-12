@@ -1,5 +1,5 @@
-var helpBoxController = function($scope) {
+var HelpBoxController = function($scope) {
 
 };
 
-module.exports = helpBoxController;
+module.exports = HelpBoxController;

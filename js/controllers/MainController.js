@@ -31,6 +31,8 @@ var MainController = function($scope, $http) {
 
     $scope.overrideCompSettings = false;
 
+    $scope.displayingPopup = false;
+
 	angular.element(document).ready(function() {
         document.getElementById('loadingSplashLoadingText').innerHTML = 'Click anywhere to begin';
     });
@@ -99,15 +101,35 @@ var MainController = function($scope, $http) {
     };
 
     $scope.showHelpBox = function() {
-        var helpBox = document.getElementById('helpPopupBox');
-        helpBox.style.visibility = "visible"
-        helpBox.style.opacity = 100;
+        if ($scope.displayingPopup === false) {
+            var helpBox = document.getElementById('helpPopupBox');
+            helpBox.style.visibility = "visible"
+            helpBox.style.opacity = 100;
+            $scope.displayingPopup = true;
+        }
     }
 
     $scope.closeHelpBox = function() {
         var helpBox = document.getElementById('helpPopupBox');
         helpBox.style.visibility = "hidden"
         helpBox.style.opacity = 0;
+        $scope.displayingPopup = false;
+    }
+
+    $scope.showSettingsBox = function() {
+        if ($scope.displayingPopup === false) {
+            var settingsBox = document.getElementById('settingsPopupBox');
+            settingsBox.style.visibility = "visible"
+            settingsBox.style.opacity = 100;
+            $scope.displayingPopup = true;
+        }
+    }
+
+    $scope.closeSettingsBox = function() {
+        var settingsBox = document.getElementById('settingsPopupBox');
+        settingsBox.style.visibility = "hidden"
+        settingsBox.style.opacity = 0;
+        $scope.displayingPopup = false;
     }
 
     $scope.$watch('editFan', function() {
