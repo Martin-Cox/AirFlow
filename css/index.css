@@ -245,27 +245,7 @@ input[readonly] {
   transition: opacity 400ms;
   visibility: hidden;
   opacity: 0;
-  color: white;
-}
-
-#helpPopupBox h1 {
-  text-align: center;
-  font-size: 1.2em;
-  font-color: #F5F5F5;
-  border-bottom: 2px;
-  border-color: #F5F5F5;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-
-#settingsPopupBox h1 {
-  text-align: center;
-  font-size: 1.2em;
-  font-color: #F5F5F5;
-  border-bottom: 2px;
-  border-color: #F5F5F5;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  color: #F5F5F5;
 }
 
 .popupCloseButton {
@@ -285,4 +265,41 @@ input[readonly] {
   cursor: default;
 }
 
+#helpPopupBox h1 {
+  text-align: center;
+  font-style: none;
+  text-decoration: underline;
+  font-size: 1.2em;
+  font-color: #F5F5F5;
+  border-bottom: 2px;
+  border-color: #F5F5F5;
+  padding-top: 10px;
+}
+  
+.helpTextFooterLink {
+  font-style: none;
+  color: #CFCFCF;
+  text-decoration: underline;
+}
+
+#helpPopupBox p {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+.helpTextFooter {
+  margin-top: 8px;
+  text-align: center;
+}
+
+#settingsPopupBox h1 {
+  text-align: center;
+  font-size: 1.2em;
+  font-color: #F5F5F5;
+  border-bottom: 2px;
+  border-color: #F5F5F5;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 
