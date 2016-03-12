@@ -14,6 +14,17 @@
       <input type="text" ng-readonly="true" ng-model="stats.particleFailurePercentage"/>
     </div>
     <div class="chartWrapper">
-      <canvas id="myChart" width="200" height="200"></canvas>
+      <p class="sectionHeader">Particle Success Ratio</p>
+      <div class="chartKeyWrapper">
+        <div class="keyElement">
+          <div class="keyIcon" id="particleSuccessRatioSuccessfulIcon"></div>
+          <p>Successful Particles</p>
+        </div>
+        <div class="keyElement">
+          <div class="keyIcon" id="particleSuccessRatioFailedIcon"></div>
+          <p>Culled Particles</p>
+        </div>
+      </div>
+      <canvas id="particleSuccessRatioChart" width="200" height="200"></canvas>
     </div>
 </div>
