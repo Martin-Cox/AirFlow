@@ -98,6 +98,18 @@ var MainController = function($scope, $http) {
         return formattedDate;
     };
 
+    $scope.showHelpBox = function() {
+        var helpBox = document.getElementById('helpPopupBox');
+        helpBox.style.visibility = "visible"
+        helpBox.style.opacity = 100;
+    }
+
+    $scope.closeHelpBox = function() {
+        var helpBox = document.getElementById('helpPopupBox');
+        helpBox.style.visibility = "hidden"
+        helpBox.style.opacity = 0;
+    }
+
     $scope.$watch('editFan', function() {
         //Angular doesn't like it when we set scope.editFan to null in deleteFan() so we have to set it to an empty array and use an override to disable component settings form
         if ($scope.editFan != null && $scope.editFan.length === 0) {

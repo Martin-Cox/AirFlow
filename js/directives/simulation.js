@@ -110,7 +110,7 @@ var simulation = function($http, defaultsService) {
 
 				fpsStats.domElement.style.position = 'absolute';
 				fpsStats.domElement.style.right = '0px';
-				fpsStats.domElement.style.top = '0px';
+				fpsStats.domElement.style.bottom = '0px';
 
 				document.getElementById("simulationContainer").appendChild(fpsStats.domElement);
 
@@ -1348,6 +1348,7 @@ var simulation = function($http, defaultsService) {
 		// - Move draw charts functions to results panel directive
 		// - Finish new project function
 		// - Style input boxes
+		// - CSS transitions to buttons
 		// - Use string tokens instead of hardcodes strings for i18n
 		// - Update modified date when we change something other than a project details property e.g. move a fan, change fan property, add fan etc.
 		// - Will loading a project change the modified date just becasue we loaded it? It shouldn't, I need to test this
