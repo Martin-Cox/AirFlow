@@ -204,6 +204,7 @@ input[readonly] {
   position: absolute;
   top: 0px;
   right: 0px;
+  visibility: hidden;
 }
 
 #helpBoxButtonWrapper button{

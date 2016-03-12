@@ -46,6 +46,9 @@ var MainController = function($scope, $http) {
             //Only wait 800ms, 1000ms is the time it takes for opacity transition, but user can see sim before that and may want to interact before opacity has finished
             setTimeout(function() {
             	document.getElementsByClassName("main")[0].removeChild(splashElement);
+
+                //Show Help and Settings buttons
+                document.getElementById('helpBoxButtonWrapper').style.visibility = "visible";
             }, 800);
 
             $scope.newProject();
