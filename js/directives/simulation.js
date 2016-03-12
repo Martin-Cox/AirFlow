@@ -61,7 +61,7 @@ var simulation = function($http, defaultsService) {
 		}
 
 		scope.drawParticleSuccessRatioChart = function() {
-	 		var context = document.getElementById("myChart").getContext("2d");
+	 		var context = document.getElementById("particleSuccessRatioChart").getContext("2d");
 
 	        var data = [
 	            {
@@ -1343,6 +1343,7 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
+		// - Mouse offsets in sim are broken again possibly due to introduction of popups
 		// - Should be able to press delete key to remove a fan etc.
 		// - Continue work with Chart.js
 		// - Move draw charts functions to results panel directive

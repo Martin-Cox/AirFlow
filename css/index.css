@@ -201,7 +201,9 @@ input[readonly] {
 }
 
 #helpBoxButtonWrapper {
-
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
 
 #helpBoxButtonWrapper button{
