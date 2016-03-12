@@ -251,6 +251,7 @@ input[readonly] {
   visibility: hidden;
   opacity: 0;
   color: #F5F5F5;
+  border-radius: 10px;
 }
 
 .popupCloseButton {
