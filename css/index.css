@@ -214,6 +214,7 @@ input[readonly] {
   color: #CFCFCF;
   font-size: 2em;
   text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  border-radius: 4px;
 }
 
 #helpBoxButtonWrapper button:hover {
@@ -221,9 +222,9 @@ input[readonly] {
 }
 
 #helpBoxButtonWrapper img {
-  width: 35px;
+  width: 30px;
   height: auto;
-  margin-top: auto;
+  margin-top: 10px;
   margin-bottom: auto;
 }
 
