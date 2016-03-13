@@ -82,6 +82,14 @@ var MainController = function($scope, $http) {
         $scope.spawnParticles();
     };
 
+     $scope.saveProject = function() {
+        console.log("Placeholder save project");
+    };
+
+     $scope.loadProject = function() {
+        console.log("Placeholder load project");
+    };
+
     $scope.getCurrentDate = function() {
         //Gets formatted date
 

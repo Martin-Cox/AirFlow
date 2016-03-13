@@ -109,11 +109,11 @@ fieldset {
   width: 55%;
 }
 
-#buttonsWrapper {
+#fanButtonsWrapper {
 
 }
 
-#buttonsWrapper button {
+#fanButtonsWrapper button {
   width: 50%;
   text-align: center;
   background: #CFCFCF;
@@ -129,17 +129,51 @@ fieldset {
   transition: all 200ms;
 }
 
-#buttonsWrapper button:enabled {
+#fanButtonsWrapper button:enabled {
 
 }
 
-#buttonsWrapper button:disabled {
+#fanButtonsWrapper button:disabled {
   background: #939393;
 }
 
-#buttonsWrapper button:hover {
+#fanButtonsWrapper button:hover {
   color: #6B6B6B;
 }
+
+#projectButtonsWrapper {
+
+}
+
+#projectButtonsWrapper button {
+  width: 33.333%;
+  text-align: center;
+  background: #CFCFCF;
+  float: left;
+  border: none;
+  border-left: 2px black;
+  font-family:"Oswald", sans-serif;
+  color: black;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  height: 100%;
+  font-size: 1.2em;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  transition: all 200ms;
+}
+
+#projectButtonsWrapper button:enabled {
+
+}
+
+#projectButtonsWrapper button:disabled {
+  background: #939393;
+}
+
+#projectButtonsWrapper button:hover {
+  color: #6B6B6B;
+}
+
 
 .chartWrapper {
   width:100%;

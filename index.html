@@ -21,14 +21,18 @@
 			</div>
 			<div id="tabbedPaneContainer">
 				<tabs>
-					<tab heading="Settings">	
+					<tab heading="Settings">
+						<div id="projectButtonsWrapper">
+							<button ng-click="newProject()">New project</button>	
+							<button ng-click="saveProject()">Save</button>	
+							<button ng-click="loadProject()">Load</button>	
+						</div>
 						<project-Details></project-Details>
 						<environment-Settings></environment-Settings>
 						<component-Settings></component-Settings>
-						<div id="buttonsWrapper">
+						<div id="fanButtonsWrapper">
 							<button ng-click="addNewFan()" ng-disabled="addingFan">Add a Fan</button>
 							<button ng-click="deleteFan()" id="deleteFanBtn" ng-disabled="!editFan || overrideCompSettings">Delete Fan</button>
-							<button ng-click="newProject()">New project PLACEHOLDER</button>
 						</div>
 					</tab>						
 					<tab heading="Results">
