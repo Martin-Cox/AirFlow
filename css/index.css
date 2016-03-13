@@ -340,10 +340,10 @@ input[readonly] {
 }
 
 #particleSuccessRatioSuccessfulIcon {
-  background: green;
+  background: #519C52;
 }
 
 #particleSuccessRatioFailedIcon {
-  background: red;
+  background: #CF5157;
 }
 
