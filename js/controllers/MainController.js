@@ -59,6 +59,7 @@ var MainController = function($scope, $http) {
         if ($scope.charts.drewCharts === false) {   
             setTimeout(function() {
                 $scope.drawParticleSuccessRatioChart();
+                $scope.drawFanRatioChart();
                 $scope.charts.drewCharts = true;
             }, 500);    //TODO: This should really be done using a promise and not a simple timer
         }

@@ -79,6 +79,26 @@ var simulation = function($http, defaultsService) {
 	        scope.charts.particleSuccessRatioChart = new Chart(context).Doughnut(data, {segmentStrokeColor : "#F5F5F5", animationEasing: "easeOutQuint", animateRotate : false, animateScale : true});
 		}
 
+		scope.drawFanRatioChart = function() {
+	 		var context = document.getElementById("fanRatioChart").getContext("2d");
+
+	        var data = [
+	            {
+	                value: scope.stats.numIntakeFans,
+	                color: "#4D82B3",
+	                highlight: "#4D82B3",
+	            },
+	            {
+	                value: scope.stats.numExhaustFans,
+	                color: "#003566",
+	                highlight: "#003566",
+	            }
+	        ]   
+
+	        scope.charts.fanRatioChart = new Chart(context).Doughnut(data, {segmentStrokeColor : "#F5F5F5", animationEasing: "easeOutQuint", animateRotate : false, animateScale : true});
+		}
+
+
 		scope.emptyScene = function() {
 			if (scene) {
 	            /*scene.children.forEach(function(object){
@@ -224,10 +244,21 @@ var simulation = function($http, defaultsService) {
 			scope.stats.particleSuccessPercentage = ((scope.stats.removedParticles/scope.stats.spawnedParticles)*100).toFixed(2) + "%";
 			scope.stats.particleFailurePercentage = ((scope.stats.culledParticles/scope.stats.spawnedParticles)*100).toFixed(2) + "%";
 			scope.stats.particleLivePercentage = ((scope.stats.activeParticles/scope.stats.spawnedParticles)*100).toFixed(2) + "%";
+
+			scope.stats.numFans = scope.fans.length;
+			scope.stats.numIntakeFans = scope.intakeFans.length;
+			scope.stats.numExhaustFans = scope.exhaustFans.length;
+
 			if (scope.charts.particleSuccessRatioChart != null || scope.charts.particleSuccessRatioChart != undefined) {
 				scope.charts.particleSuccessRatioChart.segments[0].value = scope.stats.removedParticles;
 				scope.charts.particleSuccessRatioChart.segments[1].value = scope.stats.culledParticles;
 				scope.charts.particleSuccessRatioChart.update();
+			}
+
+			if (scope.charts.fanRatioChart != null || scope.charts.fanRatioChart != undefined) {
+				scope.charts.fanRatioChart.segments[0].value = scope.stats.numIntakeFans;
+				scope.charts.fanRatioChart.segments[1].value = scope.stats.numExhaustFans;
+				scope.charts.fanRatioChart.update();
 			}
 			setTimeout(function() {
 	        	scope.updateStats();

@@ -5,6 +5,10 @@
       <p>Total Spawned Particles: </p>
       <input type="text" ng-readonly="true" ng-model="stats.spawnedParticles"/>
     </div>
+    <div class="editorProperty">
+      <p>Total Fans: </p>
+      <input type="text" ng-readonly="true" ng-model="stats.numFans"/>
+    </div>
     <p class="sectionHeader">Detailed Results</p>
     <div class="chartWrapper">
       <p class="chartHeader">Particle Success Ratio</p>
@@ -31,5 +35,34 @@
     <div class="editorProperty">
       <p>Culled Particles: </p>
       <input type="text" ng-readonly="true" ng-model="stats.particleFailurePercentage"/>
+    </div>
+
+    <!-- New chart section -->
+
+    <div class="chartWrapper">
+      <p class="chartHeader">Fan Ratio</p>
+      <div class="chartKeyWrapper">
+        <div class="keyElement">
+          <div class="keyIcon" id="fanRatioIntakeIcon"></div>
+          <p>Intake Fans</p>
+        </div>
+        <div class="keyElement">
+          <div class="keyIcon" id="fanRatioExhaustIcon"></div>
+          <p>Exhaust Fans</p>
+        </div>
+      </div>
+      <canvas id="fanRatioChart" width="200" height="200"></canvas>
+    </div>
+    <div class="editorProperty">
+      <p>Total Fans: </p>
+      <input type="text" ng-readonly="true" ng-model="stats.numFans"/>
+    </div>
+    <div class="editorProperty">
+      <p>Intake Fans: </p>
+      <input type="text" ng-readonly="true" ng-model="stats.numIntakeFans"/>
+    </div>
+    <div class="editorProperty">
+      <p>Exhaust Fans: </p>
+      <input type="text" ng-readonly="true" ng-model="stats.numExhaustFans"/>
     </div>
 </div>

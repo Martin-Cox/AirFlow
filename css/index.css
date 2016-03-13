@@ -26,7 +26,8 @@ html, body {
   width: 20%;
   min-width: 300px;
   float: left;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #simulationContainer {
@@ -363,5 +364,13 @@ input[readonly] {
 
 #particleSuccessRatioFailedIcon {
   background: #CF5157;
+}
+
+#fanRatioIntakeIcon {
+  background: #4D82B3;
+}
+
+#fanRatioExhaustIcon {
+  background: #003566;
 }
 
