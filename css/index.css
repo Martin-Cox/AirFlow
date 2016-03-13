@@ -255,6 +255,11 @@ input[readonly] {
   border-radius: 10px;
 }
 
+.popupBox p {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
 .popupCloseButton {
   font-family: Arial, sans-serif;
   position: absolute;
@@ -290,8 +295,6 @@ input[readonly] {
 }
 
 #helpPopupBox p {
-  margin-left: 10px;
-  margin-right: 10px;
   margin-top: 10px;
 }
 
