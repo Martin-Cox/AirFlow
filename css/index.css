@@ -315,6 +315,19 @@ input[readonly] {
 
 /* Results Panel Stats */
 
+#resultsPanel .editorProperty p {
+  width: 60%;
+  text-align: center;
+}
+
+#resultsPanel .editorProperty input {
+  width: 35%;
+}
+
+.chartWrapper {
+  margin-top: 10px;
+}
+
 .chartKeyWrapper {
   height: 25px;
   margin-bottom: 15px;
