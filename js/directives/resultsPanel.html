@@ -1,12 +1,13 @@
 <div class="editorSection" id="resultsPanel" ng-controller="ResultsController">
   <form novalidate class="editorForm">
-  	<p class="sectionHeader">Results</p>
+  	<p class="sectionHeader">Results Overview</p>
     <div class="editorProperty">
       <p>Total Spawned Particles: </p>
       <input type="text" ng-readonly="true" ng-model="stats.spawnedParticles"/>
     </div>
+    <p class="sectionHeader">Detailed Results</p>
     <div class="chartWrapper">
-      <p class="sectionHeader">Particle Success Ratio</p>
+      <p class="chartHeader">Particle Success Ratio</p>
       <div class="chartKeyWrapper">
         <div class="keyElement">
           <div class="keyIcon" id="particleSuccessRatioSuccessfulIcon"></div>

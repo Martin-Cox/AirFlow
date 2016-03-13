@@ -324,10 +324,6 @@ input[readonly] {
   width: 35%;
 }
 
-.chartWrapper {
-  margin-top: 10px;
-}
-
 .chartKeyWrapper {
   height: 25px;
   margin-bottom: 15px;
@@ -351,6 +347,15 @@ input[readonly] {
   margin-right: 15px;
   border-radius: 25px;
 }
+
+.chartHeader {
+  width: 100%;
+  text-align: left;
+  text-decoration: underline;
+  margin-left: 15px;
+  margin-bottom: 15px;
+}
+
 
 #particleSuccessRatioSuccessfulIcon {
   background: #519C52;
