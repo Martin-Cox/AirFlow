@@ -221,8 +221,9 @@ var simulation = function($http, defaultsService) {
 
 		scope.updateStats = function() {
 			scope.stats.particleRatio = 100;
-			scope.stats.particleSuccessPercentage = (scope.stats.removedParticles/scope.stats.spawnedParticles)*100;
-			scope.stats.particleFailurePercentage = (scope.stats.culledParticles/scope.stats.spawnedParticles)*100;
+			scope.stats.particleSuccessPercentage = ((scope.stats.removedParticles/scope.stats.spawnedParticles)*100).toFixed(2) + "%";
+			scope.stats.particleFailurePercentage = ((scope.stats.culledParticles/scope.stats.spawnedParticles)*100).toFixed(2) + "%";
+			scope.stats.particleLivePercentage = ((scope.stats.activeParticles/scope.stats.spawnedParticles)*100).toFixed(2) + "%";
 			if (scope.charts.particleSuccessRatioChart != null || scope.charts.particleSuccessRatioChart != undefined) {
 				scope.charts.particleSuccessRatioChart.segments[0].value = scope.stats.removedParticles;
 				scope.charts.particleSuccessRatioChart.segments[1].value = scope.stats.culledParticles;

@@ -19,4 +19,16 @@
       </div>
       <canvas id="particleSuccessRatioChart" width="200" height="200"></canvas>
     </div>
+    <div class="editorProperty">
+      <p>Live Particles: </p>
+      <input type="text" ng-readonly="true" ng-model="stats.particleLivePercentage"/>
+    </div>
+    <div class="editorProperty">
+      <p>Successful Particles: </p>
+      <input type="text" ng-readonly="true" ng-model="stats.particleSuccessPercentage"/>
+    </div>
+    <div class="editorProperty">
+      <p>Culled Particles: </p>
+      <input type="text" ng-readonly="true" ng-model="stats.particleFailurePercentage"/>
+    </div>
 </div>
