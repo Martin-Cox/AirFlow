@@ -8,7 +8,7 @@
     "angular": "^1.5.0",
     "chart.js": "^1.0.2",
     "physijs-browserify": "0.0.2",
-    "three": "^0.73.2",
+    "three": "^0.74.0",
     "three-orbit-controls": "^72.0.0"
   },
   "devDependencies": {

@@ -1375,13 +1375,11 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - Mouse offsets in sim are broken again possibly due to introduction of popups
 		// - Should be able to press delete key to remove a fan etc.
 		// - Continue work with Chart.js
 		// - Move draw charts functions to results panel directive
 		// - Finish new project function
 		// - Style input boxes
-		// - CSS transitions to buttons
 		// - Use string tokens instead of hardcodes strings for i18n
 		// - Update modified date when we change something other than a project details property e.g. move a fan, change fan property, add fan etc.
 		// - Will loading a project change the modified date just becasue we loaded it? It shouldn't, I need to test this
