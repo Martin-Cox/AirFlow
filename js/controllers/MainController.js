@@ -44,15 +44,19 @@ var MainController = function($scope, $http) {
 
             //Have to remove the element from the DOM, otherwise it would still be there but be invisible, meaning we can't interact with anything else
             //Only wait 800ms, 1000ms is the time it takes for opacity transition, but user can see sim before that and may want to interact before opacity has finished
-            setTimeout(function() {
-            	document.getElementsByClassName("main")[0].removeChild(splashElement);
 
+            setTimeout(function() {
                 //Show Help and Settings buttons
                 document.getElementById("helpBoxButtonWrapper").style.visibility = "visible";
 
                 //Show add/delete fan buttons
                 document.getElementById("fanButtonsWrapper").style.visibility = "visible";
-            }, 800);
+            }, 500);
+
+
+            setTimeout(function() {
+            	document.getElementsByClassName("main")[0].removeChild(splashElement);
+            }, 900);
 
             $scope.newProject();
         }
