@@ -1,0 +1,69 @@
+{
+  "overall": {
+    "title": {
+      "good": "Good setup",
+      "average": "Average setup",
+      "bad": "Bad setup"
+    },
+    "numFans": {
+      "tooMany": {
+        "title" : "Too many fans",
+        "mod": 1
+      },
+      "tooFew": {
+        "title" : "Too few fans",
+        "mod": 1
+      },
+      "none": {
+        "title" : "No fans",
+        "mod": 0
+      },
+      "goodAmount": {
+        "title" : "Good amount of fans",
+        "mod": 2
+      }
+    },
+    "particleSuccessRatio": {
+      "good": {
+        "title" : "Nearly all particles are succesful",
+        "mod": 3
+      },
+      "average": {
+        "title" : "Most particles are succesful",
+        "mod": 1
+      },
+      "poor": {
+        "title" : "Most particles are culled",
+        "mod": 0
+      }
+    }
+  },
+  "fanRatio": {
+    "equal": {
+      "title": "Equal number of intake and exhaust fans",
+      "description": "You have an equal number of intake and exhaust fans. This setup strikes a good balance between cooling and dust buildup. Cont..."
+    },
+    "moreIntake": {
+      "title": "More intake fans than exhaust fans",
+      "description": "You have more intake fans than exhaust fans. Cont..."
+    },
+    "moreExhaust": {
+      "title": "More exhaust fans than intake fans",
+      "description": "You have more exhaust fans than intake fans. Cont..."
+    }
+  },
+  "particleSuccessRatio": {
+    "good": {
+      "title": "Nearly all particles are succesful",
+      "description": "This setup ensures good airflow in your case and has little to no pockets of air buildup. Cont..."
+    },
+    "average": {
+      "title": "Most particles are succesful",
+      "description": "Placeholder average text. Cont..."
+    },
+    "bad": {
+      "title": "Most particles are culled",
+      "description": "Placeholder bad text. Cont..."
+    }
+  }
+}

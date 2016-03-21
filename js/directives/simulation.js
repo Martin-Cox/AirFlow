@@ -1375,6 +1375,9 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
+		// - Results analysis (see statsAnalysis.json) :
+			// - Overall = A rating out of 5 made up of rating for numFans and particleSuccessRatio PLUS a title e.g numFans (2) + particleSuccessRatio(3) = 5/5 Good rating plus a breakdown of rating using title property
+			// - Detailed breakdown for fanRatio and particleSuccessRatio
 		// - Should be able to press delete key to remove a fan etc.
 		// - Continue work with Chart.js
 		// - Move draw charts functions to results panel directive
