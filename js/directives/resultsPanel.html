@@ -10,6 +10,9 @@
       <input type="text" ng-readonly="true" ng-model="stats.numFans"/>
     </div>
     <p class="sectionHeader">Detailed Results</p>
+
+    <!-- Particle Success Ratio Chart-->
+
     <div class="chartWrapper">
       <p class="chartHeader">Particle Success Ratio</p>
       <div class="chartKeyWrapper">
@@ -24,10 +27,10 @@
       </div>
       <canvas id="particleSuccessRatioChart" width="200" height="200"></canvas>
     </div>
-    <div class="editorProperty">
+    <!--<div class="editorProperty">
       <p>Live Particles: </p>
       <input type="text" ng-readonly="true" ng-model="stats.particleLivePercentage"/>
-    </div>
+    </div>-->
     <div class="editorProperty">
       <p>Successful Particles: </p>
       <input type="text" ng-readonly="true" ng-model="stats.particleSuccessPercentage"/>
@@ -36,8 +39,10 @@
       <p>Culled Particles: </p>
       <input type="text" ng-readonly="true" ng-model="stats.particleFailurePercentage"/>
     </div>
+    <p class="resultsExplanationTitle" id="particleSuccessRatioExplanationTitle"></p>
+    <p class="resultsExplanationDesc" id="particleSuccessRatioExplanationDesc"></p>
 
-    <!-- New chart section -->
+    <!-- Fan Ratio Chart -->
 
     <div class="chartWrapper">
       <p class="chartHeader">Fan Ratio</p>

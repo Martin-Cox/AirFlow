@@ -1,0 +1,42 @@
+<div class="editorSection" ng-controller="ComponentController">
+  <form novalidate class="editorForm">
+  	<p class="sectionHeader">Component Settings</p>
+    <fieldset ng-disabled="!editFan || overrideCompSettings">
+      <div class="editorProperty">
+      	<p>Mode: </p>
+      	<input type="text" ng-model="editFan.properties.mode" ng-change="fanPropertiesChange(editFan.properties.mode)"/>
+      </div>
+      <div class="editorProperty">
+      	<p>Max RPM: </p>
+      	<input type="number" ng-model="editFan.properties.maxRPM" ng-change="fanPropertiesChange(editFan.properties.maxRPM)" min="0" max="3000"/>
+      </div>
+      <div class="editorProperty">
+      	<p>Size (mm): </p>
+      	<input type="number" ng-model="editFan.properties.size" ng-change="fanPropertiesChange(editFan.properties.size)" min="80" max="140"/>
+      </div>
+      <div class="editorProperty">
+        <p>Current RPM (%): </p>
+        <input type="number" ng-model="editFan.properties.percentageRPM" ng-change="fanPropertiesChange(editFan.properties.percentageRPM)" min="0" max="100"/>
+      </div>
+      <div class="editorProperty">
+        <p>FORCE X: </p>
+        <input type="number" ng-model="editFan.properties.forceVector.x"/>
+      </div>
+      <div class="editorProperty">
+        <p>FORCE Y: </p>
+        <input type="number" ng-model="editFan.properties.forceVector.y"/>
+      </div>
+      <div class="editorProperty">
+        <p>FORCE Z: </p>
+        <input type="number" ng-model="editFan.properties.forceVector.z"/>
+      </div>
+      <div class="editorProperty">
+        <p>Date created: </p>
+        <input type="text" ng-readonly="true" ng-model="editFan.properties.dateCreated"/>
+      </div>
+          <div class="editorProperty">
+        <p>Date modified: </p>
+        <input type="text" ng-readonly="true" ng-model="editFan.properties.dateModified"/>
+      </div>
+    </fieldset>
+</div>

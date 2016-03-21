@@ -246,8 +246,8 @@ var simulation = function($http, defaultsService) {
 
 		scope.updateStats = function() {
 			scope.stats.particleRatio = 100;
-			scope.stats.particleSuccessPercentage = ((scope.stats.removedParticles/scope.stats.spawnedParticles)*100).toFixed(2) + "%";
-			scope.stats.particleFailurePercentage = ((scope.stats.culledParticles/scope.stats.spawnedParticles)*100).toFixed(2) + "%";
+			scope.stats.particleSuccessPercentage = ((scope.stats.removedParticles/(scope.stats.spawnedParticles - scope.stats.activeParticles))*100).toFixed(2) + "%";
+			scope.stats.particleFailurePercentage = ((scope.stats.culledParticles/(scope.stats.spawnedParticles - scope.stats.activeParticles))*100).toFixed(2) + "%";
 			scope.stats.particleLivePercentage = ((scope.stats.activeParticles/scope.stats.spawnedParticles)*100).toFixed(2) + "%";
 
 			scope.stats.numFans = scope.fans.length;
@@ -256,6 +256,7 @@ var simulation = function($http, defaultsService) {
 
 			//Update explanations
 			updateFanRatioExplanation();
+			updateParticleSuccessRatioExplanation();
 
 			if (scope.charts.particleSuccessRatioChart != null || scope.charts.particleSuccessRatioChart != undefined) {
 				scope.charts.particleSuccessRatioChart.segments[0].value = scope.stats.removedParticles;
@@ -274,7 +275,7 @@ var simulation = function($http, defaultsService) {
 	        }, 1000);
 		}
 
-		function updateFanRatioExplanation() {
+		function updateParticleSuccessRatioExplanation() {
 				//Update explanations
 
 				var explanationTitle = document.getElementById("fanRatioExplanationTitle");
@@ -289,6 +290,29 @@ var simulation = function($http, defaultsService) {
 				} else if (scope.stats.numIntakeFans === scope.stats.numExhaustFans) {
 					explanationTitle.innerHTML = scope.statsAnalysis.fanRatio.equal.val;
 					explanationDesc.innerHTML = scope.statsAnalysis.fanRatio.equal.desc;
+				}
+		}
+
+		function updateFanRatioExplanation() {
+				//Update explanations
+
+				var explanationTitle = document.getElementById("particleSuccessRatioExplanationTitle");
+				var explanationDesc = document.getElementById("particleSuccessRatioExplanationDesc");
+
+				var failPercentageNum = scope.stats.particleFailurePercentage.replace("%", "");
+
+				if (failPercentageNum > 50) {
+					//Bad
+					explanationTitle.innerHTML = scope.statsAnalysis.particleSuccessRatio.bad.val;
+					explanationDesc.innerHTML = scope.statsAnalysis.particleSuccessRatio.bad.desc;
+				} else if (failPercentageNum > 25) {
+					//Average
+					explanationTitle.innerHTML = scope.statsAnalysis.particleSuccessRatio.average.val;
+					explanationDesc.innerHTML = scope.statsAnalysis.particleSuccessRatio.average.desc;
+				} else {
+					//Good
+					explanationTitle.innerHTML = scope.statsAnalysis.particleSuccessRatio.good.val;
+					explanationDesc.innerHTML = scope.statsAnalysis.particleSuccessRatio.good.desc;
 				}
 		}
 
