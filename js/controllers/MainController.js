@@ -34,12 +34,12 @@ var MainController = function($scope, $http) {
     $scope.displayingPopup = false;
 
 	angular.element(document).ready(function() {
-        document.getElementById('loadingSplashLoadingText').innerHTML = 'Click anywhere to begin';
+        document.getElementById("loadingSplashLoadingText").innerHTML = "Click anywhere to begin";
     });
 
     $scope.hideSplash = function() {
         if ($scope.ajaxComplete === true) {
-        	var splashElement = document.getElementById('loadingSplash');
+        	var splashElement = document.getElementById("loadingSplash");
             splashElement.style.opacity = 0;	//Set splash element opacity to 0, triggering CSS transition
 
             //Have to remove the element from the DOM, otherwise it would still be there but be invisible, meaning we can't interact with anything else
@@ -48,7 +48,10 @@ var MainController = function($scope, $http) {
             	document.getElementsByClassName("main")[0].removeChild(splashElement);
 
                 //Show Help and Settings buttons
-                document.getElementById('helpBoxButtonWrapper').style.visibility = "visible";
+                document.getElementById("helpBoxButtonWrapper").style.visibility = "visible";
+
+                //Show add/delete fan buttons
+                document.getElementById("fanButtonsWrapper").style.visibility = "visible";
             }, 800);
 
             $scope.newProject();
@@ -114,7 +117,7 @@ var MainController = function($scope, $http) {
 
     $scope.showHelpBox = function() {
         if ($scope.displayingPopup === false) {
-            var helpBox = document.getElementById('helpPopupBox');
+            var helpBox = document.getElementById("helpPopupBox");
             helpBox.style.visibility = "visible"
             helpBox.style.opacity = 100;
             $scope.displayingPopup = true;
@@ -122,7 +125,7 @@ var MainController = function($scope, $http) {
     }
 
     $scope.closeHelpBox = function() {
-        var helpBox = document.getElementById('helpPopupBox');
+        var helpBox = document.getElementById("helpPopupBox");
         helpBox.style.visibility = "hidden"
         helpBox.style.opacity = 0;
         $scope.displayingPopup = false;
@@ -130,7 +133,7 @@ var MainController = function($scope, $http) {
 
     $scope.showSettingsBox = function() {
         if ($scope.displayingPopup === false) {
-            var settingsBox = document.getElementById('settingsPopupBox');
+            var settingsBox = document.getElementById("settingsPopupBox");
             settingsBox.style.visibility = "visible"
             settingsBox.style.opacity = 100;
             $scope.displayingPopup = true;
@@ -138,7 +141,7 @@ var MainController = function($scope, $http) {
     }
 
     $scope.closeSettingsBox = function() {
-        var settingsBox = document.getElementById('settingsPopupBox');
+        var settingsBox = document.getElementById("settingsPopupBox");
         settingsBox.style.visibility = "hidden"
         settingsBox.style.opacity = 0;
         $scope.displayingPopup = false;

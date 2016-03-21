@@ -111,35 +111,51 @@ fieldset {
 }
 
 #fanButtonsWrapper {
-
+  width:100%;
+  margin-top: 5px;
+  visibility: hidden;
 }
 
 #fanButtonsWrapper button {
-  width: 50%;
+  width: 140px;
+  height: 140px;
   text-align: center;
-  background: #CFCFCF;
-  float: left;
+  background: #F5F5F5;
   border: none;
   font-family:"Oswald", sans-serif;
   color: black;
-  margin: 0 0 0 0;
-  padding: 0 0 0 0;
-  height: 100%;
   font-size: 1.2em;
   text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  border-radius: 4px;
   transition: all 200ms;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0.8;
+}
+
+.fanButtonWrapper {
+  width:50%;
+  height:140px;
+  float: left;
+}
+
+#fanButtonsWrapper img {
+  width: 120px;
+  height: 120px;
+  margin-top: 10px;
 }
 
 #fanButtonsWrapper button:enabled {
-
+  opacity: 0.8;
 }
 
 #fanButtonsWrapper button:disabled {
-  background: #939393;
+  opacity: 0.2;
 }
 
 #fanButtonsWrapper button:hover {
-  color: #6B6B6B;
+  opacity: 1.0;
 }
 
 #projectButtonsWrapper {

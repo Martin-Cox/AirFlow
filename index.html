@@ -31,8 +31,12 @@
 						<!--<environment-Settings></environment-Settings>-->
 						<component-Settings></component-Settings>
 						<div id="fanButtonsWrapper">
-							<button ng-click="addNewFan()" ng-disabled="addingFan">Add a Fan</button>
-							<button ng-click="deleteFan()" id="deleteFanBtn" ng-disabled="!editFan || overrideCompSettings">Delete Fan</button>
+							<div class="fanButtonWrapper">
+								<button ng-click="addNewFan()" ng-disabled="addingFan"><img src="/images/fan_icon_add_active.png" alt="Add Fan"></button>
+							</div>
+							<div class="fanButtonWrapper">
+								<button ng-click="deleteFan()" id="deleteFanBtn" ng-disabled="!editFan || overrideCompSettings"><img src="/images/fan_icon_delete_active.png" alt="Delete Fan"></button>
+							</div>
 						</div>
 					</tab>						
 					<tab heading="Results">
