@@ -47,6 +47,18 @@ var defaultsService = function($http) {
 		        console.log("failure");
 			});
 	}
+	this.getStatsAnalysis = function() {
+			return $http({
+				method: 'GET',
+				url: '/json/statsAnalysis.json'
+			}).then (function success(response) {
+				//Success
+				return response.data;
+			}, function error(response) {
+				//TODO: Return error message 
+		        console.log("failure");
+			});
+	}
 };
 
 module.exports = defaultsService;

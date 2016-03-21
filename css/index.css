@@ -367,6 +367,19 @@ input[readonly] {
 
 /* Results Panel Stats */
 
+#resultsPanel .resultsExplanationTitle {
+  width: 100%;
+  text-align: center;
+  margin: 5px 0 5px 0;
+  font-size: 1.1em;
+}
+
+#resultsPanel .resultsExplanationDesc {
+  width: 90%;
+  margin-left: 5%;
+  font-size: 0.9em;
+}
+
 #resultsPanel .editorProperty p {
   width: 60%;
   text-align: center;

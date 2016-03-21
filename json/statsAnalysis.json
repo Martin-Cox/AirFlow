@@ -1,69 +1,69 @@
 {
   "overall": {
-    "title": {
+    "result": {
       "good": "Good setup",
       "average": "Average setup",
       "bad": "Bad setup"
     },
     "numFans": {
       "tooMany": {
-        "title" : "Too many fans",
+        "val" : "Too many fans",
         "mod": 1
       },
       "tooFew": {
-        "title" : "Too few fans",
+        "val" : "Too few fans",
         "mod": 1
       },
       "none": {
-        "title" : "No fans",
+        "val" : "No fans",
         "mod": 0
       },
       "goodAmount": {
-        "title" : "Good amount of fans",
+        "val" : "Good amount of fans",
         "mod": 2
       }
     },
     "particleSuccessRatio": {
       "good": {
-        "title" : "Nearly all particles are succesful",
+        "val" : "Nearly all particles are succesful",
         "mod": 3
       },
       "average": {
-        "title" : "Most particles are succesful",
+        "val" : "Most particles are succesful",
         "mod": 1
       },
       "poor": {
-        "title" : "Most particles are culled",
+        "val" : "Most particles are culled",
         "mod": 0
       }
     }
   },
   "fanRatio": {
     "equal": {
-      "title": "Equal number of intake and exhaust fans",
-      "description": "You have an equal number of intake and exhaust fans. This setup strikes a good balance between cooling and dust buildup. Cont..."
+      "val": "Equal number of intake and exhaust fans",
+      "desc": "You have an equal number of intake and exhaust fans. This setup strikes a good balance between cooling and dust buildup. Cont..."
     },
     "moreIntake": {
-      "title": "More intake fans than exhaust fans",
-      "description": "You have more intake fans than exhaust fans. Cont..."
+      "val": "More intake fans than exhaust fans",
+      "desc": "You have more intake fans than exhaust fans. Cont..."
     },
     "moreExhaust": {
-      "title": "More exhaust fans than intake fans",
-      "description": "You have more exhaust fans than intake fans. Cont..."
+      "val": "More exhaust fans than intake fans",
+      "desc": "You have more exhaust fans than intake fans. Cont..."
     }
   },
   "particleSuccessRatio": {
     "good": {
-      "title": "Nearly all particles are succesful",
-      "description": "This setup ensures good airflow in your case and has little to no pockets of air buildup. Cont..."
+      "val": "Nearly all particles are succesful",
+      "desc": "This setup ensures good airflow in your case and has little to no pockets of air buildup. Cont..."
     },
     "average": {
-      "title": "Most particles are succesful",
-      "description": "Placeholder average text. Cont..."
+      "val": "Most particles are succesful",
+      "desc": "Placeholder average text. Cont..."
     },
     "bad": {
-      "title": "Most particles are culled",
-      "description": "Placeholder bad text. Cont..."
+      "val": "Most particles are culled",
+      "desc": "Placeholder bad text. Cont..."
     }
   }
 }

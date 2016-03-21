@@ -20,6 +20,7 @@ var MainController = function($scope, $http) {
     $scope.caseGroup = new Object();
 
     $scope.stats = [];
+    $scope.statsAnalysis = null;
     $scope.charts = new Object();
     $scope.charts.drewCharts = false;
 

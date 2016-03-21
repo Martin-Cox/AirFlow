@@ -52,8 +52,13 @@ var simulation = function($http, defaultsService) {
 						projectDetailsDefaultsPromise.then(function(result) {
 							scope.defaultProjectDetails = result;
 
-							//Need to change this value after all AJAX calls have completed to notify controller that loading has completed
-							scope.ajaxComplete = true;
+							var statsAnalysisPromise = defaultsService.getStatsAnalysis();
+							statsAnalysisPromise.then(function(result) {
+								scope.statsAnalysis = result;
+
+								//Need to change this value after all AJAX calls have completed to notify controller that loading has completed
+								scope.ajaxComplete = true;
+							});
 						});
 					});
 				});
@@ -249,6 +254,9 @@ var simulation = function($http, defaultsService) {
 			scope.stats.numIntakeFans = scope.intakeFans.length;
 			scope.stats.numExhaustFans = scope.exhaustFans.length;
 
+			//Update explanations
+			updateFanRatioExplanation();
+
 			if (scope.charts.particleSuccessRatioChart != null || scope.charts.particleSuccessRatioChart != undefined) {
 				scope.charts.particleSuccessRatioChart.segments[0].value = scope.stats.removedParticles;
 				scope.charts.particleSuccessRatioChart.segments[1].value = scope.stats.culledParticles;
@@ -259,10 +267,29 @@ var simulation = function($http, defaultsService) {
 				scope.charts.fanRatioChart.segments[0].value = scope.stats.numIntakeFans;
 				scope.charts.fanRatioChart.segments[1].value = scope.stats.numExhaustFans;
 				scope.charts.fanRatioChart.update();
+				
 			}
 			setTimeout(function() {
 	        	scope.updateStats();
 	        }, 1000);
+		}
+
+		function updateFanRatioExplanation() {
+				//Update explanations
+
+				var explanationTitle = document.getElementById("fanRatioExplanationTitle");
+				var explanationDesc = document.getElementById("fanRatioExplanationDesc");
+
+				if (scope.stats.numIntakeFans > scope.stats.numExhaustFans) {
+					explanationTitle.innerHTML = scope.statsAnalysis.fanRatio.moreIntake.val;
+					explanationDesc.innerHTML = scope.statsAnalysis.fanRatio.moreIntake.desc;
+				} else if (scope.stats.numExhaustFans > scope.stats.numIntakeFans) {
+					explanationTitle.innerHTML = scope.statsAnalysis.fanRatio.moreExhaust.val;
+					explanationDesc.innerHTML = scope.statsAnalysis.fanRatio.moreExhaust.desc;
+				} else if (scope.stats.numIntakeFans === scope.stats.numExhaustFans) {
+					explanationTitle.innerHTML = scope.statsAnalysis.fanRatio.equal.val;
+					explanationDesc.innerHTML = scope.statsAnalysis.fanRatio.equal.desc;
+				}
 		}
 
 		function createParticles(numToCreate) { 
