@@ -311,7 +311,9 @@ var simulation = function($http, defaultsService) {
 					rating += scope.statsAnalysis.overall.numFans.none.mod;
 				}
 
-				particleSuccessRatioBreakdownExplanation = scope.stats.particleSuccessRatioVal;
+				numFansBreakdownExplanation = numFansBreakdownExplanation + " +" + rating;
+
+				particleSuccessRatioBreakdownExplanation = scope.stats.particleSuccessRatioVal + " +" + scope.stats.particleSuccessRatioMod;
 				rating += scope.stats.particleSuccessRatioMod;
 
 				if (rating > 3) {
