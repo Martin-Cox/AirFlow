@@ -32,7 +32,7 @@
         "val" : "Most particles are succesful",
         "mod": 1
       },
-      "poor": {
+      "bad": {
         "val" : "Most particles are culled",
         "mod": 0
       }

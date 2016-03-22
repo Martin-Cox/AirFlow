@@ -186,6 +186,8 @@ var simulation = function($http, defaultsService) {
 			scope.stats.removedParticles = 0;
 			scope.stats.particleSuccessPercentage = 0;
 			scope.stats.particleFailurePercentage = 0;
+			scope.stats.particleSuccessRatioVal = "";
+			scope.stats.particleSuccessRatioMod = 0;
 			scope.updateStats();
 
 			var topLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -257,6 +259,7 @@ var simulation = function($http, defaultsService) {
 			//Update explanations
 			updateFanRatioExplanation();
 			updateParticleSuccessRatioExplanation();
+			updateOverallRating();
 
 			if (scope.charts.particleSuccessRatioChart != null || scope.charts.particleSuccessRatioChart != undefined) {
 				scope.charts.particleSuccessRatioChart.segments[0].value = scope.stats.removedParticles;
@@ -275,7 +278,60 @@ var simulation = function($http, defaultsService) {
 	        }, 1000);
 		}
 
-		function updateParticleSuccessRatioExplanation() {
+		function updateOverallRating() {
+				//Update final rating
+
+				var breakdownTitle = document.getElementById("overallRatingTitle");
+				var breakdownNumFans = document.getElementById("breakdownNumFans");
+				var breakdownParticleSuccessRatio = document.getElementById("breakdownParticleSuccessRatio");
+
+
+				//Calculate score out of 5
+				var rating = 0;
+				var textRating = "";
+				var numFansBreakdownExplanation = "";
+				var particleSuccessRatioBreakdownExplanation = "";
+
+
+				if (scope.stats.numFans > 8) {
+					//Too many fans
+					numFansBreakdownExplanation = scope.statsAnalysis.overall.numFans.tooMany.val;
+					rating += scope.statsAnalysis.overall.numFans.tooMany.mod;
+				} else if (scope.stats.numFans > 2) {
+					//Good amount of fans
+					numFansBreakdownExplanation = scope.statsAnalysis.overall.numFans.goodAmount.val;
+					rating += scope.statsAnalysis.overall.numFans.goodAmount.mod;
+				} else if (scope.stats.numFans > 0) {
+					//Too few fans
+					numFansBreakdownExplanation = scope.statsAnalysis.overall.numFans.tooFew.val;
+					rating += scope.statsAnalysis.overall.numFans.tooFew.mod;
+				} else {
+					//No fans
+					numFansBreakdownExplanation = scope.statsAnalysis.overall.numFans.none.val;
+					rating += scope.statsAnalysis.overall.numFans.none.mod;
+				}
+
+				particleSuccessRatioBreakdownExplanation = scope.stats.particleSuccessRatioVal;
+				rating += scope.stats.particleSuccessRatioMod;
+
+				if (rating > 3) {
+					//Good rating
+					textRating = scope.statsAnalysis.overall.result.good + " " + rating + "/5";
+				} else if (rating > 2) {
+					//Average rating
+					textRating = scope.statsAnalysis.overall.result.average + " " + rating + "/5";
+				} else {
+					//Bad rating
+					textRating = scope.statsAnalysis.overall.result.bad + " " + rating + "/5";
+				}
+
+				breakdownTitle.innerHTML = textRating;
+				breakdownNumFans.innerHTML = numFansBreakdownExplanation;
+				breakdownParticleSuccessRatio.innerHTML = particleSuccessRatioBreakdownExplanation;
+
+		}
+
+		function updateFanRatioExplanation() {
 				//Update explanations
 
 				var explanationTitle = document.getElementById("fanRatioExplanationTitle");
@@ -293,7 +349,7 @@ var simulation = function($http, defaultsService) {
 				}
 		}
 
-		function updateFanRatioExplanation() {
+		function updateParticleSuccessRatioExplanation() {
 				//Update explanations
 
 				var explanationTitle = document.getElementById("particleSuccessRatioExplanationTitle");
@@ -305,14 +361,20 @@ var simulation = function($http, defaultsService) {
 					//Bad
 					explanationTitle.innerHTML = scope.statsAnalysis.particleSuccessRatio.bad.val;
 					explanationDesc.innerHTML = scope.statsAnalysis.particleSuccessRatio.bad.desc;
+					scope.stats.particleSuccessRatioVal = scope.statsAnalysis.overall.particleSuccessRatio.bad.val;
+					scope.stats.particleSuccessRatioMod = scope.statsAnalysis.overall.particleSuccessRatio.bad.mod;
 				} else if (failPercentageNum > 25) {
 					//Average
 					explanationTitle.innerHTML = scope.statsAnalysis.particleSuccessRatio.average.val;
 					explanationDesc.innerHTML = scope.statsAnalysis.particleSuccessRatio.average.desc;
+					scope.stats.particleSuccessRatioVal = scope.statsAnalysis.overall.particleSuccessRatio.average.val;
+					scope.stats.particleSuccessRatioMod = scope.statsAnalysis.overall.particleSuccessRatio.average.mod;
 				} else {
 					//Good
 					explanationTitle.innerHTML = scope.statsAnalysis.particleSuccessRatio.good.val;
 					explanationDesc.innerHTML = scope.statsAnalysis.particleSuccessRatio.good.desc;
+					scope.stats.particleSuccessRatioVal = scope.statsAnalysis.overall.particleSuccessRatio.good.val;
+					scope.stats.particleSuccessRatioMod = scope.statsAnalysis.overall.particleSuccessRatio.good.mod;
 				}
 		}
 
