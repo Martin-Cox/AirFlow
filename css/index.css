@@ -380,7 +380,16 @@ input[readonly] {
   font-size: 0.9em;
 }
 
-#resultsPanel .ratingBreakdownPoint {
+.resultsExplanationWrapper {
+  background: #CFCFCF;
+}
+
+#overallRatingWrapper {
+  padding: 5px 0 10px 0;
+  background: #CFCFCF;
+}
+
+#overallRatingWrapper .ratingBreakdownPoint {
   width: 90%;
   margin: 0 0 5px 5%;
   font-size: 0.9em;
