@@ -52,12 +52,12 @@ var MainController = function($scope, $http) {
 
                 //Show add/delete fan buttons
                 document.getElementById("fanButtonsWrapper").style.visibility = "visible";
-            }, 500);
+            }, 300);
 
 
             setTimeout(function() {
             	document.getElementsByClassName("main")[0].removeChild(splashElement);
-            }, 900);
+            }, 800);
 
             $scope.newProject();
         }
