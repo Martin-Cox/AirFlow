@@ -1490,45 +1490,28 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - Results analysis (see statsAnalysis.json) :
-			// - Overall = A rating out of 5 made up of rating for numFans and particleSuccessRatio PLUS a title e.g numFans (2) + particleSuccessRatio(3) = 5/5 Good rating plus a breakdown of rating using title property
-			// - Detailed breakdown for fanRatio and particleSuccessRatio
-		// - Should be able to press delete key to remove a fan etc.
-		// - Continue work with Chart.js
-		// - Move draw charts functions to results panel directive
-		// - Finish new project function
-		// - Style input boxes
-		// - Use string tokens instead of hardcodes strings for i18n
+		// - Should be able to cancel adding a fan
+		// - User defined quality settings in gear icon popup (max num particles, shadows, AA etc.)
+		// - Finish new project function so that it works correctly when we click it the second+ times
+		// - Finish save/load project functionality
 		// - Update modified date when we change something other than a project details property e.g. move a fan, change fan property, add fan etc.
 		// - Will loading a project change the modified date just becasue we loaded it? It shouldn't, I need to test this
-		// - When move mouse and adding new fan, check if current pos is valid. Turn fanPlaceholderAOE wire frame turn green in valid pos, red in invalid pos
-		// - When click and adding new fan and in valid pos, create a new fan, otherwise, if in invalid pos, show error
 		// - Stop fans from being able to go off the side of the case
-		// - Disallow fans to "intersect" eachother
-		// - Remove loops performed on particles to prevent "freezing" particles that dont get force applied immediately
-		// - Be able to drag fans to a different plane and it rotates correctly (SEE CODE FOR ADDING NEW FAN!)
-		// - "Add Fan" button where you click the button then can click on any case face to "plop" a fan there, you should also be given the fan outline so you can see exactly where you are placing the fan
+		// - Disallow fans to "intersect" eachother, FIX ISSUE WHERE YOU CAN GO TO INVALID STATE BUT NOT BACK AGAIN
 		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation - Fix using intersectsCase in detectTouchingFan
 		// - Add components to defaultCase.json e.g. GPU, Hard drives, CPU etc.
-		// - Color change of particles that have been around for a long time
-		// - Move global variables to scope objects (see notes)
-		// - Create component settings controller <component-Settings id="fan.id" for each fan OR just keep a single component settings controller but make it look more presentable
-		// - User configurable environment settings 												- AND UNIT TESTS
+		// - Color change of particles that have been around for a long time and all particles have same color at spawn time
 		// - User configurable project settings 													- AND UNIT TESTS
 		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS
 		// - Input validation on ALL user enterable data (using Angular) 							- AND UNIT TESTS
 		// - Implement WEB-ARIA roles and support a11y
 		// - Change rate of spawning in particles dependant on the number of intake fans
-		// - Simulation quality settings (AA on/off) 
-		// - How to use overlay
-		// - About popup
+		// - Reqrite how to use/about popup
 		// - Standardised error messages
 		// - Clean up code, optimisation, proper documentation etc. SEE quality standards in interim report
 		// - Testing on multiple devices
 		// - Be able to import a computer case 3D model and smartly generate physics planes based off 3D geometry (OPTIONAL)
 		// - Fan model and animations (OPTIONAL)
-		// - Save information to a .airflow file (OPTIONAL)
-		// - Upload project from .airflow file (OPTIONAL)
 		// - User defined case settings (OPTIONAL)
     }
   }; 
