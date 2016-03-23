@@ -4,7 +4,10 @@
     <fieldset ng-disabled="!editFan || overrideCompSettings">
       <div class="editorProperty">
       	<p>Mode: </p>
-      	<input type="text" ng-model="editFan.properties.mode" ng-change="fanPropertiesChange(editFan.properties.mode)"/>
+        <select ng-model="editFan.properties.mode" ng-change="fanPropertiesChange(editFan.properties.mode)">
+          <option value="intake">Intake</option>
+          <option value="exhaust">Exhaust</option>
+        </select>
       </div>
       <div class="editorProperty">
       	<p>Max RPM: </p>

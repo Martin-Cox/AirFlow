@@ -171,6 +171,21 @@ var MainController = function($scope, $http) {
         $scope.projectDetails.dateModified = $scope.getCurrentDate();
         $scope.editFan.properties.forceVector = $scope.calculateForceVector($scope.editFan);
         $scope.resizeFan($scope.editFan);
+
+        //Recreate intake fans/exhaust fans lists
+        $scope.exhaustFans = [];
+        $scope.intakeFans = [];
+
+        for (let fan of $scope.fans) {
+            if (fan.properties.mode === "intake") {
+                $scope.intakeFans.push(fan);
+            } else if (fan.properties.mode === "exhaust") {
+                $scope.exhaustFans.push(fan);
+            }
+        }
+
+        console.log("Intake fans size: " + $scope.intakeFans.length);
+        console.log("Exhaust fans size: " + $scope.exhaustFans.length);
     }
 
 };

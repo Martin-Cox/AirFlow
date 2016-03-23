@@ -110,6 +110,10 @@ fieldset {
   width: 55%;
 }
 
+#tabbedPaneContainer .editorProperty select {
+  width: 55%;
+}
+
 #fanButtonsWrapper {
   width:100%;
   margin-top: 5px;
