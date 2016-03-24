@@ -38,7 +38,9 @@
 								<button ng-click="deleteFan()" id="deleteFanBtn" ng-disabled="!editFan || overrideCompSettings"><img src="/images/fan_icon_delete_active.png" alt="Delete Fan"></button>
 							</div>
 						</div>
-						<button ng-click="cancelAddingFan()" id="cancelAddFanButton" ng-disabled="!addingFan">Cancel add fan</button>
+						<div id="cancelAddFanButton">
+							<button ng-click="cancelAddingFan()" ng-disabled="!addingFan">Cancel adding fan</button>
+						</div>
 					</tab>						
 					<tab heading="Results">
 						<results-Panel></results-Panel>
