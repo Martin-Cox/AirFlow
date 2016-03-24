@@ -1341,6 +1341,17 @@ var simulation = function($http, defaultsService) {
 		
 		}
 
+		scope.cancelAddingFan = function() {
+			scope.editFan = null;
+			scope.dragFan = null;
+			scope.addingFan = false;
+			scope.addingFanValidPos = false;
+			scene.remove(scope.newFanPlaceholderObject);
+			scene.remove(scope.newFanPlaceholderWireframe);
+			scope.newFanPlaceholderObject = new Object();
+    		scope.newFanPlaceholderWireframe = null;
+		}
+
 		function chooseSide(event, position) {			
 			//Determines what side of the case a fan is being dragged on
 
