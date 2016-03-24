@@ -11,6 +11,28 @@ describe("AirFlow", function () {
 	        	done();
 	     	});
 		});
+		describe("Default Project Details", function() {
+			it("should have defaultProjectDetails.json", function(done) {
+				request.get(baseURL + "/json/defaultProjectDetails.json", function(error, response, body) {
+		        	expect(response.statusCode).to.be.equal(200);
+		        	done();
+		     	});
+			});
+			it("should be a valid .json", function(done) {
+				request.get(baseURL + "/json/defaultProjectDetails.json", function(error, response, body) {
+		        	expect(body).to.be.json;
+		        	done();
+		     	});
+			});
+			it("should contain a default project definition", function(done) {
+				request.get(baseURL + "/json/defaultProjectDetails.json", function(error, response, body) {
+		        	expect(body).to.contain("projectName");
+		        	expect(body).to.contain("author");
+		        	expect(body).to.contain("version");
+		        	done();
+		     	});
+			});
+		});
 		describe("Default Case", function() {
 			it("should have defaultCase.json", function(done) {
 				request.get(baseURL + "/json/defaultCase.json", function(error, response, body) {
@@ -24,14 +46,9 @@ describe("AirFlow", function () {
 		        	done();
 		     	});
 			});
-			it("should contain: materials", function(done) {
+			it("should contain a case definition", function(done) {
 				request.get(baseURL + "/json/defaultCase.json", function(error, response, body) {
 		        	expect(body).to.contain("materials");
-		        	done();
-		     	});
-			});
-			it("should contain: dimensions", function(done) {
-				request.get(baseURL + "/json/defaultCase.json", function(error, response, body) {
 		        	expect(body).to.contain("dimensions");
 		        	done();
 		     	});
@@ -50,27 +67,59 @@ describe("AirFlow", function () {
 		        	done();
 		     	});
 			});
-			it("should contain: at least one fan", function(done) {
+			it("should contain at least one fan definition", function(done) {
 				request.get(baseURL + "/json/defaultFans.json", function(error, response, body) {
 		        	expect(body).to.contain("fanOne");
-		        	done();
-		     	});
-			});
-			it("fan should contain: a fan object", function(done) {
-				request.get(baseURL + "/json/defaultFans.json", function(error, response, body) {
 		        	expect(body).to.contain("fanObject");
-		        	done();
-		     	});
-			});
-			it("fan should contain: a fan AOE object", function(done) {
-				request.get(baseURL + "/json/defaultFans.json", function(error, response, body) {
 		        	expect(body).to.contain("fanAOEObject");
+		        	expect(body).to.contain("properties");
 		        	done();
 		     	});
 			});
-			it("fan should contain: properties", function(done) {
-				request.get(baseURL + "/json/defaultFans.json", function(error, response, body) {
+		});
+		describe("Default New Fan", function() {
+			it("should have defaultNewFanDetails.json", function(done) {
+				request.get(baseURL + "/json/defaultNewFanDetails.json", function(error, response, body) {
+		        	expect(response.statusCode).to.be.equal(200);
+		        	done();
+		     	});
+			});
+			it("should be a valid .json", function(done) {
+				request.get(baseURL + "/json/defaultNewFanDetails.json", function(error, response, body) {
+		        	expect(body).to.be.json;
+		        	done();
+		     	});
+			});
+			it("should contain a default new fan defintion", function(done) {
+				request.get(baseURL + "/json/defaultNewFanDetails.json", function(error, response, body) {
+		        	expect(body).to.contain("fanObject");
+		        	expect(body).to.contain("material");
+		        	expect(body).to.contain("fanAOEObject");
 		        	expect(body).to.contain("properties");
+		        	done();
+		     	});
+			});
+		});
+		describe("Stats Analysis JSON", function() {
+			it("should have statsAnalysis.json", function(done) {
+				request.get(baseURL + "/json/statsAnalysis.json", function(error, response, body) {
+		        	expect(response.statusCode).to.be.equal(200);
+		        	done();
+		     	});
+			});
+			it("should be a valid .json", function(done) {
+				request.get(baseURL + "/json/statsAnalysis.json", function(error, response, body) {
+		        	expect(body).to.be.json;
+		        	done();
+		     	});
+			});
+			it("should contain stats analysis values", function(done) {
+				request.get(baseURL + "/json/statsAnalysis.json", function(error, response, body) {
+		        	expect(body).to.contain("overall");
+		        	expect(body).to.contain("result");
+		        	expect(body).to.contain("numFans");
+		        	expect(body).to.contain("particleSuccessRatio");
+		        	expect(body).to.contain("fanRatio");
 		        	done();
 		     	});
 			});
