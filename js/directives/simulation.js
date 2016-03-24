@@ -387,21 +387,12 @@ var simulation = function($http, defaultsService) {
 				var particle;
 
 				var randNum = Math.random();
-				var matColor;
-
-				if (randNum < 0.34) {
-					matColor = 0xD9216A;
-				} else if (randNum > 0.34 && randNum < 0.67) {
-					matColor = 0x18ABDB;
-				} else {
-					matColor = 0x18DB3F;
-				}
 
 				var sphereGeometry = new THREE.SphereGeometry(5, 16, 16);
 
 				var sphereMaterial = Physijs.createMaterial(
 			      new THREE.MeshLambertMaterial({
-			        color: matColor
+			        color: 0x18ABDB
 			      }),
 			      0.3, // friction
 			      1 // restitution
@@ -496,11 +487,15 @@ var simulation = function($http, defaultsService) {
 			//cullTime is an integer in ms representing the longest amount of time before the particle should be culled. Will be configurable in project settings
 			//recheckTime is an integer in ms represeting the preiod of time between checking for particles that need to be culled. Will be configurable in sim quality settings
 
-			var recheckTime = 1000; //1 second, debug value
+			var recheckTime = 500; //0.5 second, debug value
 
 			if (particles.length > 0) {
 
 				var cullTime = 30000; //30 seconds, debug value
+				
+				//Change color times
+				var medTime = 10000;
+				var longTime = 20000;
 
 				var unixTime = (new Date).getTime();
 
@@ -510,6 +505,14 @@ var simulation = function($http, defaultsService) {
 						scope.stats.culledParticles += 1;
 						scope.stats.activeParticles -= 1;
 						scope.$digest();
+					}
+					if (particles[i].spawnTime != null && unixTime - particles[i].spawnTime >= medTime) {
+						//Particle has been around for a medium amount of time, turn orange
+						particles[i].material.color.setHex(0xFDBD5C);
+					} 
+					if (particles[i].spawnTime != null && unixTime - particles[i].spawnTime >= longTime) {
+						//Particle has been around for a long amount of time, turn red
+						particles[i].material.color.setHex(0xD9216A);
 					}
 				}
 
@@ -1510,7 +1513,6 @@ var simulation = function($http, defaultsService) {
 		// - Disallow fans to "intersect" eachother, FIX ISSUE WHERE YOU CAN GO TO INVALID STATE BUT NOT BACK AGAIN
 		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation - Fix using intersectsCase in detectTouchingFan
 		// - Add components to defaultCase.json e.g. GPU, Hard drives, CPU etc.
-		// - Color change of particles that have been around for a long time and all particles have same color at spawn time
 		// - User configurable project settings 													- AND UNIT TESTS
 		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS
 		// - Input validation on ALL user enterable data (using Angular) 							- AND UNIT TESTS
