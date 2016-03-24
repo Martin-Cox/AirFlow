@@ -1501,8 +1501,7 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - Should be able to cancel adding a fan
-		// - User defined quality settings in gear icon popup (max num particles, shadows, AA etc.)
+		// - User defined quality settings in gear icon popup (max num particles, shadows, AA etc.) -> Maybe not have this, we would need to recreate render everytime a property changed which could be really difficult to do properly
 		// - Finish new project function so that it works correctly when we click it the second+ times
 		// - Finish save/load project functionality
 		// - Update modified date when we change something other than a project details property e.g. move a fan, change fan property, add fan etc.
