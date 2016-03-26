@@ -581,6 +581,13 @@ var simulation = function($http, defaultsService) {
 
 			caseFrontPlane.position.set(0, caseHeight/2, -caseDepth/2);
 
+			caseInvisibleSidePlane.isInvisible = true; //Set invisible marker
+			caseVisibleSidePlane.isInvisible = false;
+			caseBottomPlane.isInvisible = false;
+			caseTopPlane.isInvisible = false;
+			caseBackPlane.isInvisible = false;
+			caseFrontPlane.isInvisible = false;
+
 			scene.add(caseBottomPlane);
 			scene.add(caseTopPlane);
 			scene.add(caseVisibleSidePlane);
@@ -1447,12 +1454,44 @@ var simulation = function($http, defaultsService) {
 				fanPhysicalObjects.push(scope.fans[i].fanPhysicalObject);
 			}
 
-			var intersectsFans = raycaster.intersectObjects(fanPhysicalObjects, true);
+		    //Isolate case planes into array
+			var casePlanes = [];
+			for(var key in scope.caseGroup) {
+			    casePlanes.push(scope.caseGroup[key]);
+			}
 
-			//If we have touched a fanPhysicalObject, return the root fanObject it belongs to
-			if (intersectsFans.length > 0) {;
+
+		    //Isolate objects into array
+			var objects = [];
+			for(var key in scope.caseGroup) {
+			    objects.push(scope.caseGroup[key]);
+			}
+			for (var i = 0; i < scope.fans.length; i++) {
+				objects.push(scope.fans[i].fanPhysicalObject);
+			}
+
+			var intersectsObjects = raycaster.intersectObjects(objects, true);
+
+			if (intersectsObjects.length > 0) {
+
+				var posToCheck = 0;
+
+				for (var i = 0; i < casePlanes.length; i++) {
+					//If first object is a case return null, we don't want to click fans through case planes (except for the invisible side plane)
+					if (casePlanes[i].id == intersectsObjects[posToCheck].object.id) {
+						//Detect if we clicked "through" the invisible side
+						if (casePlanes[i].isInvisible == true) {
+							posToCheck++;
+							break;
+						} else {
+							return null;
+						}
+					}
+				}
+
+				//If we didn't touch a visible case plane first, check if we touched a fan
 				for (var i = 0; i < scope.fans.length; i++) {
-					if (scope.fans[i].fanPhysicalObject.id == intersectsFans[0].object.id) {
+					if (scope.fans[i].fanPhysicalObject.id == intersectsObjects[posToCheck].object.id) {
 						return scope.fans[i];
 					}
 				}
@@ -1511,7 +1550,6 @@ var simulation = function($http, defaultsService) {
 		// - Will loading a project change the modified date just becasue we loaded it? It shouldn't, I need to test this
 		// - Stop fans from being able to go off the side of the case
 		// - Disallow fans to "intersect" eachother, FIX ISSUE WHERE YOU CAN GO TO INVALID STATE BUT NOT BACK AGAIN
-		// - User can "click" or "mouseover" a fan that is obscured by a case panel, preventing rotation - Fix using intersectsCase in detectTouchingFan
 		// - Add components to defaultCase.json e.g. GPU, Hard drives, CPU etc.
 		// - User configurable project settings 													- AND UNIT TESTS
 		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS
