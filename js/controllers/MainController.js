@@ -76,18 +76,28 @@ var MainController = function($scope, $http) {
     $scope.newProject = function() {
         //Starts a new project using the default values
 
-        $scope.projectDetails = $scope.defaultProjectDetails;
+        $scope.projectDetails.projectName = $scope.defaultProjectDetails.projectName;
+        $scope.projectDetails.author = $scope.defaultProjectDetails.author;
+        $scope.projectDetails.version = $scope.defaultProjectDetails.version;
 
         $scope.projectDetails.dateCreated = $scope.getCurrentDate();
         $scope.projectDetails.dateModified = $scope.getCurrentDate();
 
-        //TODO: Reset Three.js scene
+        //Reset values
+        $scope.fans = [];
+        $scope.exhaustFans = [];
+        $scope.intakeFans = [];
+        $scope.dragFan = null;
+        $scope.editFan = null;
+
+
+        //TODO: THIS IS BREAKING THE PARTICLE SUCCESS RATIO CHART
+
         $scope.stats = [];
 
         $scope.emptyScene();
         $scope.init();                    
         $scope.animate();
-        $scope.spawnParticles();
     };
 
      $scope.saveProject = function() {

@@ -161,9 +161,12 @@ var simulation = function($http, defaultsService) {
 				orbitControl.constraint.minDistance = 600;
 				orbitControl.constraint.maxDistance = 2200;
 				clock = new THREE.Clock();
-				createParticles(100);
+				scope.spawnParticles();
 				cullParticles();
+				scope.updateStats();
 			}
+
+			createParticles(100);
 
 			createDefaultCase(scope.defaultCase);
 
@@ -188,7 +191,7 @@ var simulation = function($http, defaultsService) {
 			scope.stats.particleFailurePercentage = 0;
 			scope.stats.particleSuccessRatioVal = "";
 			scope.stats.particleSuccessRatioMod = 0;
-			scope.updateStats();
+			
 
 			var topLight = new THREE.DirectionalLight(0xffffff, 1);
 			topLight.position.set(0, 1, 0);
@@ -248,13 +251,45 @@ var simulation = function($http, defaultsService) {
 
 		scope.updateStats = function() {
 			scope.stats.particleRatio = 100;
-			scope.stats.particleSuccessPercentage = ((scope.stats.removedParticles/(scope.stats.spawnedParticles - scope.stats.activeParticles))*100).toFixed(2) + "%";
-			scope.stats.particleFailurePercentage = ((scope.stats.culledParticles/(scope.stats.spawnedParticles - scope.stats.activeParticles))*100).toFixed(2) + "%";
-			scope.stats.particleLivePercentage = ((scope.stats.activeParticles/scope.stats.spawnedParticles)*100).toFixed(2) + "%";
+
+			var successRatio, failureRatio, liveRatio;
 
 			scope.stats.numFans = scope.fans.length;
 			scope.stats.numIntakeFans = scope.intakeFans.length;
 			scope.stats.numExhaustFans = scope.exhaustFans.length;
+
+			successRatio = ((scope.stats.removedParticles/(scope.stats.spawnedParticles - scope.stats.activeParticles))*100).toFixed(2);
+			failureRatio = ((scope.stats.culledParticles/(scope.stats.spawnedParticles - scope.stats.activeParticles))*100).toFixed(2);
+			liveRatio = ((scope.stats.activeParticles/scope.stats.spawnedParticles)*100).toFixed(2);
+
+			if (isNaN(successRatio)) {
+				successRatio = 0;
+			}
+
+			if (isNaN(failureRatio)) {
+				failureRatio = 0;
+			}
+
+			if (isNaN(liveRatio)) {
+				liveRatio = 0;
+			}
+
+			if(successRatio === 0 && failureRatio === 0) {
+				//This should only be called at the initialisation of a new project
+				//Need to override 0, 0 values with something otherwise no chart will be drawn
+				//By doing this we fake the chart data so that it looks like 100% of particles are successful
+				//The chart will update to real values after a couple of seconds, which is way before any particles will have been culled
+				//So the end result is no different for the user than if we didn't have to do this
+				var ratioSegSuccess = 1;
+				var ratioSegFailure = 0;
+			} else {
+				var ratioSegSuccess = scope.stats.removedParticles;
+				var ratioSegFailure = scope.stats.culledParticles;
+			}
+
+			scope.stats.particleSuccessPercentage = successRatio + "%";
+			scope.stats.particleFailurePercentage = failureRatio + "%";
+			scope.stats.particleLivePercentage = liveRatio + "%";
 
 			//Update explanations
 			updateFanRatioExplanation();
@@ -262,8 +297,8 @@ var simulation = function($http, defaultsService) {
 			updateOverallRating();
 
 			if (scope.charts.particleSuccessRatioChart != null || scope.charts.particleSuccessRatioChart != undefined) {
-				scope.charts.particleSuccessRatioChart.segments[0].value = scope.stats.removedParticles;
-				scope.charts.particleSuccessRatioChart.segments[1].value = scope.stats.culledParticles;
+				scope.charts.particleSuccessRatioChart.segments[0].value = ratioSegSuccess;
+				scope.charts.particleSuccessRatioChart.segments[1].value = ratioSegFailure;
 				scope.charts.particleSuccessRatioChart.update();
 			}
 
@@ -382,6 +417,9 @@ var simulation = function($http, defaultsService) {
 
 		function createParticles(numToCreate) { 
 			//Creates the pool of particles that will be added to the scene
+
+			particles = [];
+			availableParticles = [];
 
 			for (var i = 0; i < numToCreate; i++) {
 				var particle;
@@ -1543,8 +1581,8 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
+		// - Occasional bug where intersectedObjects[posToCheck] will be undefined, need to investigate
 		// - User defined quality settings in gear icon popup (max num particles, shadows, AA etc.) -> Maybe not have this, we would need to recreate render everytime a property changed which could be really difficult to do properly
-		// - Finish new project function so that it works correctly when we click it the second+ times
 		// - Finish save/load project functionality
 		// - Update modified date when we change something other than a project details property e.g. move a fan, change fan property, add fan etc.
 		// - Will loading a project change the modified date just becasue we loaded it? It shouldn't, I need to test this
