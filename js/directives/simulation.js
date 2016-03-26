@@ -453,6 +453,10 @@ var simulation = function($http, defaultsService) {
 
 				//Record the unix time ms that the particle spawned
 				availableParticles[0].spawnTime = (new Date).getTime();
+				
+				//Reset the colour to blue again
+				availableParticles[0].material.color.setHex(0x18ABDB);
+
 
 				//Add first available particle to scene
 				scene.add(availableParticles[0]);
