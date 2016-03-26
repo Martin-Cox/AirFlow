@@ -336,14 +336,10 @@ var simulation = function($http, defaultsService) {
 					//Good amount of fans
 					numFansBreakdownExplanation = scope.statsAnalysis.overall.numFans.goodAmount.val;
 					rating += scope.statsAnalysis.overall.numFans.goodAmount.mod;
-				} else if (scope.stats.numFans > 0) {
+				} else if (scope.stats.numFans <= 2) {
 					//Too few fans
 					numFansBreakdownExplanation = scope.statsAnalysis.overall.numFans.tooFew.val;
 					rating += scope.statsAnalysis.overall.numFans.tooFew.mod;
-				} else {
-					//No fans
-					numFansBreakdownExplanation = scope.statsAnalysis.overall.numFans.none.val;
-					rating += scope.statsAnalysis.overall.numFans.none.mod;
 				}
 
 				numFansBreakdownExplanation = numFansBreakdownExplanation + " +" + rating;
@@ -1325,27 +1321,28 @@ var simulation = function($http, defaultsService) {
 		}
 
 		scope.deleteFan = function() {
+			if (scope.fans.length > 1) {
+				scope.editFan.editing = false;
 
-			scope.editFan.editing = false;
+				scene.remove(scope.editFan.fanPhysicalObject);
+				scene.remove(scope.editFan.fanAOEObject);
+				scene.remove(scope.editFan.AOEWireframe);
 
-			scene.remove(scope.editFan.fanPhysicalObject);
-			scene.remove(scope.editFan.fanAOEObject);
-			scene.remove(scope.editFan.AOEWireframe);
+				if (scope.editFan.properties.mode === "intake") {
+					var index = scope.intakeFans.indexOf(scope.editFan);
+					scope.intakeFans.splice(index, 1);
+				} else if (scope.editFan.properties.mode === "exhaust") {
+					var index = scope.exhaustFans.indexOf(scope.editFan);
+					scope.exhaustFans.splice(index, 1);
+				}
 
-			if (scope.editFan.properties.mode === "intake") {
-				var index = scope.intakeFans.indexOf(scope.editFan);
-				scope.intakeFans.splice(index, 1);
-			} else if (scope.editFan.properties.mode === "exhaust") {
-				var index = scope.exhaustFans.indexOf(scope.editFan);
-				scope.exhaustFans.splice(index, 1);
+				var index = scope.fans.indexOf(scope.editFan);
+				scope.fans.splice(index, 1);
+				
+				//Angular doesn't play nice setting scope.editFan to null here, this is a workaround
+				scope.editFan = [];
+				scope.dragFan = null;
 			}
-
-			var index = scope.fans.indexOf(scope.editFan);
-			scope.fans.splice(index, 1);
-			
-			//Angular doesn't play nice setting scope.editFan to null here, this is a workaround
-			scope.editFan = [];
-			scope.dragFan = null;
 		}
 
 		scope.addNewFan = function() {
@@ -1582,8 +1579,6 @@ var simulation = function($http, defaultsService) {
 
 		//TODO (IN ORDER):
 		// - Occasional bug where intersectedObjects[posToCheck] will be undefined, need to investigate
-		// - Delete all fans BEFORE loading results tab, no chart will be drawn, then add a fan, still no chart will be drawn. Need to display "Anlaysing Data" or something if both doughnut chart options are 0, then actually draw chart when data is available
-			// - Also need to do the same thing for the particleSuccessRatio chart instead of faking the 1,0 data for success,failure (see commit 32b28137d57fdc4632ea8c31399ab525268c323e)
 		// - User defined quality settings in gear icon popup (max num particles, shadows, AA etc.) -> Maybe not have this, we would need to recreate render everytime a property changed which could be really difficult to do properly
 		// - Finish save/load project functionality
 		// - Update modified date when we change something other than a project details property e.g. move a fan, change fan property, add fan etc.

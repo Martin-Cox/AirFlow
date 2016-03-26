@@ -14,10 +14,6 @@
         "val" : "Too few fans",
         "mod": 1
       },
-      "none": {
-        "val" : "No fans",
-        "mod": 0
-      },
       "goodAmount": {
         "val" : "Good amount of fans",
         "mod": 2
