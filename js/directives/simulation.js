@@ -1582,6 +1582,8 @@ var simulation = function($http, defaultsService) {
 
 		//TODO (IN ORDER):
 		// - Occasional bug where intersectedObjects[posToCheck] will be undefined, need to investigate
+		// - Delete all fans BEFORE loading results tab, no chart will be drawn, then add a fan, still no chart will be drawn. Need to display "Anlaysing Data" or something if both doughnut chart options are 0, then actually draw chart when data is available
+			// - Also need to do the same thing for the particleSuccessRatio chart instead of faking the 1,0 data for success,failure (see commit 32b28137d57fdc4632ea8c31399ab525268c323e)
 		// - User defined quality settings in gear icon popup (max num particles, shadows, AA etc.) -> Maybe not have this, we would need to recreate render everytime a property changed which could be really difficult to do properly
 		// - Finish save/load project functionality
 		// - Update modified date when we change something other than a project details property e.g. move a fan, change fan property, add fan etc.
