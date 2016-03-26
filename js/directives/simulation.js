@@ -1528,6 +1528,10 @@ var simulation = function($http, defaultsService) {
 					}
 				}
 
+				if (intersectsObjects[posToCheck] === undefined) {
+					return null;
+				}
+
 				//If we didn't touch a visible case plane first, check if we touched a fan
 				for (var i = 0; i < scope.fans.length; i++) {
 					if (scope.fans[i].fanPhysicalObject.id == intersectsObjects[posToCheck].object.id) {
@@ -1582,7 +1586,6 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - Occasional bug where intersectedObjects[posToCheck] will be undefined, need to investigate
 		// - User defined quality settings in gear icon popup (max num particles, shadows, AA etc.) -> Maybe not have this, we would need to recreate render everytime a property changed which could be really difficult to do properly
 		// - Finish save/load project functionality
 		// - Update modified date when we change something other than a project details property e.g. move a fan, change fan property, add fan etc.
