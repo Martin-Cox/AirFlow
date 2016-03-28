@@ -90,7 +90,7 @@ describe("AirFlow", function () {
 		        	done();
 		     	});
 			});
-			it("should contain a default new fan defintion", function(done) {
+			it("should contain a default new fan definition", function(done) {
 				request.get(baseURL + "/json/defaultNewFanDetails.json", function(error, response, body) {
 		        	expect(body).to.contain("fanObject");
 		        	expect(body).to.contain("material");
