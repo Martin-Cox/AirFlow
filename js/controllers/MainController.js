@@ -101,7 +101,18 @@ var MainController = function($scope, $http) {
     };
 
      $scope.saveProject = function() {
-        console.log("Placeholder save project");
+        //Convert all relevant objects to JSON: $scope.projectDetails, $scope.stats, $scope.fans and put into a big JSON file for downloading/uploading
+
+        /*var projectDetailsObject = '{ "projectName": "' + $scope.projectDetails.projectName + '",' +
+                                   ' "author": "' + $scope.projectDetails.author + '",' +
+                                   ' "version": ' + $scope.projectDetails.version + ' }' */
+
+        var projectDetailsObject = JSON.stringify($scope.projectDetails);
+
+        var airflowProjectFile = '{ "projectDetails": ' + projectDetailsObject + ', "stats": ' + projectDetailsObject + '}';
+        
+        console.log(airflowProjectFile);
+
     };
 
      $scope.loadProject = function() {
