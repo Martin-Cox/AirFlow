@@ -19,7 +19,7 @@ var MainController = function($scope, $http) {
 
     $scope.caseGroup = new Object();
 
-    $scope.stats = [];
+    $scope.stats = new Object();
     $scope.statsAnalysis = null;
     $scope.charts = new Object();
     $scope.charts.drewCharts = false;
@@ -93,7 +93,7 @@ var MainController = function($scope, $http) {
 
         //TODO: THIS IS BREAKING THE PARTICLE SUCCESS RATIO CHART
 
-        $scope.stats = [];
+        $scope.stats = new Object();
 
         $scope.emptyScene();
         $scope.init();                    
@@ -108,8 +108,10 @@ var MainController = function($scope, $http) {
                                    ' "version": ' + $scope.projectDetails.version + ' }' */
 
         var projectDetailsObject = JSON.stringify($scope.projectDetails);
+        var projectStatsObject = JSON.stringify($scope.stats);
+        //var projectFansObject = JSON.stringify($scope.fans);
 
-        var airflowProjectFile = '{ "projectDetails": ' + projectDetailsObject + ', "stats": ' + projectDetailsObject + '}';
+        var airflowProjectFile = '{ "projectDetails": ' + projectDetailsObject + ', "stats": ' + projectStatsObject + ', "fans": ' + projectStatsObject + '}';
         
         console.log(airflowProjectFile);
 
