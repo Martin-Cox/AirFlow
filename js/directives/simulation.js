@@ -1213,7 +1213,8 @@ var simulation = function($http, defaultsService) {
 			for (var i = 0; i < scope.fans.length; i++) {
 				scope.fans[i].editing = false;
 				scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
-				scene.remove(scope.fans[i].AOEWireframe); 
+				scene.remove(scope.fans[i].AOEWireframe);
+				document.getElementById("componentForm").setAttribute("aria-disabled", true); 
 			}
 
 			//If we clicked on a fan, do stuff here
@@ -1228,6 +1229,7 @@ var simulation = function($http, defaultsService) {
 				scope.originalFanPos.z = touchFan.fanPhysicalObject.position.z;
 				scope.originalFanPos.position = touchFan.properties.position;
 				scope.$digest();
+				document.getElementById("componentForm").setAttribute("aria-disabled", false); 
 				orbitControl.enableRotate = false;
 			}
 
@@ -1596,7 +1598,7 @@ var simulation = function($http, defaultsService) {
 		// - User configurable project settings 													- AND UNIT TESTS
 		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS
 		// - Input validation on ALL user enterable data (using Angular) 							- AND UNIT TESTS
-		// - Implement WEB-ARIA roles and support a11y
+		// - Recheck WEB-ARIA roles and properties
 		// - Change rate of spawning in particles dependant on the number of intake fans
 		// - Reqrite how to use/about popup
 		// - Standardised error messages

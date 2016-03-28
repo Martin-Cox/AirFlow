@@ -1,12 +1,12 @@
-<div class="popupBox" id="helpPopupBox" ng-controller="HelpBoxController">
-  <a class="popupCloseButton" ng-click="closeHelpBox()">×</a>
-  <h1>How to use</h1>
+<div class="popupBox" id="helpPopupBox" ng-controller="HelpBoxController" role="dialog">
+  <a class="popupCloseButton" ng-click="closeHelpBox()" role="button">×</a>
+  <h1 role="heading">How to use</h1>
   <p>On the left is the control panel, where you can define project settings, individual component settings, and see the results of the simulation. The rest of the screen is taken up by the simulation. The blue boxes represent fans, the grey planes represent the computer case, and the coloured spheres represent air particles.</p>
   <p>To manipulate the simulation camera, you can click with left mouse button and drag the mouse to rotate the camera. You click with the right mouse button and drag to pan the camera. You can zoom in and out by scrolling the mouse wheel.</p>
   <p>Inside the simulation, you can click on any fan to edit it. When you start editing a fan, the "Component Settings" section in the control panel will activate, where you can change the settings for each fan individually. You can also move the fans by clicking on a fan, then dragging the mouse. When you move the fan to a different side of the case, the fan will automatically rotate. If you try to move a fan to position that is invalid (For example, overlapping another fan) then it will turn red and you will not be able to place the fan in that position.</p>
   <p>You can add or remove fans at any time by pressing the "Add a Fan" or "Delete Fan" buttons in the control panel.</p>
   <p>To close this popup box, click the × in the top right corner of the popup box.</p>
-  <h1>About AirFlow</h1>
+  <h1 role="heading">About AirFlow</h1>
   <p>AirFlow is a web application designed to provide a semi-realistic simulation of the movement of air in a computer case for use by computer builders to better understand how air cooling works. AirFlow is not 100% realistic, and so you shouldn't rely on the simulation and results provided to work exactly the same in the real world.</p>
   <p class="helpTextFooter">© Martin Stephen Cox 2015-2016</p>
   <p class="helpTextFooter">Gear icon made by <a class="helpTextFooterLink" href="http://www.flaticon.com/authors/tutsplus" title="TutsPlus">TutsPlus</a> from <a class="helpTextFooterLink" href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and is licensed by <a class="helpTextFooterLink" href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>

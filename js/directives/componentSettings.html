@@ -1,45 +1,45 @@
 <div class="editorSection" ng-controller="ComponentController">
-  <form novalidate class="editorForm">
-  	<p class="sectionHeader">Component Settings</p>
+  <form novalidate class="editorForm" id="componentForm" role="form" aria-disabled="true">
+  	<p class="sectionHeader" role="heading">Component Settings</p>
     <fieldset ng-disabled="!editFan || overrideCompSettings">
       <div class="editorProperty">
       	<p>Mode: </p>
-        <select ng-model="editFan.properties.mode" ng-change="fanPropertiesChange(editFan.properties.mode)">
+        <select ng-model="editFan.properties.mode" ng-change="fanPropertiesChange(editFan.properties.mode)" role="combobox">
           <option value="intake">Intake</option>
           <option value="exhaust">Exhaust</option>
         </select>
       </div>
       <div class="editorProperty">
       	<p>Max RPM: </p>
-      	<input type="number" ng-model="editFan.properties.maxRPM" ng-change="fanPropertiesChange(editFan.properties.maxRPM)" min="0" max="3000"/>
+      	<input type="number" ng-model="editFan.properties.maxRPM" ng-change="fanPropertiesChange(editFan.properties.maxRPM)" min="0" max="3000" role="textbox"/>
       </div>
       <div class="editorProperty">
       	<p>Size (mm): </p>
-      	<input type="number" ng-model="editFan.properties.size" ng-change="fanPropertiesChange(editFan.properties.size)" min="80" max="140"/>
+      	<input type="number" ng-model="editFan.properties.size" ng-change="fanPropertiesChange(editFan.properties.size)" min="80" max="140" role="textbox"/>
       </div>
       <div class="editorProperty">
         <p>Current RPM (%): </p>
-        <input type="number" ng-model="editFan.properties.percentageRPM" ng-change="fanPropertiesChange(editFan.properties.percentageRPM)" min="0" max="100"/>
+        <input type="number" ng-model="editFan.properties.percentageRPM" ng-change="fanPropertiesChange(editFan.properties.percentageRPM)" min="0" max="100" role="textbox"/>
       </div>
       <div class="editorProperty">
         <p>FORCE X: </p>
-        <input type="number" ng-model="editFan.properties.forceVector.x"/>
+        <input type="number" ng-model="editFan.properties.forceVector.x" role="textbox"/>
       </div>
       <div class="editorProperty">
         <p>FORCE Y: </p>
-        <input type="number" ng-model="editFan.properties.forceVector.y"/>
+        <input type="number" ng-model="editFan.properties.forceVector.y" role="textbox"/>
       </div>
       <div class="editorProperty">
         <p>FORCE Z: </p>
-        <input type="number" ng-model="editFan.properties.forceVector.z"/>
+        <input type="number" ng-model="editFan.properties.forceVector.z" role="textbox"/>
       </div>
       <div class="editorProperty">
         <p>Date created: </p>
-        <input type="text" ng-readonly="true" ng-model="editFan.properties.dateCreated"/>
+        <input type="text" ng-readonly="true" ng-model="editFan.properties.dateCreated" role="textbox" aria-readonly="true"/>
       </div>
       <div class="editorProperty">
         <p>Date modified: </p>
-        <input type="text" ng-readonly="true" ng-model="editFan.properties.dateModified"/>
+        <input type="text" ng-readonly="true" ng-model="editFan.properties.dateModified" role="textbox" aria-readonly="true"/>
       </div>
     </fieldset>
 </div>

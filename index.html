@@ -11,44 +11,44 @@
 		<script src="js/build.js"></script>		
 		<script src="js/external/stats.min.js"></script>			
 	</head>
-	<body ng-app="AirFlowApp">
+	<body ng-app="AirFlowApp" role="main">
 		<div class="main" ng-controller="MainController">
 
-			<div id="loadingSplash" ng-click="hideSplash()">
+			<div id="loadingSplash" ng-click="hideSplash()" role="presentation">
 				<img src="/images/logo_icon.svg" alt="AirFlow logo" id="loadingSplashIcon"> 
-				<h1 id="loadingSplashLogoText">AIRFLOW</h1>
+				<h1 id="loadingSplashLogoText" role="heading">AIRFLOW</h1>
 				<p id="loadingSplashLoadingText">Loading...</p>
 			</div>
 			<div id="tabbedPaneContainer">
-				<tabs>
-					<tab heading="Settings">
+				<tabs role="tabpanel">
+					<tab heading="Settings" role="tablist">
 						<div id="projectButtonsWrapper">
-							<button ng-click="newProject()">New project</button>	
-							<button ng-click="saveProject()">Save</button>	
-							<button ng-click="loadProject()">Load</button>	
+							<button ng-click="newProject()" role="button">New project</button>	
+							<button ng-click="saveProject()" role="button">Save</button>	
+							<button ng-click="loadProject()" role="button">Load</button>	
 						</div>
 						<project-Details></project-Details>
 						<!--<environment-Settings></environment-Settings>-->
 						<component-Settings></component-Settings>
 						<div id="fanButtonsWrapper">
 							<div class="fanButtonWrapper">
-								<button ng-click="addNewFan()" ng-disabled="addingFan"><img src="/images/fan_icon_add_active.png" alt="Add Fan"></button>
+								<button ng-click="addNewFan()" ng-disabled="addingFan" role="button"><img src="/images/fan_icon_add_active.png" alt="Add Fan"></button>
 							</div>
 							<div class="fanButtonWrapper">
-								<button ng-click="deleteFan()" id="deleteFanBtn" ng-disabled="!editFan || overrideCompSettings || fans.length <= 1"><img src="/images/fan_icon_delete_active.png" alt="Delete Fan"></button>
+								<button ng-click="deleteFan()" id="deleteFanBtn" ng-disabled="!editFan || overrideCompSettings || fans.length <= 1" role="button"><img src="/images/fan_icon_delete_active.png" alt="Delete Fan"></button>
 							</div>
 						</div>
 						<div id="cancelAddFanButton">
-							<button ng-click="cancelAddingFan()" ng-disabled="!addingFan">Cancel adding fan</button>
+							<button ng-click="cancelAddingFan()" ng-disabled="!addingFan" role="button">Cancel adding fan</button>
 						</div>
 					</tab>						
-					<tab heading="Results">
+					<tab heading="Results" role="tablist">
 						<results-Panel></results-Panel>
 					</tab>
 				</tabs>
 			</div>
 
-			<div id="simulationContainer">
+			<div id="simulationContainer" role="application">
 				<simulation></simulation>
 			</div>
 

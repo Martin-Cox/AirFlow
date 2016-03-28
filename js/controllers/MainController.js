@@ -193,9 +193,6 @@ var MainController = function($scope, $http) {
                 $scope.exhaustFans.push(fan);
             }
         }
-
-        console.log("Intake fans size: " + $scope.intakeFans.length);
-        console.log("Exhaust fans size: " + $scope.exhaustFans.length);
     }
 
 };

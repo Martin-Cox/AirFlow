@@ -1,11 +1,11 @@
 <div class="editorSection" id="resultsPanel" ng-controller="ResultsController">
-  <form novalidate class="editorForm">
-  	<p class="sectionHeader">Results Overview</p>
+  <form novalidate class="editorForm" role="form">
+  	<p class="sectionHeader" role="heading">Results Overview</p>
 
     <div id="overallRatingWrapper">
-      <p class="resultsExplanationTitle" id="overallRatingTitle">test title</p>
-      <p class="ratingBreakdownPoint" id="breakdownNumFans">test num fans</p>
-      <p class="ratingBreakdownPoint" id="breakdownParticleSuccessRatio">test ratio</p>
+      <p class="resultsExplanationTitle" id="overallRatingTitle"></p>
+      <p class="ratingBreakdownPoint" id="breakdownNumFans"></p>
+      <p class="ratingBreakdownPoint" id="breakdownParticleSuccessRatio"></p>
     </div>
 
     <div class="editorProperty">
@@ -17,23 +17,23 @@
       <input type="text" ng-readonly="true" ng-model="stats.numFans"/>
     </div>
 
-    <p class="sectionHeader">Detailed Results</p>
+    <p class="sectionHeader" role="heading">Detailed Results</p>
 
     <!-- Particle Success Ratio Chart-->
 
-    <div class="chartWrapper">
-      <p class="chartHeader">Particle Success Ratio</p>
+    <div class="chartWrapper" role="presentation">
+      <p class="chartHeader" role="heading">Particle Success Ratio</p>
       <div class="chartKeyWrapper">
         <div class="keyElement">
-          <div class="keyIcon" id="particleSuccessRatioSuccessfulIcon"></div>
+          <div class="keyIcon" id="particleSuccessRatioSuccessfulIcon" role="presentation"></div>
           <p>Successful Particles</p>
         </div>
         <div class="keyElement">
-          <div class="keyIcon" id="particleSuccessRatioFailedIcon"></div>
+          <div class="keyIcon" id="particleSuccessRatioFailedIcon" role="presentation"></div>
           <p>Culled Particles</p>
         </div>
       </div>
-      <canvas id="particleSuccessRatioChart" width="200" height="200"></canvas>
+      <canvas id="particleSuccessRatioChart" width="200" height="200" role="presentation"></canvas>
     </div>
     <!--<div class="editorProperty">
       <p>Live Particles: </p>
@@ -54,19 +54,19 @@
 
     <!-- Fan Ratio Chart -->
 
-    <div class="chartWrapper">
-      <p class="chartHeader">Fan Ratio</p>
+    <div class="chartWrapper" role="presentation">
+      <p class="chartHeader" role="heading">Fan Ratio</p>
       <div class="chartKeyWrapper">
         <div class="keyElement">
-          <div class="keyIcon" id="fanRatioIntakeIcon"></div>
+          <div class="keyIcon" id="fanRatioIntakeIcon" role="presentation"></div>
           <p>Intake Fans</p>
         </div>
         <div class="keyElement">
-          <div class="keyIcon" id="fanRatioExhaustIcon"></div>
+          <div class="keyIcon" id="fanRatioExhaustIcon" role="presentation"></div>
           <p>Exhaust Fans</p>
         </div>
       </div>
-      <canvas id="fanRatioChart" width="200" height="200"></canvas>
+      <canvas id="fanRatioChart" width="200" height="200" role="presentation"></canvas>
     </div>
     <div class="editorProperty">
       <p>Total Fans: </p>

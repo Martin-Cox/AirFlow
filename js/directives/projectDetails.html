@@ -1,26 +1,26 @@
 <div class="editorSection" ng-controller="ProjectDetailsController">
-  <form novalidate class="editorForm">
-  	<p class="sectionHeader">Project Details</p>
+  <form novalidate class="editorForm" role="form">
+  	<p class="sectionHeader" role="heading">Project Details</p>
     <fieldset>
       <div class="editorProperty">
       	<p>Project Name: </p>
-      	<input type="text" ng-model="projectDetails.projectName" ng-change="projectDetailsChange()"/>
+      	<input type="text" ng-model="projectDetails.projectName" ng-change="projectDetailsChange()" role="textbox"/>
       </div>
       <div class="editorProperty">
       	<p>Author: </p>
-      	<input type="text" ng-model="projectDetails.author" ng-change="projectDetailsChange()"/>
+      	<input type="text" ng-model="projectDetails.author" ng-change="projectDetailsChange()" role="textbox"/>
       </div>
       <div class="editorProperty">
       	<p>Version: </p>
-      	<input type="number" ng-model="projectDetails.version" ng-change="projectDetailsChange()"/>
+      	<input type="number" ng-model="projectDetails.version" ng-change="projectDetailsChange()" role="textbox"/>
       </div>
       <div class="editorProperty">
         <p>Date created: </p>
-        <input type="text" ng-readonly="true" ng-model="projectDetails.dateCreated"/>
+        <input type="text" ng-readonly="true" ng-model="projectDetails.dateCreated" role="textbox" aria-readonly="true">
       </div>
           <div class="editorProperty">
         <p>Date modified: </p>
-        <input type="text" ng-readonly="true" ng-model="projectDetails.dateModified"/>
+        <input type="text" ng-readonly="true" ng-model="projectDetails.dateModified" role="textbox" aria-readonly="true"/>
       </div>
     <fieldset>
 </div>
