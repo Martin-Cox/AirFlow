@@ -1,5 +1,7 @@
 var MainController = function($scope, $http) {
 
+    var THREE = require('three');
+
     $scope.ajaxComplete = false;
 
     $scope.projectDetails = new Object();
@@ -111,10 +113,34 @@ var MainController = function($scope, $http) {
         var projectStatsObject = JSON.stringify($scope.stats);
         //var projectFansObject = JSON.stringify($scope.fans);
 
+        /*for (let fan of $scope.fans) {
+            if (fan.properties.mode === "intake") {
+                $scope.intakeFans.push(fan);
+            } else if (fan.properties.mode === "exhaust") {
+                $scope.exhaustFans.push(fan);
+            }
+        }*/
+
+        //var projectFansObject = JSON.stringify($scope.fans[0].fanPhysicalObject); //or .properties
+        //var projectFansObject = THREE.Object3D.prototype.toJSON($scope.fans[0].fanPhysicalObject);
+
+        //TODO: Trying to convert the fans to JSON is broken, need to investigate
+
         var airflowProjectFile = '{ "projectDetails": ' + projectDetailsObject + ', "stats": ' + projectStatsObject + ', "fans": ' + projectStatsObject + '}';
         
         console.log(airflowProjectFile);
 
+
+
+        //Prompt user to download file
+        var dLink = document.createElement('a');
+        dLink.style.visibility = 'hidden';
+        document.body.appendChild(dLink);
+        var blob = new Blob([airflowProjectFile], { type: 'text/plain' });
+        dLink.href = URL.createObjectURL(blob);
+        dLink.download = $scope.projectDetails.projectName + "_v" + $scope.projectDetails.version + ".json";
+        dLink.click();
+        dLink.remove();
     };
 
      $scope.loadProject = function() {
