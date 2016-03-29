@@ -105,32 +105,24 @@ var MainController = function($scope, $http) {
      $scope.saveProject = function() {
         //Convert all relevant objects to JSON: $scope.projectDetails, $scope.stats, $scope.fans and put into a big JSON file for downloading/uploading
 
-        /*var projectDetailsObject = '{ "projectName": "' + $scope.projectDetails.projectName + '",' +
-                                   ' "author": "' + $scope.projectDetails.author + '",' +
-                                   ' "version": ' + $scope.projectDetails.version + ' }' */
-
         var projectDetailsObject = JSON.stringify($scope.projectDetails);
         var projectStatsObject = JSON.stringify($scope.stats);
-        //var projectFansObject = JSON.stringify($scope.fans);
 
-        /*for (let fan of $scope.fans) {
-            if (fan.properties.mode === "intake") {
-                $scope.intakeFans.push(fan);
-            } else if (fan.properties.mode === "exhaust") {
-                $scope.exhaustFans.push(fan);
-            }
-        }*/
+        var fansCompositeObj = new Object();
 
-        //var projectFansObject = JSON.stringify($scope.fans[0].fanPhysicalObject); //or .properties
-        //var projectFansObject = THREE.Object3D.prototype.toJSON($scope.fans[0].fanPhysicalObject);
+        for (var i = 0; i < $scope.fans.length; i++) {            
+            var fanObj = new Object();
+            fanObj.properties = $scope.fans[i].properties;
+            fanObj.dimensions = $scope.fans[i].fanPhysicalObject.dimensions;
+            fanObj.x = $scope.fans[i].fanPhysicalObject.position.x;
+            fanObj.y = $scope.fans[i].fanPhysicalObject.position.y;
+            fanObj.z = $scope.fans[i].fanPhysicalObject.position.z;
+            fansCompositeObj[i] = fanObj;
+        }
 
-        //TODO: Trying to convert the fans to JSON is broken, need to investigate
+        var projectFansObject = JSON.stringify(fansCompositeObj);
 
-        var airflowProjectFile = '{ "projectDetails": ' + projectDetailsObject + ', "stats": ' + projectStatsObject + ', "fans": ' + projectStatsObject + '}';
-        
-        console.log(airflowProjectFile);
-
-
+        var airflowProjectFile = '{ "projectDetails": ' + projectDetailsObject + ', "stats": ' + projectStatsObject + ', "fans": ' + projectFansObject + '}';
 
         //Prompt user to download file
         var dLink = document.createElement('a');
