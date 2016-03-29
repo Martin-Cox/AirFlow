@@ -128,7 +128,7 @@ var MainController = function($scope, $http) {
         var dLink = document.createElement('a');
         dLink.style.visibility = 'hidden';
         document.body.appendChild(dLink);
-        var blob = new Blob([airflowProjectFile], { type: 'text/plain' });
+        var blob = new Blob([airflowProjectFile], { type: 'application/json' });
         dLink.href = URL.createObjectURL(blob);
         dLink.download = $scope.projectDetails.projectName + "_v" + $scope.projectDetails.version + ".json";
         dLink.click();
