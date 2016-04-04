@@ -189,12 +189,15 @@ var simulation = function($http, defaultsService) {
 
 			createDefaultCase(scope.defaultCase);
 
-			scope.createFan(scope.defaultFans.fanOne);
-			scope.createFan(scope.defaultFans.fanTwo);
-			scope.createFan(scope.defaultFans.fanThree);
-			scope.createFan(scope.defaultFans.fanFour);
-			scope.createFan(scope.defaultFans.fanFive);
-			scope.createFan(scope.defaultFans.fanSix);
+			//Clone the default fans, otherwise the default fan properties will get overriden if we attempt to modify them
+			var defaultFansCopy = (JSON.parse(JSON.stringify(scope.defaultFans)));
+
+			scope.createFan(defaultFansCopy.fanOne);
+			scope.createFan(defaultFansCopy.fanTwo);
+			scope.createFan(defaultFansCopy.fanThree);
+			scope.createFan(defaultFansCopy.fanFour);
+			scope.createFan(defaultFansCopy.fanFive);
+			scope.createFan(defaultFansCopy.fanSix);
 
 			var skyboxGeometry = new THREE.CubeGeometry(9000, 9000, 9000);
 			var skyboxMaterial = new THREE.MeshBasicMaterial({ color: 0x262B30, side: THREE.BackSide });
