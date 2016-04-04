@@ -44,6 +44,7 @@ var simulation = function($http, defaultsService) {
 					//TODO: Handle if error returned, create error message dialog
 					scope.fanColors = result.colors;
 					scope.defaultFans = result;
+					scope.defaultNewFanAOE = result.fanOne.fanAOEObject;
 					var newFanDefaultsPromise = defaultsService.getNewFanDefaults();
 					newFanDefaultsPromise.then(function(result) {
 						scope.defaultNewFan = result;
@@ -117,6 +118,24 @@ var simulation = function($http, defaultsService) {
 	        }
 		}
 
+		scope.removeFansAndParticles = function() {			
+	        //Remove all fans and particles from scene
+	        var obj = null;
+	        for(var i = scene.children.length - 1; i >= 0; i--) { 
+	            obj = scene.children[i];
+	            for (var j = 0; j < scope.fans.length; j++) {
+	            	if (obj.id == scope.fans[j].fanPhysicalObject.id || obj.id == scope.fans[j].fanAOEObject.id) {
+						scene.remove(obj);
+	            	}
+	            }
+	            for (var j = 0; j < particles.length; j++) {
+	            	if (obj.id == particles[j].id) {
+						scene.remove(obj);
+	            	}
+	            }
+	        }
+		}
+
 		scope.init = function() {
 			//Loads physijs files, creates scene etc.
 			if (renderer === null) {
@@ -170,12 +189,12 @@ var simulation = function($http, defaultsService) {
 
 			createDefaultCase(scope.defaultCase);
 
-			createDefaultFan(scope.defaultFans.fanOne);
-			createDefaultFan(scope.defaultFans.fanTwo);
-			createDefaultFan(scope.defaultFans.fanThree);
-			createDefaultFan(scope.defaultFans.fanFour);
-			createDefaultFan(scope.defaultFans.fanFive);
-			createDefaultFan(scope.defaultFans.fanSix);
+			scope.createFan(scope.defaultFans.fanOne);
+			scope.createFan(scope.defaultFans.fanTwo);
+			scope.createFan(scope.defaultFans.fanThree);
+			scope.createFan(scope.defaultFans.fanFour);
+			scope.createFan(scope.defaultFans.fanFive);
+			scope.createFan(scope.defaultFans.fanSix);
 
 			var skyboxGeometry = new THREE.CubeGeometry(9000, 9000, 9000);
 			var skyboxMaterial = new THREE.MeshBasicMaterial({ color: 0x262B30, side: THREE.BackSide });
@@ -641,7 +660,7 @@ var simulation = function($http, defaultsService) {
 			scope.caseGroup.frontPlane = caseFrontPlane;
 		}
 
-		function createDefaultFan(fan) {
+		scope.createFan = function(fan) {
 			/*A fan is made up a of a fanObject with two sub-objects, a fanAOEObject representing the area of effect for a fan
 			and the fanPhysicalObject, which is the physical fan the user sees*/
 
@@ -710,6 +729,103 @@ var simulation = function($http, defaultsService) {
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 			fanObject.properties.dateCreated = scope.getCurrentDate();
 			fanObject.properties.dateModified = scope.getCurrentDate();
+			fanObject.properties.isValidPos = true;
+
+			determineFanAOEPosition(fanObject);
+
+			scene.add(fanPhysicalObject);
+
+			scene.add(fanAOEObject);
+
+			fanObject.fanPhysicalObject.addEventListener('collision', handleFanToFanCollision);
+
+			//Calculate force
+			//fanObject.forceVector = new THREE.Vector3(fan.properties.forceVector.x, fan.properties.forceVector.y, fan.properties.forceVector.z);
+			fanObject.properties.forceVector =  scope.calculateForceVector(fanObject);
+
+			//Checking param mode here to offset positions
+			//TODO: Add support for fans that are neither intake or exhaust (e.g. GPU fan)
+			if (fan.properties.mode != "exhaust") {
+				scope.intakeFans.push(fanObject);
+			} else {
+				scope.exhaustFans.push(fanObject);
+			}
+
+			scope.fans.push(fanObject);	
+		}
+
+		scope.loadFan = function(fan) {
+			/*A fan is made up a of a fanObject with two sub-objects, a fanAOEObject representing the area of effect for a fan
+			and the fanPhysicalObject, which is the physical fan the user sees*/
+			//Only fans loaded from a project file should be created using this function
+
+			fan.fanAOEObject = scope.defaultNewFanAOE;
+
+ 			var fanAOEObject = createFanAOEObject(fan, false);
+
+			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
+			var fanPhysicalMaterial = Physijs.createMaterial(
+				new THREE.MeshLambertMaterial({
+					color: parseInt(scope.fanColors.normal),
+					side: THREE.DoubleSide
+				}),
+				0.3,
+				1
+			);
+
+
+			var fanPhysicalObject = new Physijs.BoxMesh(new THREE.CubeGeometry(fan.dimensions.width, fan.dimensions.height, fan.dimensions.depth), fanPhysicalMaterial, 0); //Gravity, 0 = weightless
+
+			//We need to rotate the fanAOEObject (and possibly fanPhysicalObject) in order for them to "point" inside the case
+			switch(fan.properties.position) {
+				case positionsEnum.FRONT:
+					fanAOEObject.rotation.x = 90 * Math.PI/180;
+					break;
+				case positionsEnum.BACK:
+					fanAOEObject.rotation.x = 90 * Math.PI/180;
+					break;
+				case positionsEnum.TOP:
+					fanPhysicalObject.rotation.x = 90 * Math.PI/180;
+					fanAOEObject.rotation.x = 180 * Math.PI/180;
+					break;
+				case positionsEnum.BOTTOM:
+					fanPhysicalObject.rotation.x = 90 * Math.PI/180;
+					fanAOEObject.rotation.x = 180 * Math.PI/180;
+					break;
+				case positionsEnum.VISIBLE_SIDE:
+					fanPhysicalObject.rotation.y = 90 * Math.PI/180;
+					fanAOEObject.rotation.z = 90 * Math.PI/180;
+					break;
+				case positionsEnum.INVISIBLE_SIDE:
+					fanPhysicalObject.rotation.y = 90 * Math.PI/180;
+					fanAOEObject.rotation.z = 90 * Math.PI/180;
+					break;
+			}
+
+			fanPhysicalObject.position.set(fan.x, fan.y, fan.z);
+
+			fanPhysicalObject._physijs.collision_flags = 4;	//Allows collision detection, but doesn't affect velocity etc. of object colliding with it
+
+			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
+
+			var fanObject = new Object();
+
+			fanObject.properties = new Object();
+
+			fanObject.fanAOEObject = fanAOEObject;
+			fanObject.fanAOEObject.dimensions = fan.fanAOEObject.dimensions;
+			fanObject.fanPhysicalObject = fanPhysicalObject;
+			fanObject.fanPhysicalObject.dimensions = fan.dimensions;
+			fanObject.id = fanPhysicalObject.id;
+			fanObject.editing = false;
+			fanObject.properties.mode = fan.properties.mode;
+			fanObject.properties.size = fan.properties.size;
+			fanObject.properties.maxRPM = fan.properties.maxRPM;
+			fanObject.properties.percentageRPM = fan.properties.percentageRPM;
+			fanObject.properties.position = fan.properties.position;
+			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
+			fanObject.properties.dateCreated = fan.properties.dateCreated;
+			fanObject.properties.dateModified = fan.properties.dateModified;
 			fanObject.properties.isValidPos = true;
 
 			determineFanAOEPosition(fanObject);
@@ -1588,7 +1704,7 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - Finish save/load project functionality
+		// - Add file validation to loadProject() function to ensure only valid airflow files are loaded
 		// - Update modified date when we change something other than a project details property e.g. move a fan, change fan property, add fan etc.
 		// - Will loading a project change the modified date just becasue we loaded it? It shouldn't, I need to test this
 		// - Stop fans from being able to go off the side of the case
