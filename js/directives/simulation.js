@@ -856,7 +856,7 @@ var simulation = function($http, defaultsService) {
 			and the fanPhysicalObject, which is the physical fan the user sees*/
 
 			//Create a new fan using default properties from newFanDefaults.json
-			//Much the same as createDefaultFan
+			//Much the same as scope.createFan
 
 			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
 			var fanPhysicalMaterial = Physijs.createMaterial(
@@ -944,6 +944,7 @@ var simulation = function($http, defaultsService) {
 			}
 
 			scope.fans.push(fanObject);	
+			scope.projectDetails.dateModified = scope.getCurrentDate();
 		}
 
 		function createFanAOEObject(fan, defaultCreation) { 
@@ -1051,7 +1052,7 @@ var simulation = function($http, defaultsService) {
 			resizedFan.fanAOEObject.dimensions.radiusBottom = resizedFan.properties.size/2;
 			resizedFan.position = resizedFan.fanPhysicalObject.position;
 
-			createDefaultFan(resizedFan);
+			scope.createFan(resizedFan);
 
 			var length = scope.fans.length;
 
@@ -1209,6 +1210,8 @@ var simulation = function($http, defaultsService) {
 							scope.dragFan.fanAOEObject.__dirtyPosition = true;
 							scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
 							scope.dragFan.properties.forceVector = scope.calculateForceVector(scope.dragFan);
+							scope.projectDetails.dateModified = scope.getCurrentDate();
+							scope.editFan.properties.dateModified = scope.getCurrentDate();
 							scope.$digest();
 						}
 					}
@@ -1464,6 +1467,8 @@ var simulation = function($http, defaultsService) {
 				//Angular doesn't play nice setting scope.editFan to null here, this is a workaround
 				scope.editFan = [];
 				scope.dragFan = null;
+
+				scope.projectDetails.dateModified = scope.getCurrentDate();
 			}
 		}
 
@@ -1704,9 +1709,8 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
+		// - Changign fan size then clicking new project doesn't reset fan size
 		// - Add file validation to loadProject() function to ensure only valid airflow files are loaded
-		// - Update modified date when we change something other than a project details property e.g. move a fan, change fan property, add fan etc.
-		// - Will loading a project change the modified date just becasue we loaded it? It shouldn't, I need to test this
 		// - Stop fans from being able to go off the side of the case
 		// - Disallow fans to "intersect" eachother, FIX ISSUE WHERE YOU CAN GO TO INVALID STATE BUT NOT BACK AGAIN
 		// - Add components to defaultCase.json e.g. GPU, Hard drives, CPU etc.
