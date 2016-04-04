@@ -138,6 +138,16 @@ var MainController = function($scope, $http) {
      $scope.loadProject = function(projectJSON) {
         //Project file in projectJSON
         //TODO: Check if project JSON contains correct properties, if it doesn't (e.g. uploaded an incorrect file) return an error message
+
+        $scope.projectDetails.projectName = projectJSON.projectDetails.projectName;
+        $scope.projectDetails.author = projectJSON.projectDetails.author;
+        $scope.projectDetails.version = projectJSON.projectDetails.version;
+
+        $scope.projectDetails.dateCreated = projectJSON.projectDetails.dateCreated;
+        $scope.projectDetails.dateModified = projectJSON.projectDetails.dateModified;
+
+
+
     };
 
     $scope.notifyProjectLoad = function(element) {
