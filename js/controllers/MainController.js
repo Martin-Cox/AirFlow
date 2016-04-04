@@ -250,6 +250,7 @@ var MainController = function($scope, $http) {
         //Called when the user edits a fan property
         $scope.projectDetails.dateModified = $scope.getCurrentDate();
         $scope.editFan.properties.forceVector = $scope.calculateForceVector($scope.editFan);
+        $scope.editFan.properties.dateModified = $scope.getCurrentDate();
         $scope.resizeFan($scope.editFan);
 
         //Recreate intake fans/exhaust fans lists
