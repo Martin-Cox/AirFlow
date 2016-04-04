@@ -25,7 +25,9 @@
 						<div id="projectButtonsWrapper">
 							<button ng-click="newProject()" role="button">New project</button>	
 							<button ng-click="saveProject()" role="button">Save</button>	
-							<button ng-click="loadProject()" role="button">Load</button>	
+							<!--<button ng-click="loadProject()" role="button">Load</button>-->
+							<label for="projectLoadInput" id="projectLoadInputLabel">Load</label>
+							<input id="projectLoadInput" ng-model="loadedFile" onchange="angular.element(this).scope().file_changed(this)" type="file" accept=".json"></input>
 						</div>
 						<project-Details></project-Details>
 						<!--<environment-Settings></environment-Settings>-->

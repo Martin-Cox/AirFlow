@@ -1588,7 +1588,6 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - User defined quality settings in gear icon popup (max num particles, shadows, AA etc.) -> Maybe not have this, we would need to recreate render everytime a property changed which could be really difficult to do properly
 		// - Finish save/load project functionality
 		// - Update modified date when we change something other than a project details property e.g. move a fan, change fan property, add fan etc.
 		// - Will loading a project change the modified date just becasue we loaded it? It shouldn't, I need to test this

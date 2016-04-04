@@ -177,7 +177,7 @@ fieldset {
   color: black;
   margin: 0 0 0 0;
   padding: 0 0 0 0;
-  height: 100%;
+  height: 30px;
   font-size: 1.2em;
   text-shadow: 0 1px 1px rgba(0,0,0,.2);
   transition: all 200ms;
@@ -195,6 +195,29 @@ fieldset {
   color: #6B6B6B;
 }
 
+#projectLoadInput {
+  display: none;
+}
+
+#projectLoadInputLabel {
+  text-align: center;
+  font-family:"Oswald", sans-serif;
+  color: black;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  height: 30px;
+  font-size: 1.2em;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  background: #CFCFCF;
+  border:none;
+  float: left;
+  width: 33.33%;
+  height: 30px;
+}
+
+#projectLoadInput input:hover {
+  color: #6B6B6B;
+}
 
 .chartWrapper {
   width:100%;
