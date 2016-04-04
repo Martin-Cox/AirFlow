@@ -135,9 +135,21 @@ var MainController = function($scope, $http) {
         dLink.remove();
     };
 
-     $scope.loadProject = function() {
-        console.log("Placeholder load project");
+     $scope.loadProject = function(projectJSON) {
+        //Project file in projectJSON
+        //TODO: Check if project JSON contains correct properties, if it doesn't (e.g. uploaded an incorrect file) return an error message
     };
+
+    $scope.notifyProjectLoad = function(element) {
+         $scope.$apply(function(scope) {
+             var reader = new FileReader();
+             reader.onload = function() {
+                var projectJSON = JSON.parse(reader.result);
+                $scope.loadProject(projectJSON);
+             };
+             reader.readAsText(element.files[0]);
+         });
+    };  
 
     $scope.getCurrentDate = function() {
         //Gets formatted date
