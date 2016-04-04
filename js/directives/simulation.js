@@ -1712,7 +1712,6 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - Changign fan size then clicking new project doesn't reset fan size
 		// - Add file validation to loadProject() function to ensure only valid airflow files are loaded
 		// - Stop fans from being able to go off the side of the case
 		// - Disallow fans to "intersect" eachother, FIX ISSUE WHERE YOU CAN GO TO INVALID STATE BUT NOT BACK AGAIN
