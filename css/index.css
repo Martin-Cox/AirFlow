@@ -359,16 +359,6 @@ input[readonly] {
   text-align: center;
 }
 
-#settingsPopupBox h1 {
-  text-align: center;
-  font-size: 1.2em;
-  font-color: #F5F5F5;
-  border-bottom: 2px;
-  border-color: #F5F5F5;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-
 #cancelAddFanButton button {
   text-align: center;
   background: #CFCFCF;

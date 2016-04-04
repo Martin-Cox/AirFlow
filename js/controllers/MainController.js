@@ -177,22 +177,6 @@ var MainController = function($scope, $http) {
         $scope.displayingPopup = false;
     }
 
-    $scope.showSettingsBox = function() {
-        if ($scope.displayingPopup === false) {
-            var settingsBox = document.getElementById("settingsPopupBox");
-            settingsBox.style.visibility = "visible"
-            settingsBox.style.opacity = 100;
-            $scope.displayingPopup = true;
-        }
-    }
-
-    $scope.closeSettingsBox = function() {
-        var settingsBox = document.getElementById("settingsPopupBox");
-        settingsBox.style.visibility = "hidden"
-        settingsBox.style.opacity = 0;
-        $scope.displayingPopup = false;
-    }
-
     $scope.$watch('editFan', function() {
         //Angular doesn't like it when we set scope.editFan to null in deleteFan() so we have to set it to an empty array and use an override to disable component settings form
         if ($scope.editFan != null && $scope.editFan.length === 0) {

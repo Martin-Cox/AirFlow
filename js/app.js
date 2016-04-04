@@ -20,7 +20,6 @@ var projectDetails = require('./directives/projectDetails');
 var resultsPanel = require('./directives/resultsPanel');
 var simulation = require('./directives/simulation');
 var helpBox = require('./directives/helpBox');
-var settingsBox = require('./directives/settingsBox');
 var defaultsService = require('./services/defaultsService');
 
 var app = angular.module("AirFlowApp", []);
@@ -39,6 +38,5 @@ app.directive('environmentSettings', [environmentSettings]);
 app.directive('projectDetails', [projectDetails]);
 app.directive('resultsPanel', [resultsPanel]);
 app.directive('helpBox', [helpBox]);
-app.directive('settingsBox', [settingsBox]);
 app.service('defaultsService', ['$http', defaultsService]);
 app.directive('simulation', ['$http', 'defaultsService', simulation]);
