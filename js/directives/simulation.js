@@ -124,7 +124,7 @@ var simulation = function($http, defaultsService) {
 	        for(var i = scene.children.length - 1; i >= 0; i--) { 
 	            obj = scene.children[i];
 	            for (var j = 0; j < scope.fans.length; j++) {
-	            	if (obj.id == scope.fans[j].fanPhysicalObject.id || obj.id == scope.fans[j].fanAOEObject.id) {
+	            	if (obj.id == scope.fans[j].fanPhysicalObject.id || obj.id == scope.fans[j].fanAOEObject.id || obj.id == scope.fans[j].AOEWireframe.id) {
 						scene.remove(obj);
 	            	}
 	            }
