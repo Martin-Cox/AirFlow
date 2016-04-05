@@ -1712,7 +1712,6 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - Add file validation to loadProject() function to ensure only valid airflow files are loaded
 		// - Stop fans from being able to go off the side of the case
 		// - Disallow fans to "intersect" eachother, FIX ISSUE WHERE YOU CAN GO TO INVALID STATE BUT NOT BACK AGAIN
 		// - Add components to defaultCase.json e.g. GPU, Hard drives, CPU etc.
