@@ -140,47 +140,52 @@ var MainController = function($scope, $http) {
         //Project file in projectJSON
         //TODO: Check if project JSON contains correct properties, if it doesn't (e.g. uploaded an incorrect file) return an error message
 
-        $scope.removeFansAndParticles();
+        if (projectJSON.hasOwnProperty("projectDetails") && projectJSON.hasOwnProperty("stats") && projectJSON.hasOwnProperty("fans")) {
 
-        $scope.projectDetails.projectName = projectJSON.projectDetails.projectName;
-        $scope.projectDetails.author = projectJSON.projectDetails.author;
-        $scope.projectDetails.version = projectJSON.projectDetails.version;
+            $scope.removeFansAndParticles();
 
-        $scope.projectDetails.dateCreated = projectJSON.projectDetails.dateCreated;
-        $scope.projectDetails.dateModified = projectJSON.projectDetails.dateModified;
+            $scope.projectDetails.projectName = projectJSON.projectDetails.projectName;
+            $scope.projectDetails.author = projectJSON.projectDetails.author;
+            $scope.projectDetails.version = projectJSON.projectDetails.version;
 
-        $scope.stats.spawnedParticles = projectJSON.stats.spawnedParticles;
-        $scope.stats.activeParticles = projectJSON.stats.activeParticles;
-        $scope.stats.culledParticles = projectJSON.stats.culledParticles;
-        $scope.stats.removedParticles = projectJSON.stats.removedParticles;
-        $scope.stats.particleSuccessPercentage = projectJSON.stats.particleSuccessPercentage;
-        $scope.stats.particleFailurePercentage = projectJSON.stats.particleFailurePercentage;
-        $scope.stats.particleLivePercentage = projectJSON.stats.particleLivePercentage;
-        $scope.stats.particleSuccessRatioVal = projectJSON.stats.particleSuccessRatioVal;
-        $scope.stats.particleSuccessRatioMod = projectJSON.stats.particleSuccessRatioMod;
-        $scope.stats.numFans = projectJSON.stats.numFans;
-        $scope.stats.numExhaustFans = projectJSON.stats.numExhaustFans;
-        $scope.stats.numIntakeFans = projectJSON.stats.numIntakeFans;
+            $scope.projectDetails.dateCreated = projectJSON.projectDetails.dateCreated;
+            $scope.projectDetails.dateModified = projectJSON.projectDetails.dateModified;
 
-        //Reset values
-        $scope.fans = [];
-        $scope.exhaustFans = [];
-        $scope.intakeFans = [];
-        $scope.dragFan = null;
-        $scope.editFan = null;
+            $scope.stats.spawnedParticles = projectJSON.stats.spawnedParticles;
+            $scope.stats.activeParticles = projectJSON.stats.activeParticles;
+            $scope.stats.culledParticles = projectJSON.stats.culledParticles;
+            $scope.stats.removedParticles = projectJSON.stats.removedParticles;
+            $scope.stats.particleSuccessPercentage = projectJSON.stats.particleSuccessPercentage;
+            $scope.stats.particleFailurePercentage = projectJSON.stats.particleFailurePercentage;
+            $scope.stats.particleLivePercentage = projectJSON.stats.particleLivePercentage;
+            $scope.stats.particleSuccessRatioVal = projectJSON.stats.particleSuccessRatioVal;
+            $scope.stats.particleSuccessRatioMod = projectJSON.stats.particleSuccessRatioMod;
+            $scope.stats.numFans = projectJSON.stats.numFans;
+            $scope.stats.numExhaustFans = projectJSON.stats.numExhaustFans;
+            $scope.stats.numIntakeFans = projectJSON.stats.numIntakeFans;
 
-        var fans = projectJSON.fans;
-        var size = 0;
+            //Reset values
+            $scope.fans = [];
+            $scope.exhaustFans = [];
+            $scope.intakeFans = [];
+            $scope.dragFan = null;
+            $scope.editFan = null;
 
-        for (fan in fans) {
-            size++;
+            var fans = projectJSON.fans;
+            var size = 0;
+
+            for (fan in fans) {
+                size++;
+            }
+
+            for (var i = 0; i < size; i++) {       
+                $scope.loadFan(fans[i]);
+            }
+
+            $scope.$digest();
+        } else {
+            alert("Not an airflow project file");
         }
-
-        for (var i = 0; i < size; i++) {       
-            $scope.loadFan(fans[i]);
-        }
-
-        $scope.$digest();
     };
 
     $scope.notifyProjectLoad = function(element) {
