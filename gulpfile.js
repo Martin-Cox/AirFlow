@@ -1,10 +1,11 @@
-var gulp = require('gulp')
-var connect = require('gulp-connect')
-var browserify = require('browserify')
+var gulp = require('gulp');
+var connect = require('gulp-connect');
+var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var mochaPhantomJS = require('gulp-mocha-phantomjs');
+var Server = require('karma').Server;
 
 gulp.task('connect', function () {
     connect.server({
@@ -27,26 +28,18 @@ gulp.task('watch', function() {
     gulp.watch(['./**/*', '!./js/build.js'], { interval: 500 }, ['build'])
 })
 
-gulp.task('test', function() {
+gulp.task('runTests', function() {
     //Creates local server, runs mocha tests, then exits process (therefore killing server)
     connect.server({
         root: '',
         port: 4000
     });
-    return gulp.src('./test/test.js').pipe(mocha())
+    return gulp.src('./test/serverTests.js').pipe(mocha())
     .once('end', function () {
-      process.exit();
-    });
-})
-
-gulp.task('htmltest', function() {
-    connect.server({
-        root: '',
-        port: 4000
-    });
-    return gulp.src('test/index.html').pipe(mochaPhantomJS())
-    .once('end', function () {
-      process.exit();
+        return new Server({
+            configFile: __dirname + '/karma.conf.js',
+            singleRun: true
+        }).start()
     });
 })
 
