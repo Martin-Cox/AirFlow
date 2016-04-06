@@ -21,6 +21,9 @@ module.exports = function(config) {
       'js/build.js',
       {pattern: 'js/directives/*.html', included: true},
       {pattern: 'js/external/*.js', included: true},
+      {pattern: 'json/*', included: true},
+      {pattern: 'images/*', included: true},
+      {pattern: 'css/*', included: true},
       'index.html'
     ],
 
