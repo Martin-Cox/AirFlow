@@ -4,6 +4,7 @@ var browserify = require('browserify')
 var source = require('vinyl-source-stream');
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
+var mochaPhantomJS = require('gulp-mocha-phantomjs');
 
 gulp.task('connect', function () {
     connect.server({
@@ -33,6 +34,17 @@ gulp.task('test', function() {
         port: 4000
     });
     return gulp.src('./test/test.js').pipe(mocha())
+    .once('end', function () {
+      process.exit();
+    });
+})
+
+gulp.task('htmltest', function() {
+    connect.server({
+        root: '',
+        port: 4000
+    });
+    return gulp.src('test/index.html').pipe(mochaPhantomJS())
     .once('end', function () {
       process.exit();
     });
