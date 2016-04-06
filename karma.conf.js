@@ -17,12 +17,17 @@ module.exports = function(config) {
     files: [
       {pattern: 'test/clientTests.js', included: true},
       'node_modules/angular/angular.js',
-      'node_modules/angular-mocks/angular-mocks.js'
+      'node_modules/angular-mocks/angular-mocks.js',
+      'js/build.js',
+      {pattern: 'js/directives/*.html', included: true},
+      {pattern: 'js/external/*.js', included: true},
+      'index.html'
     ],
 
 
     // list of files to exclude
     exclude: [
+      'js/external/physijs_worker.js'   //Not excluding this causes a test failure, do I need it for the tests?
     ],
 
 
