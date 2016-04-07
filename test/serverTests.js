@@ -3,7 +3,7 @@ var request = require("request");
 
 var baseURL = "http://localhost:4000";
 
-describe("AirFlow Server", function () {
+describe("AirFlow Server", function() {
 	describe("Server", function() {
 		it("should respond OK", function(done) {
 			request.get(baseURL, function(error, response, body) {
