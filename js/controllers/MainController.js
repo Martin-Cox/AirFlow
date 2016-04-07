@@ -37,6 +37,10 @@ var MainController = function($scope, $http) {
 
     $scope.displayingPopup = false;
 
+
+    $scope.unitTestValue = 554;
+
+
 	angular.element(document).ready(function() {
         document.getElementById("loadingSplashLoadingText").innerHTML = "Click anywhere to begin";
     });
@@ -92,9 +96,6 @@ var MainController = function($scope, $http) {
         $scope.intakeFans = [];
         $scope.dragFan = null;
         $scope.editFan = null;
-
-
-        //TODO: THIS IS BREAKING THE PARTICLE SUCCESS RATIO CHART
 
         $scope.stats = new Object();
 
@@ -262,15 +263,14 @@ var MainController = function($scope, $http) {
         $scope.exhaustFans = [];
         $scope.intakeFans = [];
 
-        for (let fan of $scope.fans) {
-            if (fan.properties.mode === "intake") {
-                $scope.intakeFans.push(fan);
-            } else if (fan.properties.mode === "exhaust") {
-                $scope.exhaustFans.push(fan);
+        for (var i = 0; i < $scope.fans.length; i++) {
+            if ($scope.fans[i].properties.mode === "intake") {
+                $scope.intakeFans.push($scope.fans[i]);
+            } else if ($scope.fans[i].properties.mode === "exhaust") {
+                $scope.exhaustFans.push($scope.fans[i]);
             }
         }
     }
-
 };
 
 module.exports = MainController;
