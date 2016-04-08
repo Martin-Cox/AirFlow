@@ -661,6 +661,38 @@ var simulation = function($http, defaultsService) {
 			scope.caseGroup.invisibleSidePlane = caseInvisibleSidePlane;
 			scope.caseGroup.backPlane = caseBackPlane;
 			scope.caseGroup.frontPlane = caseFrontPlane;
+
+			scope.caseGroup.bottomPlane.positionCode = positionsEnum.BOTTOM;
+			scope.caseGroup.topPlane.positionCode = positionsEnum.TOP;
+			scope.caseGroup.visibleSidePlane.positionCode = positionsEnum.VISIBLE_SIDE;
+			scope.caseGroup.invisibleSidePlane.positionCode = positionsEnum.INVISIBLE_SIDE;
+			scope.caseGroup.backPlane.positionCode = positionsEnum.BACK;
+			scope.caseGroup.frontPlane.positionCode = positionsEnum.FRONT;
+
+			scope.caseGroup.bottomPlane.dimensions = new Object();
+			scope.caseGroup.topPlane.dimensions = new Object();
+			scope.caseGroup.visibleSidePlane.dimensions = new Object();
+			scope.caseGroup.invisibleSidePlane.dimensions = new Object();
+			scope.caseGroup.backPlane.dimensions = new Object();
+			scope.caseGroup.frontPlane.dimensions = new Object();
+
+			scope.caseGroup.bottomPlane.dimensions.width = caseWidth;
+			scope.caseGroup.bottomPlane.dimensions.height = caseDepth;
+
+			scope.caseGroup.topPlane.dimensions.width = caseWidth;
+			scope.caseGroup.topPlane.dimensions.height = caseDepth;
+
+			scope.caseGroup.visibleSidePlane.dimensions.width = caseDepth;
+			scope.caseGroup.visibleSidePlane.dimensions.height = caseHeight;
+
+			scope.caseGroup.invisibleSidePlane.dimensions.width = caseDepth;
+			scope.caseGroup.invisibleSidePlane.dimensions.height = caseHeight;
+
+			scope.caseGroup.backPlane.dimensions.width = caseWidth;
+			scope.caseGroup.backPlane.dimensions.height = caseHeight;
+
+			scope.caseGroup.frontPlane.dimensions.width = caseWidth;
+			scope.caseGroup.frontPlane.dimensions.height = caseHeight;
 		}
 
 		scope.createFan = function(fan) {
@@ -1723,7 +1755,7 @@ var simulation = function($http, defaultsService) {
 				}
 			}
 
-			if (samePlaneFans.length !== 0) {
+			//if (samePlaneFans.length !== 0) {
 				//Only check if a fan intersects another fan on the same case plane
 
 				var invalidAreas = [];
@@ -1769,10 +1801,41 @@ var simulation = function($http, defaultsService) {
 
 								if (!(editFanArea.X1 < checkFanArea.X2) && !(editFanArea.X2 > checkFanArea.X1) && !(editFanArea.Y1 < checkFanArea.Y2) && !(editFanArea.Y2 > checkFanArea.Y1)) {
 									valid = false;
-									break;
+								}
+							}
+
+							//Now check if fan "hangs" off the case
+							var casePlane = null;
+							var casePlanes = [];
+							for (var key in scope.caseGroup) {
+							    casePlanes.push(scope.caseGroup[key]);
+							}
+
+							for (var i = 0; i < casePlanes.length; i++) {
+								if (casePlanes[i].positionCode === currentPos) {
+									casePlane = casePlanes[i];
+								}
+							}
+
+							if (casePlane !== null) {
+								//Should never be null but its safer to check
+
+								var casePlaneHalfHeight = casePlane.dimensions.height/2;
+								var casePlaneHalfWidth = casePlane.dimensions.width/2;
+								var casePlaneCenterX = casePlane.position.x;
+								var casePlaneCenterY = casePlane.position.y;
+
+								var checkCaseArea = new Object();
+
+								checkCaseArea.X1 = (casePlaneCenterX + casePlaneHalfWidth);		//X1 left
+								checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
+								checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
+								checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
+								
+								if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
+									valid = false;
 								}
 
-											//Now check if fan "hangs" off the case
 							}
 							break;
 						case positionsEnum.BACK:
@@ -1995,7 +2058,7 @@ var simulation = function($http, defaultsService) {
 
 											//Now check if fan "hangs" off the case
 							}
-					}
+					//}
 			}
 
 			if (valid === true) {
