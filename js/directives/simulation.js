@@ -772,8 +772,6 @@ var simulation = function($http, defaultsService) {
 
 			scene.add(fanAOEObject);
 
-			fanObject.fanPhysicalObject.addEventListener('collision', handleFanToFanCollision);
-
 			//Calculate force
 			//fanObject.forceVector = new THREE.Vector3(fan.properties.forceVector.x, fan.properties.forceVector.y, fan.properties.forceVector.z);
 			fanObject.properties.forceVector =  scope.calculateForceVector(fanObject);
@@ -869,8 +867,6 @@ var simulation = function($http, defaultsService) {
 
 			scene.add(fanAOEObject);
 
-			fanObject.fanPhysicalObject.addEventListener('collision', handleFanToFanCollision);
-
 			//Calculate force
 			//fanObject.forceVector = new THREE.Vector3(fan.properties.forceVector.x, fan.properties.forceVector.y, fan.properties.forceVector.z);
 			fanObject.properties.forceVector =  scope.calculateForceVector(fanObject);
@@ -963,8 +959,6 @@ var simulation = function($http, defaultsService) {
 			scene.add(fanPhysicalObject);
 
 			scene.add(fanAOEObject);
-
-			fanObject.fanPhysicalObject.addEventListener('collision', handleFanToFanCollision);
 
 			//Calculate force
 			//fanObject.forceVector = new THREE.Vector3(fan.properties.forceVector.x, fan.properties.forceVector.y, fan.properties.forceVector.z);
@@ -1138,23 +1132,6 @@ var simulation = function($http, defaultsService) {
 					break;
 				} 
 			}
-		}
-
-		function handleFanToFanCollision(collided_with, linearVelocity, angularVelocity) {
-			//Event gets called when a fan collides with/is moved to the same position as another fan
-
-			/*for (var i = 0; i < scope.fans.length; i++) {
-				if (collided_with.id === scope.fans[i].fanPhysicalObject.id) {
-					//Change to invalid pos color
-					if (scope.dragFan != null) {
-						scope.dragFan.fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.invalidEdit));
-						scope.dragFan.properties.isValidPos = false;
-					} else if (scope.addingFan == true) {
-						scope.newFanPlaceholderWireframe.material.color.setHex(parseInt(scope.fanColors.invalidEdit));
-						scope.addingFanValidPos = false;
-					}
-				}
-			}*/
 		}
 
 		function handleMouseMove(event) {			
@@ -1554,8 +1531,6 @@ var simulation = function($http, defaultsService) {
 			scope.newFanPlaceholderObject.position.set(0, 300, -248);
 			scene.add(scope.newFanPlaceholderObject);
 			scene.add(scope.newFanPlaceholderWireframe);
-
-			scope.newFanPlaceholderObject.addEventListener('collision', handleFanToFanCollision);
 
 			scope.addingFan = true;
 		
