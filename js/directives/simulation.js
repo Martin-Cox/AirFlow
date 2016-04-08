@@ -1771,6 +1771,8 @@ var simulation = function($http, defaultsService) {
 									valid = false;
 									break;
 								}
+
+											//Now check if fan "hangs" off the case
 							}
 							break;
 						case positionsEnum.BACK:
@@ -1813,6 +1815,8 @@ var simulation = function($http, defaultsService) {
 									valid = false;
 									break;
 								}
+
+											//Now check if fan "hangs" off the case
 							}
 							break;
 						case positionsEnum.TOP:
@@ -1821,7 +1825,7 @@ var simulation = function($http, defaultsService) {
 								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
 								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
 								var editFanCenterX = fan.position.x;
-								var editFanCenterY = fan.position.y;
+								var editFanCenterY = fan.position.z;
 							} else {
 								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
 								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
@@ -1856,6 +1860,8 @@ var simulation = function($http, defaultsService) {
 									valid = false;
 									break;
 								}
+
+											//Now check if fan "hangs" off the case
 							}
 							break;
 						case positionsEnum.BOTTOM:
@@ -1864,7 +1870,7 @@ var simulation = function($http, defaultsService) {
 								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
 								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
 								var editFanCenterX = fan.position.x;
-								var editFanCenterY = fan.position.y;
+								var editFanCenterY = fan.position.z;
 							} else {
 								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
 								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
@@ -1898,6 +1904,8 @@ var simulation = function($http, defaultsService) {
 									valid = false;
 									break;
 								}
+
+											//Now check if fan "hangs" off the case
 							}
 							break;
 						case positionsEnum.VISIBLE_SIDE:
@@ -1905,7 +1913,7 @@ var simulation = function($http, defaultsService) {
 							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
 								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
 								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
-								var editFanCenterX = fan.position.x;
+								var editFanCenterX = fan.position.z;
 								var editFanCenterY = fan.position.y;
 							} else {
 								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
@@ -1940,6 +1948,8 @@ var simulation = function($http, defaultsService) {
 									valid = false;
 									break;
 								}
+
+											//Now check if fan "hangs" off the case
 							}
 							break;
 						case positionsEnum.INVISIBLE_SIDE:
@@ -1947,7 +1957,7 @@ var simulation = function($http, defaultsService) {
 							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
 								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
 								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
-								var editFanCenterX = fan.position.x;
+								var editFanCenterX = fan.position.z;
 								var editFanCenterY = fan.position.y;
 							} else {
 								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
@@ -1982,6 +1992,8 @@ var simulation = function($http, defaultsService) {
 									valid = false;
 									break;
 								}
+
+											//Now check if fan "hangs" off the case
 							}
 					}
 			}
@@ -2006,8 +2018,6 @@ var simulation = function($http, defaultsService) {
 				}
 			}
 
-			//Now check if fan "hangs" off the case
-
 		} 
 
 		function onWindowResize(){
@@ -2024,7 +2034,6 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - Adding a fan doesn't have correct collision detection
 		// - Stop fans from being able to go off the side of the case
 		// - Add components to defaultCase.json e.g. GPU, Hard drives, CPU etc.
 		// - User configurable project settings 													- AND UNIT TESTS
