@@ -1214,10 +1214,8 @@ var simulation = function($http, defaultsService) {
 						var dragSide = chooseSide(event, scope.dragFan.properties.position);
 
 						if (dragSide.intersects.length > 0) {
-							scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point);
-							
-							scope.isValidFanPosition(scope.dragFan, position);
-							
+							scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point);							
+							scope.isValidFanPosition(scope.dragFan, position);							
 							determineFanAOEPosition(scope.dragFan);
 							scope.dragFan.fanAOEObject.__dirtyPosition = true;
 							scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
@@ -1285,6 +1283,8 @@ var simulation = function($http, defaultsService) {
 					if (dragSide.intersects != undefined) {
 							if (dragSide.intersects.length > 0) {
 							scope.newFanPlaceholderObject.position.copy(dragSide.intersects[0].point);
+
+							scope.isValidFanPosition(scope.newFanPlaceholderObject, position);	
 
 							scope.newFanPlaceholderObject.__dirtyPosition = true;
 
@@ -1729,10 +1729,17 @@ var simulation = function($http, defaultsService) {
 				switch(currentPos) {
 						case positionsEnum.FRONT:
 							//Get the area that the edit fan is inhabiting
-							var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
-							var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
-							var editFanCenterX = fan.fanPhysicalObject.position.x;
-							var editFanCenterY = fan.fanPhysicalObject.position.y;
+							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
+								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
+								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
+								var editFanCenterX = fan.position.x;
+								var editFanCenterY = fan.position.y;
+							} else {
+								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
+								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
+								var editFanCenterX = fan.fanPhysicalObject.position.x;
+								var editFanCenterY = fan.fanPhysicalObject.position.y;
+							}
 
 							var editFanArea = new Object();
 							
@@ -1764,10 +1771,17 @@ var simulation = function($http, defaultsService) {
 							break;
 						case positionsEnum.BACK:
 							//Get the area that the edit fan is inhabiting
-							var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
-							var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
-							var editFanCenterX = fan.fanPhysicalObject.position.x;
-							var editFanCenterY = fan.fanPhysicalObject.position.y;
+							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
+								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
+								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
+								var editFanCenterX = fan.position.x;
+								var editFanCenterY = fan.position.y;
+							} else {
+								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
+								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
+								var editFanCenterX = fan.fanPhysicalObject.position.x;
+								var editFanCenterY = fan.fanPhysicalObject.position.y;
+							}
 
 							var editFanArea = new Object();
 							
@@ -1799,10 +1813,18 @@ var simulation = function($http, defaultsService) {
 							break;
 						case positionsEnum.TOP:
 							//Get the area that the edit fan is inhabiting
-							var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
-							var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
-							var editFanCenterX = fan.fanPhysicalObject.position.x;
-							var editFanCenterY = fan.fanPhysicalObject.position.z;
+							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
+								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
+								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
+								var editFanCenterX = fan.position.x;
+								var editFanCenterY = fan.position.y;
+							} else {
+								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
+								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
+								var editFanCenterX = fan.fanPhysicalObject.position.x;
+								var editFanCenterY = fan.fanPhysicalObject.position.z;
+							}
+
 
 							var editFanArea = new Object();
 							
@@ -1834,10 +1856,17 @@ var simulation = function($http, defaultsService) {
 							break;
 						case positionsEnum.BOTTOM:
 							//Get the area that the edit fan is inhabiting
-							var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
-							var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
-							var editFanCenterX = fan.fanPhysicalObject.position.x;
-							var editFanCenterY = fan.fanPhysicalObject.position.z;
+							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
+								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
+								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
+								var editFanCenterX = fan.position.x;
+								var editFanCenterY = fan.position.y;
+							} else {
+								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
+								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
+								var editFanCenterX = fan.fanPhysicalObject.position.x;
+								var editFanCenterY = fan.fanPhysicalObject.position.z;
+							}
 
 							var editFanArea = new Object();
 							
@@ -1869,10 +1898,17 @@ var simulation = function($http, defaultsService) {
 							break;
 						case positionsEnum.VISIBLE_SIDE:
 							//Get the area that the edit fan is inhabiting
-							var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
-							var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
-							var editFanCenterX = fan.fanPhysicalObject.position.z;
-							var editFanCenterY = fan.fanPhysicalObject.position.y;
+							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
+								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
+								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
+								var editFanCenterX = fan.position.x;
+								var editFanCenterY = fan.position.y;
+							} else {
+								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
+								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
+								var editFanCenterX = fan.fanPhysicalObject.position.z;
+								var editFanCenterY = fan.fanPhysicalObject.position.y;
+							}
 
 							var editFanArea = new Object();
 							
@@ -1904,10 +1940,17 @@ var simulation = function($http, defaultsService) {
 							break;
 						case positionsEnum.INVISIBLE_SIDE:
 							//Get the area that the edit fan is inhabiting
-							var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
-							var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
-							var editFanCenterX = fan.fanPhysicalObject.position.z;
-							var editFanCenterY = fan.fanPhysicalObject.position.y;
+							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
+								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
+								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
+								var editFanCenterX = fan.position.x;
+								var editFanCenterY = fan.position.y;
+							} else {
+								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
+								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
+								var editFanCenterX = fan.fanPhysicalObject.position.z;
+								var editFanCenterY = fan.fanPhysicalObject.position.y;
+							}
 
 							var editFanArea = new Object();
 							
@@ -1958,7 +2001,7 @@ var simulation = function($http, defaultsService) {
 					scope.addingFanValidPos = false;
 				}
 			}
-			
+
 			//Now check if fan "hangs" off the case
 
 		} 
