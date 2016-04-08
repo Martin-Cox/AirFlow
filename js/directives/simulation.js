@@ -1831,11 +1831,10 @@ var simulation = function($http, defaultsService) {
 								checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
 								checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
 								checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
-								
+
 								if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
 									valid = false;
 								}
-
 							}
 							break;
 						case positionsEnum.BACK:
@@ -1878,8 +1877,39 @@ var simulation = function($http, defaultsService) {
 									valid = false;
 									break;
 								}
+							}
 
-											//Now check if fan "hangs" off the case
+							//Now check if fan "hangs" off the case
+							var casePlane = null;
+							var casePlanes = [];
+							for (var key in scope.caseGroup) {
+							    casePlanes.push(scope.caseGroup[key]);
+							}
+
+							for (var i = 0; i < casePlanes.length; i++) {
+								if (casePlanes[i].positionCode === currentPos) {
+									casePlane = casePlanes[i];
+								}
+							}
+
+							if (casePlane !== null) {
+								//Should never be null but its safer to check
+
+								var casePlaneHalfHeight = casePlane.dimensions.height/2;
+								var casePlaneHalfWidth = casePlane.dimensions.width/2;
+								var casePlaneCenterX = casePlane.position.x;
+								var casePlaneCenterY = casePlane.position.y;
+
+								var checkCaseArea = new Object();
+
+								checkCaseArea.X1 = (casePlaneCenterX + casePlaneHalfWidth);		//X1 left
+								checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
+								checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
+								checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
+
+								if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
+									valid = false;
+								}
 							}
 							break;
 						case positionsEnum.TOP:
@@ -1923,8 +1953,39 @@ var simulation = function($http, defaultsService) {
 									valid = false;
 									break;
 								}
+							}
 
-											//Now check if fan "hangs" off the case
+							//Now check if fan "hangs" off the case
+							var casePlane = null;
+							var casePlanes = [];
+							for (var key in scope.caseGroup) {
+							    casePlanes.push(scope.caseGroup[key]);
+							}
+
+							for (var i = 0; i < casePlanes.length; i++) {
+								if (casePlanes[i].positionCode === currentPos) {
+									casePlane = casePlanes[i];
+								}
+							}
+
+							if (casePlane !== null) {
+								//Should never be null but its safer to check
+
+								var casePlaneHalfHeight = casePlane.dimensions.height/2;
+								var casePlaneHalfWidth = casePlane.dimensions.width/2;
+								var casePlaneCenterX = casePlane.position.x;
+								var casePlaneCenterY = casePlane.position.z;
+
+								var checkCaseArea = new Object();
+
+								checkCaseArea.X1 = (casePlaneCenterX + casePlaneHalfWidth);		//X1 left
+								checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
+								checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
+								checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
+
+								if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
+									valid = false;
+								}
 							}
 							break;
 						case positionsEnum.BOTTOM:
@@ -1967,8 +2028,39 @@ var simulation = function($http, defaultsService) {
 									valid = false;
 									break;
 								}
+							}
 
-											//Now check if fan "hangs" off the case
+							//Now check if fan "hangs" off the case
+							var casePlane = null;
+							var casePlanes = [];
+							for (var key in scope.caseGroup) {
+							    casePlanes.push(scope.caseGroup[key]);
+							}
+
+							for (var i = 0; i < casePlanes.length; i++) {
+								if (casePlanes[i].positionCode === currentPos) {
+									casePlane = casePlanes[i];
+								}
+							}
+
+							if (casePlane !== null) {
+								//Should never be null but its safer to check
+
+								var casePlaneHalfHeight = casePlane.dimensions.height/2;
+								var casePlaneHalfWidth = casePlane.dimensions.width/2;
+								var casePlaneCenterX = casePlane.position.x;
+								var casePlaneCenterY = casePlane.position.z;
+
+								var checkCaseArea = new Object();
+
+								checkCaseArea.X1 = (casePlaneCenterX + casePlaneHalfWidth);		//X1 left
+								checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
+								checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
+								checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
+
+								if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
+									valid = false;
+								}
 							}
 							break;
 						case positionsEnum.VISIBLE_SIDE:
@@ -2011,8 +2103,39 @@ var simulation = function($http, defaultsService) {
 									valid = false;
 									break;
 								}
+							}
 
-											//Now check if fan "hangs" off the case
+							//Now check if fan "hangs" off the case
+							var casePlane = null;
+							var casePlanes = [];
+							for (var key in scope.caseGroup) {
+							    casePlanes.push(scope.caseGroup[key]);
+							}
+
+							for (var i = 0; i < casePlanes.length; i++) {
+								if (casePlanes[i].positionCode === currentPos) {
+									casePlane = casePlanes[i];
+								}
+							}
+
+							if (casePlane !== null) {
+								//Should never be null but its safer to check
+
+								var casePlaneHalfHeight = casePlane.dimensions.height/2;
+								var casePlaneHalfWidth = casePlane.dimensions.width/2;
+								var casePlaneCenterX = casePlane.position.z;
+								var casePlaneCenterY = casePlane.position.y;
+
+								var checkCaseArea = new Object();
+
+								checkCaseArea.X1 = (casePlaneCenterX + casePlaneHalfWidth);		//X1 left
+								checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
+								checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
+								checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
+
+								if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
+									valid = false;
+								}
 							}
 							break;
 						case positionsEnum.INVISIBLE_SIDE:
@@ -2055,8 +2178,39 @@ var simulation = function($http, defaultsService) {
 									valid = false;
 									break;
 								}
+							}
 
-											//Now check if fan "hangs" off the case
+							//Now check if fan "hangs" off the case
+							var casePlane = null;
+							var casePlanes = [];
+							for (var key in scope.caseGroup) {
+							    casePlanes.push(scope.caseGroup[key]);
+							}
+
+							for (var i = 0; i < casePlanes.length; i++) {
+								if (casePlanes[i].positionCode === currentPos) {
+									casePlane = casePlanes[i];
+								}
+							}
+
+							if (casePlane !== null) {
+								//Should never be null but its safer to check
+
+								var casePlaneHalfHeight = casePlane.dimensions.height/2;
+								var casePlaneHalfWidth = casePlane.dimensions.width/2;
+								var casePlaneCenterX = casePlane.position.z;
+								var casePlaneCenterY = casePlane.position.y;
+
+								var checkCaseArea = new Object();
+
+								checkCaseArea.X1 = (casePlaneCenterX + casePlaneHalfWidth);		//X1 left
+								checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
+								checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
+								checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
+
+								if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
+									valid = false;
+								}
 							}
 					//}
 			}
