@@ -2251,7 +2251,6 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - Stop fans from being able to go off the side of the case
 		// - Add components to defaultCase.json e.g. GPU, Hard drives, CPU etc.
 		// - User configurable project settings 													- AND UNIT TESTS
 		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS
