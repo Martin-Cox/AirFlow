@@ -1239,6 +1239,7 @@ var simulation = function($http, defaultsService) {
 						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.rotation.x = 90 * Math.PI/180;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
+						position = positionsEnum.BOTTOM;
 						break;
 					case scope.caseGroup.topPlane:
 						scope.newFanPlaceholderObjectPosition= positionsEnum.TOP;
@@ -1246,6 +1247,7 @@ var simulation = function($http, defaultsService) {
 						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.rotation.x = 90 * Math.PI/180;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
+						position = positionsEnum.TOP;
 						break;
 					case scope.caseGroup.visibleSidePlane:
 						scope.newFanPlaceholderObjectPosition = positionsEnum.VISIBLE_SIDE;
@@ -1253,6 +1255,7 @@ var simulation = function($http, defaultsService) {
 						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.rotation.y = 90 * Math.PI/180;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
+						position = positionsEnum.VISIBLE_SIDE;
 						break;
 					case scope.caseGroup.invisibleSidePlane:
 						scope.newFanPlaceholderObjectPosition = positionsEnum.INVISIBLE_SIDE;
@@ -1260,6 +1263,7 @@ var simulation = function($http, defaultsService) {
 						scope.newFanPlaceholderObject.rotation.y = 0;
 						scope.newFanPlaceholderObject.rotation.y = 90 * Math.PI/180;
 						scope.newFanPlaceholderObject.__dirtyRotation = true;
+						position = positionsEnum.INVISIBLE_SIDE;
 						break;
 					case scope.caseGroup.backPlane:
 						scope.newFanPlaceholderObjectPosition = positionsEnum.BACK;
@@ -2020,14 +2024,8 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
-		// - Create isValidFanPos function that is called everytime mouse moves when edit/add fan. It checks:
-			// - Are any fans on same case plane, if no, set valid
-			// - If fans on same case plane, get the area they inhabit (fanPhysicalObject.xyz + and - 1/2 fanPhysicalObject.dimensions), if edit/add fan goes into those bounds (lowerY,upperY etc.) , set invalid pos
-			// - Get 1/2 edit/add fan dimensions, get the area the case plane inhabits (casePlane.xyz + and - 1/2 casePlane.dimensions) then remove 1/2 fan dimensions from those bounds (caseLowerY, caseUpperY etc.)
-			// - and if the add/edit fan exceeds those bounds, then fan will be "hanging" off the edge of the case, set invalid, other wise set valid
-			// - Remove listener for fan2fan collisions as we are calculating collisions ourselves
+		// - Adding a fan doesn't have correct collision detection
 		// - Stop fans from being able to go off the side of the case
-		// - Disallow fans to "intersect" eachother, FIX ISSUE WHERE YOU CAN GO TO INVALID STATE BUT NOT BACK AGAIN
 		// - Add components to defaultCase.json e.g. GPU, Hard drives, CPU etc.
 		// - User configurable project settings 													- AND UNIT TESTS
 		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS
