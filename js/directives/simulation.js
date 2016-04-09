@@ -31,32 +31,25 @@ var simulation = function($http, defaultsService) {
 
 		getDefaults();
 
+		/*Loads all the default values (defaultFans, defaultProjectDetails etc.) using defaultsService and sets scope.ajaxComplete to true when all files have been loaded*/
 		function getDefaults() {
-			//Get defaults using defaultsService, then when all promises are fulfilled notify main controller
 			var caseDefaultsPromise = defaultsService.getCaseDefaults();
 			caseDefaultsPromise.then(function(result) {
-				//Function run only after service AJAX call has completed
-				//TODO: Handle if error returned, create error message dialog
 				scope.defaultCase = result;
 				var fanDefaultsPromise = defaultsService.getFanDefaults();
 				fanDefaultsPromise.then(function(result) {
-					//Function run only after service AJAX call has completed
-					//TODO: Handle if error returned, create error message dialog
 					scope.fanColors = result.colors;
 					scope.defaultFans = result;
 					scope.defaultNewFanAOE = result.fanOne.fanAOEObject;
 					var newFanDefaultsPromise = defaultsService.getNewFanDefaults();
 					newFanDefaultsPromise.then(function(result) {
 						scope.defaultNewFan = result;
-
 						var projectDetailsDefaultsPromise = defaultsService.getProjectDetailsDefaults();
 						projectDetailsDefaultsPromise.then(function(result) {
 							scope.defaultProjectDetails = result;
-
 							var statsAnalysisPromise = defaultsService.getStatsAnalysis();
 							statsAnalysisPromise.then(function(result) {
 								scope.statsAnalysis = result;
-
 								//Need to change this value after all AJAX calls have completed to notify controller that loading has completed
 								scope.ajaxComplete = true;
 							});
@@ -66,6 +59,7 @@ var simulation = function($http, defaultsService) {
 			});
 		}
 
+		/*Creates the particle success ratio chart. Should only be called once. Updates are handled by scope.updateStats()*/
 		scope.drawParticleSuccessRatioChart = function() {
 	 		var context = document.getElementById("particleSuccessRatioChart").getContext("2d");
 
@@ -85,6 +79,7 @@ var simulation = function($http, defaultsService) {
 	        scope.charts.particleSuccessRatioChart = new Chart(context).Doughnut(data, {segmentStrokeColor : "#F5F5F5", animationEasing: "easeOutQuint", animateRotate : false, animateScale : true});
 		}
 
+		/*Creates the fan ratio chart. Should only be called once. Updates are handled by scope.updateStats()*/
 		scope.drawFanRatioChart = function() {
 	 		var context = document.getElementById("fanRatioChart").getContext("2d");
 
@@ -104,12 +99,9 @@ var simulation = function($http, defaultsService) {
 	        scope.charts.fanRatioChart = new Chart(context).Doughnut(data, {segmentStrokeColor : "#F5F5F5", animationEasing: "easeOutQuint", animateRotate : false, animateScale : true});
 		}
 
-
+		/*Removes all objects from the 3D scene (fan objects, particles, case planes etc.)*/
 		scope.emptyScene = function() {
 			if (scene) {
-	            /*scene.children.forEach(function(object){
-	                scene.remove(object);
-	            });*/
 				var obj = null;
 				for(var i = scene.children.length - 1; i >= 0; i--) { 
 					obj = scene.children[i];
@@ -118,6 +110,7 @@ var simulation = function($http, defaultsService) {
 	        }
 		}
 
+		/*Removes all fans (fanPhysicalObjects, fanAOEObjects, fanWireframe) and particles from the 3D scene*/
 		scope.removeFansAndParticles = function() {			
 	        //Remove all fans and particles from scene
 	        var obj = null;
@@ -136,8 +129,8 @@ var simulation = function($http, defaultsService) {
 	        }
 		}
 
+		/*Loads any extra files needed, initialises 3D scene, creates render, lights, canera, default fauns/case etc.*/
 		scope.init = function() {
-			//Loads physijs files, creates scene etc.
 			if (renderer === null) {
 				//First time calling init, need to create renderer, scene, attach scripts etc.
 
@@ -243,6 +236,7 @@ var simulation = function($http, defaultsService) {
 			document.addEventListener("visibilitychange", handleVisibilityChange, false);
 		}
 
+		/*Pauses the simulation when the browser tab focus is lost (e.g. user clicks on a different browser tab)*/
 		function handleVisibilityChange() {
 			if (document.hidden) {
 				simPaused = true;				
@@ -252,6 +246,7 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
+		/*Animates and simulates physics for the 3D scene*/
 		scope.animate = function() {
 			//Animates/simulates scene
 
@@ -271,6 +266,8 @@ var simulation = function($http, defaultsService) {
 			fpsStats.end();
 		}
 
+		/*Recalculates the stats for a scene, updates charts, and calls the functions to update chart explanations
+		  This function calls itself every 1s, and should only be started once*/
 		scope.updateStats = function() {
 			scope.stats.particleRatio = 100;
 
@@ -335,6 +332,9 @@ var simulation = function($http, defaultsService) {
 	        }, 1000);
 		}
 
+		/*Determines the final rating given to a project. Factors that affect the final rating include:
+		  The Number of fans (too few, good amount, too many)
+		  The ratio of successful particles to culled particles (too many culled particles etc.)*/
 		function updateOverallRating() {
 				//Update final rating
 
@@ -386,6 +386,7 @@ var simulation = function($http, defaultsService) {
 
 		}
 
+		/*Updates textual explanations for the fan ratio chart*/
 		function updateFanRatioExplanation() {
 				//Update explanations
 
@@ -404,9 +405,8 @@ var simulation = function($http, defaultsService) {
 				}
 		}
 
+		/*Updates textual explanations for the particle success ratio chart*/
 		function updateParticleSuccessRatioExplanation() {
-				//Update explanations
-
 				var explanationTitle = document.getElementById("particleSuccessRatioExplanationTitle");
 				var explanationDesc = document.getElementById("particleSuccessRatioExplanationDesc");
 
@@ -433,9 +433,9 @@ var simulation = function($http, defaultsService) {
 				}
 		}
 
+		/*Creates the pool of particles that will be added to the scene
+		  numToCreate = The size of the pool of particles*/
 		function createParticles(numToCreate) { 
-			//Creates the pool of particles that will be added to the scene
-
 			particles = [];
 			availableParticles = [];
 
@@ -463,9 +463,8 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
+		/*Adds the first available particle to the scene every spawnRate ms. If none are available, wait spawnRate ms and check again*/
 		scope.spawnParticles = function() {
-			//Adds the first available particle to the scene every spawnRate ms. If none are available, wait spawnRate ms and check again
-
 			var spawnRate = 300;
 
 			if (availableParticles.length > 0 && scope.intakeFans.length > 0) {
@@ -500,9 +499,9 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
+		/*Chooses a random intake fan to act as a spawning point, then chooses a random 3D coordinate inside the fanAOEObject for that intake fan
+		  particle = The particle to spawn*/
 		function setParticleStartingPosition(particle) {
-			//Chooses a random intake fan to act as a starting point, then randomises the starting coordinates within the fanAOEObject
-
 			//Randomly select one of the intake fans to act as a spawn point for this particle
 			var fanObject = scope.intakeFans[Math.floor(Math.random()*scope.intakeFans.length)];
 
@@ -532,9 +531,8 @@ var simulation = function($http, defaultsService) {
 			return particle;
 		}
 
+		/*Removes a particle from the scene and adds it back to the pool of available particles*/
 		function recycleParticle(particle) {
-			//Removes a particle from the scene, resets its starting position, and adds it back to the pool of available particles
-
 			scene.remove(particle);
 
 			particle.spawnTime = null;
@@ -542,11 +540,8 @@ var simulation = function($http, defaultsService) {
 			availableParticles.push(particle);
 		}
 
+		/*Removes and recycles a particle from the 3D scene if it has existed for too long*/
 		function cullParticles() {	
-			//Removes a particle from the scene using recycleParticle() if it has existed for too long. 
-			//cullTime is an integer in ms representing the longest amount of time before the particle should be culled. Will be configurable in project settings
-			//recheckTime is an integer in ms represeting the preiod of time between checking for particles that need to be culled. Will be configurable in sim quality settings
-
 			var recheckTime = 500; //0.5 second, debug value
 
 			if (particles.length > 0) {
@@ -586,6 +581,9 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
+		/*Creates a 3D model of a computer case using Box meshes. This function should only be used to create a case
+		  by using the default case values
+		  caseDefaults = The object containing the default case values (size, material colour etc.)*/
 		function createDefaultCase(caseDefaults) {
 			//Creates a 3D model of a computer case
 
@@ -695,6 +693,8 @@ var simulation = function($http, defaultsService) {
 			scope.caseGroup.frontPlane.dimensions.height = caseHeight;
 		}
 
+		/*Creates a new composite fan object consisting of a fanPhysicalObject, a fanAOEObject, and properties
+		  fan = The object containing the properties that will be used to create a new fan e.g. size, RPM etc.*/
 		scope.createFan = function(fan) {
 			/*A fan is made up a of a fanObject with two sub-objects, a fanAOEObject representing the area of effect for a fan
 			and the fanPhysicalObject, which is the physical fan the user sees*/
@@ -787,6 +787,8 @@ var simulation = function($http, defaultsService) {
 			scope.fans.push(fanObject);	
 		}
 
+		/*Creates a new composite fan object consisting of a fanPhysicalObject, a fanAOEObject, and properties. This will create 
+		  a fan using values loaded from a project file. This should only be used by the loadProject() function*/
 		scope.loadFan = function(fan) {
 			/*A fan is made up a of a fanObject with two sub-objects, a fanAOEObject representing the area of effect for a fan
 			and the fanPhysicalObject, which is the physical fan the user sees*/
@@ -882,10 +884,8 @@ var simulation = function($http, defaultsService) {
 			scope.fans.push(fanObject);	
 		}
 
+		/*Creates a new composite fan object consisting of a fanPhysicalObject, a fanAOEObject, and properties*/
 		function createNewFan() {
-			/*A fan is made up a of a fanObject with two sub-objects, a fanAOEObject representing the area of effect for a fan
-			and the fanPhysicalObject, which is the physical fan the user sees*/
-
 			//Create a new fan using default properties from newFanDefaults.json
 			//Much the same as scope.createFan
 
@@ -976,6 +976,9 @@ var simulation = function($http, defaultsService) {
 			scope.projectDetails.dateModified = scope.getCurrentDate();
 		}
 
+		/*Creates a new fanAOEObject for a given fan
+		  fan = The fan composite object which the fanAOEObject will be a part of
+		  defaultCreation = If the fan we are creating a fanAOEObject for uses default fan property values, set this to true to create a fanAOEObject using default values*/
 		function createFanAOEObject(fan, defaultCreation) { 
 			var fanAOEMaterial = Physijs.createMaterial(
 				new THREE.MeshLambertMaterial({
@@ -1008,6 +1011,8 @@ var simulation = function($http, defaultsService) {
 			return fanAOEObject;
 		}
 
+		/*Calculates the force vector in terms of (x,y,z) values for a given fan
+		  fan = The fan to calculate the force vector for*/
 		scope.calculateForceVector = function(fan) {
 			var maxForce = ((fan.properties.size * 5000) + (fan.properties.maxRPM * 100));
 
@@ -1015,7 +1020,6 @@ var simulation = function($http, defaultsService) {
 
 			if (realForce > 300000) { realForce = 300000 }; //Max value is a magic number, will be explained why in documentation
 
-			//return new THREE.Vector3(0,0,realForce);
 			//determine which axis to apply force depending on fan.properties.mode and fan.properties.position
 			//What about fans which aren't intake/exhaust?
 			switch(fan.properties.position) {
@@ -1070,6 +1074,8 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
+		/*Recreates a fan object with the new size whenever size changes
+		  fan = The fan being resized*/
 		scope.resizeFan = function(fan) {
 			//We can't resize objects with physijs, so we have to create a new fan whenever we resize
 
@@ -1109,6 +1115,8 @@ var simulation = function($http, defaultsService) {
 			scene.remove(fan.AOEWireframe);
 		}
 
+		/*Handles particle to fan collisions. If a particle collides with an exhaust fan fanPhysicalObject, remove the particle from the scene and recycle it.
+		  If a particle collides with a fan fanAOEObject, then apply the fans force to the particle*/
 		function handleParticleToFanCollision(collided_with, linearVelocity, angularVelocity) {
 			//Event gets called when physics objects (spheres) collide with another object
 
@@ -1134,6 +1142,7 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
+		/*Handles mouse move events. If we are adding or dragging a fan, then we update it's position/rotation here*/
 		function handleMouseMove(event) {			
 			if (scope.dragFan != null) {
 				var touchSide = detectTouchingCase(event);
@@ -1328,8 +1337,10 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
+		/*Handles user mouse clicks. If we are adding a fan, this will create a new fan object at the mouse location.
+		  If we click on an existing fan, then start editing that fan. If we are dragging a fan, then release the dragged fan
+		  at the current mouse location*/
 		function handleMouseClick(event) {
-
 			if (scope.addingFan === true) {
 				orbitControl.enableRotate = false;
 				if (scope.addingFanValidPos === true) {
@@ -1387,7 +1398,9 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
-
+		/*Handles what happens when a user releases a mouse click. If a fan is being dragged and
+		  is in a valid position, then stop dragging the fan. If it is in an invalid position, then
+		  move it back to it's original position (before the user started dragging it)*/
 		function handleMouseRelease(event) {
 			if (scope.dragFan != null) {
 				if (scope.dragFan.properties.isValidPos == true) {
@@ -1470,6 +1483,7 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
+		/*Deleates a fan from the 3D scene and from the list of fans*/
 		scope.deleteFan = function() {
 			if (scope.fans.length > 1) {
 				scope.editFan.editing = false;
@@ -1497,8 +1511,8 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
+		/*Creates a placeholder fan object that follows the users mouse so the user can decide where to place the fan*/
 		scope.addNewFan = function() {
-			//Creates a placeholder fan object that follows the users mouse so the user can decide where to place the fan
 
 			scope.editFan = null;
 			scope.dragFan = null;
@@ -1536,6 +1550,7 @@ var simulation = function($http, defaultsService) {
 		
 		}
 
+		/*Cancels the add fan operation*/
 		scope.cancelAddingFan = function() {
 			scope.editFan = null;
 			scope.dragFan = null;
@@ -1547,8 +1562,8 @@ var simulation = function($http, defaultsService) {
     		scope.newFanPlaceholderWireframe = null;
 		}
 
+		/**Determines what side of the case a fan is being dragged on*/
 		function chooseSide(event, position) {			
-			//Determines what side of the case a fan is being dragged on
 
 			//Have to normalise these coords so that they are between -1 and 1
 			var mouseX = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because otherwise it would be included in the normalising to get X in terms of the canvas
@@ -1595,9 +1610,9 @@ var simulation = function($http, defaultsService) {
 			return returnObj;
 		}
 
+		/*Updates the position of the fanAOEObject for a given fan, used when moving a fan
+		  fan = The fan being moved*/
 		function determineFanAOEPosition(fan) {
-			//When dragging a fan we actually drag the fanPhysicalObject so this function updates the position of the fanAOEObject so that it moves with the fanPhysicalObject we are dragging
-
 			if (fan == null) {
 				var fan = scope.dragFan;
 			}		
@@ -1624,11 +1639,11 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
+		/*Returns a fanObject if the mouse is touching one, else nothing is returned*/
 		function detectTouchingFan(event) {
-			//Returns a fanObject if the mouse is touching one, else nothing is returned
 
 			//Have to normalise these coords so that they are between -1 and 1
-			mouse.x = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
+			mouse.x = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because otherwise it would be included in the normalising to get X in terms of the canvas
 			mouse.y = - (event.clientY / height) * 2 + 1;
 
 			raycaster.setFromCamera( mouse, camera );
@@ -1645,7 +1660,6 @@ var simulation = function($http, defaultsService) {
 			    casePlanes.push(scope.caseGroup[key]);
 			}
 
-
 		    //Isolate objects into array
 			var objects = [];
 			for(var key in scope.caseGroup) {
@@ -1658,9 +1672,7 @@ var simulation = function($http, defaultsService) {
 			var intersectsObjects = raycaster.intersectObjects(objects, true);
 
 			if (intersectsObjects.length > 0) {
-
 				var posToCheck = 0;
-
 				for (var i = 0; i < casePlanes.length; i++) {
 					//If first object is a case return null, we don't want to click fans through case planes (except for the invisible side plane)
 					if (casePlanes[i].id == intersectsObjects[posToCheck].object.id) {
@@ -1673,11 +1685,9 @@ var simulation = function($http, defaultsService) {
 						}
 					}
 				}
-
 				if (intersectsObjects[posToCheck] === undefined) {
 					return null;
 				}
-
 				//If we didn't touch a visible case plane first, check if we touched a fan
 				for (var i = 0; i < scope.fans.length; i++) {
 					if (scope.fans[i].fanPhysicalObject.id == intersectsObjects[posToCheck].object.id) {
@@ -1689,11 +1699,11 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
+		/*Returns a case plane if a mouse is touching on, else nothing is returned*/
 		function detectTouchingCase(event) {
-			//Returns a case plane if the mouse is touching one, else nothing is returned
 
 			//Have to normalise these coords so that they are between -1 and 1
-			mouse.x = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because oftherwise it would be included in the normalising to get X in terms of the canvas
+			mouse.x = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because otherwise it would be included in the normalising to get X in terms of the canvas
 			mouse.y = - (event.clientY / height) * 2 + 1;
 
 			raycaster.setFromCamera( mouse, camera );
@@ -1718,6 +1728,11 @@ var simulation = function($http, defaultsService) {
 			}
 		}
 
+		/*For a given fan and given side of the case, check whether the fan is in a valid position
+		  e.g a fan shouldn't be able to be in the same position as another fan, or hang off the side
+		  of the case.
+		  fan = The fan that we are moving and checking if it is in a valid position
+		  position = The enum for the side of the case the fan we are moving*/
 		scope.isValidFanPosition = function(fan, position) {
 
 			var valid = true;
@@ -1894,8 +1909,8 @@ var simulation = function($http, defaultsService) {
 			}
 		} 
 
+		/*Dynamically resizes 3D renderer and camera when browser window is resized*/
 		function onWindowResize(){
-			//Dynamically resizes renderer and camera when window is resized
 
 			width = document.getElementById('simulationContainer').offsetWidth;
 			height = document.getElementById('simulationContainer').offsetHeight;
