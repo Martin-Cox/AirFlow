@@ -37,21 +37,18 @@ var MainController = function($scope, $http) {
 
     $scope.displayingPopup = false;
 
-
-    $scope.unitTestValue = 554;
-
-
 	angular.element(document).ready(function() {
         document.getElementById("loadingSplashLoadingText").innerHTML = "Click anywhere to begin";
     });
 
+    /*Hides the splash screen on user click if AJAX calls have completed*/
     $scope.hideSplash = function() {
         if ($scope.ajaxComplete === true) {
         	var splashElement = document.getElementById("loadingSplash");
             splashElement.style.opacity = 0;	//Set splash element opacity to 0, triggering CSS transition
 
             //Have to remove the element from the DOM, otherwise it would still be there but be invisible, meaning we can't interact with anything else
-            //Only wait 900ms, 1000ms is the time it takes for opacity transition, but user can see sim before that and may want to interact before opacity has finished
+            //Only wait 800ms, 1000ms is the time it takes for opacity transition, but user can see sim before that and may want to interact before opacity has finished
 
             setTimeout(function() {
                 //Show Help and Settings buttons
@@ -70,6 +67,7 @@ var MainController = function($scope, $http) {
         }
     };
 
+    /*Draws the charts on the results tab*/
     $scope.drawCharts = function() {     
         if ($scope.charts.drewCharts === false) {   
             setTimeout(function() {
@@ -80,8 +78,8 @@ var MainController = function($scope, $http) {
         }
     }
 
+    /*Starts a new project using the default project values*/
     $scope.newProject = function() {
-        //Starts a new project using the default values
 
         $scope.projectDetails.projectName = $scope.defaultProjectDetails.projectName;
         $scope.projectDetails.author = $scope.defaultProjectDetails.author;
@@ -99,19 +97,21 @@ var MainController = function($scope, $http) {
 
         $scope.stats = new Object();
 
+        //Recreate 3D scene
         $scope.emptyScene();
         $scope.init();                    
         $scope.animate();
     };
 
-     $scope.saveProject = function() {
-        //Convert all relevant objects to JSON: $scope.projectDetails, $scope.stats, $scope.fans and put into a big JSON file for downloading/uploading
+    /*Convert all relevant objects to JSON: $scope.projectDetails, $scope.stats, $scope.fans and put into a big JSON file for downloading/uploading*/
+    $scope.saveProject = function() {
 
         var projectDetailsObject = JSON.stringify($scope.projectDetails);
         var projectStatsObject = JSON.stringify($scope.stats);
 
         var fansCompositeObj = new Object();
 
+        //Put each fan into a composite object
         for (var i = 0; i < $scope.fans.length; i++) {            
             var fanObj = new Object();
             fanObj.properties = $scope.fans[i].properties;
@@ -137,9 +137,9 @@ var MainController = function($scope, $http) {
         dLink.remove();
     };
 
-     $scope.loadProject = function(projectJSON) {
-        //Project file in projectJSON
-        //TODO: Check if project JSON contains correct properties, if it doesn't (e.g. uploaded an incorrect file) return an error message
+    /*Recreates a project from an uploaded project file
+     *projectJSON = the parsed JSON object containing the project details provided in an uploaded file*/
+    $scope.loadProject = function(projectJSON) {
 
         if (projectJSON.hasOwnProperty("projectDetails") && projectJSON.hasOwnProperty("stats") && projectJSON.hasOwnProperty("fans")) {
 
@@ -189,6 +189,7 @@ var MainController = function($scope, $http) {
         }
     };
 
+    /*Once project file has been fully read, call loadProject() to recreate the project*/
     $scope.notifyProjectLoad = function(element) {
          $scope.$apply(function(scope) {
              var reader = new FileReader();
@@ -200,8 +201,8 @@ var MainController = function($scope, $http) {
          });
     };  
 
+    /*Returns a nicely formatted date*/
     $scope.getCurrentDate = function() {
-        //Gets formatted date
 
         var today = new Date();
         var day = today.getDate();
@@ -222,6 +223,7 @@ var MainController = function($scope, $http) {
         return formattedDate;
     };
 
+    /*Make the help popup box visible to the user*/
     $scope.showHelpBox = function() {
         if ($scope.displayingPopup === false) {
             var helpBox = document.getElementById("helpPopupBox");
@@ -231,6 +233,7 @@ var MainController = function($scope, $http) {
         }
     }
 
+    /*Hide the help popup box from the user*/
     $scope.closeHelpBox = function() {
         var helpBox = document.getElementById("helpPopupBox");
         helpBox.style.visibility = "hidden"
@@ -247,13 +250,13 @@ var MainController = function($scope, $http) {
         }
     });
 
+    /*Update the project data modified field when a project detail is changed*/
     $scope.projectDetailsChange = function() {
-        //The project details have been changed, update the modified date
         $scope.projectDetails.dateModified = $scope.getCurrentDate();
     }
 
-    $scope.fanPropertiesChange = function(changedProperty) {
-        //Called when the user edits a fan property
+    /*When the user edits a fan property, instantly update the 3D scene to reflect the changes made*/
+    $scope.fanPropertiesChange = function() {
         $scope.projectDetails.dateModified = $scope.getCurrentDate();
         $scope.editFan.properties.forceVector = $scope.calculateForceVector($scope.editFan);
         $scope.editFan.properties.dateModified = $scope.getCurrentDate();
