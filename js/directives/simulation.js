@@ -1734,461 +1734,144 @@ var simulation = function($http, defaultsService) {
 				//Only check if a fan intersects another fan on the same case plane
 
 				var invalidAreas = [];
+
+				var editFanCenterXPos, editFanCenterYPos, checkFanCenterXPos, checkFanCenterYPos;
 				
 				//For all fans that exist on the same case plane as the edit fan, we get the area they inhabit. The edit fan cannot be allowed to go into this inhabited area.
 				//Credit to Charles Bretana at https://stackoverflow.com/questions/306316/determine-if-two-rectangles-overlap-each-other
 				switch(currentPos) {
 						case positionsEnum.FRONT:
-							//Get the area that the edit fan is inhabiting
-							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
-								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
-								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
-								var editFanCenterX = fan.position.x;
-								var editFanCenterY = fan.position.y;
-							} else {
-								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
-								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
-								var editFanCenterX = fan.fanPhysicalObject.position.x;
-								var editFanCenterY = fan.fanPhysicalObject.position.y;
-							}
-
-							var editFanArea = new Object();
-							
-							editFanArea.X1 = editFanCenterX + editFanHalfWidth;		//X1 left
-							editFanArea.Y1 = editFanCenterY + editFanHalfHeight;	//Y1 top
-							editFanArea.X2 = editFanCenterX - editFanHalfWidth;		//X2 right
-							editFanArea.Y2 = editFanCenterY - editFanHalfHeight;	//Y2 bottom
-							
-
-							//Get the area other fans on the same plane inhabit
-							for (var i = 0; i < samePlaneFans.length; i++) {
-								var checkFanHalfHeight = samePlaneFans[i].fanPhysicalObject.dimensions.height/2;
-								var checkFanHalfWidth = samePlaneFans[i].fanPhysicalObject.dimensions.width/2;
-								var checkFanCenterX = samePlaneFans[i].fanPhysicalObject.position.x;
-								var checkFanCenterY = samePlaneFans[i].fanPhysicalObject.position.y;
-
-								var checkFanArea = new Object();
-
-								checkFanArea.X1 = checkFanCenterX + checkFanHalfWidth;		//X1 left
-								checkFanArea.Y1 = checkFanCenterY + checkFanHalfHeight;		//Y1 top
-								checkFanArea.X2 = checkFanCenterX - checkFanHalfWidth;		//X2 right
-								checkFanArea.Y2 = checkFanCenterY - checkFanHalfHeight;		//Y2 bottom
-
-								if (!(editFanArea.X1 < checkFanArea.X2) && !(editFanArea.X2 > checkFanArea.X1) && !(editFanArea.Y1 < checkFanArea.Y2) && !(editFanArea.Y2 > checkFanArea.Y1)) {
-									valid = false;
-								}
-							}
-
-							//Now check if fan "hangs" off the case
-							var casePlane = null;
-							var casePlanes = [];
-							for (var key in scope.caseGroup) {
-							    casePlanes.push(scope.caseGroup[key]);
-							}
-
-							for (var i = 0; i < casePlanes.length; i++) {
-								if (casePlanes[i].positionCode === currentPos) {
-									casePlane = casePlanes[i];
-								}
-							}
-
-							if (casePlane !== null) {
-								//Should never be null but its safer to check
-
-								var casePlaneHalfHeight = casePlane.dimensions.height/2;
-								var casePlaneHalfWidth = casePlane.dimensions.width/2;
-								var casePlaneCenterX = casePlane.position.x;
-								var casePlaneCenterY = casePlane.position.y;
-
-								var checkCaseArea = new Object();
-
-								checkCaseArea.X1 = (casePlaneCenterX + casePlaneHalfWidth);		//X1 left
-								checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
-								checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
-								checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
-
-								if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
-									valid = false;
-								}
-							}
+							axisX = "X";
+							axisY = "Y";
 							break;
 						case positionsEnum.BACK:
-							//Get the area that the edit fan is inhabiting
-							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
-								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
-								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
-								var editFanCenterX = fan.position.x;
-								var editFanCenterY = fan.position.y;
-							} else {
-								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
-								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
-								var editFanCenterX = fan.fanPhysicalObject.position.x;
-								var editFanCenterY = fan.fanPhysicalObject.position.y;
-							}
-
-							var editFanArea = new Object();
-							
-							editFanArea.X1 = editFanCenterX + editFanHalfWidth;		//X1 left
-							editFanArea.Y1 = editFanCenterY + editFanHalfHeight;	//Y1 top
-							editFanArea.X2 = editFanCenterX - editFanHalfWidth;		//X2 right
-							editFanArea.Y2 = editFanCenterY - editFanHalfHeight;	//Y2 bottom
-							
-
-							//Get the area other fans on the same plane inhabit
-							for (var i = 0; i < samePlaneFans.length; i++) {
-								var checkFanHalfHeight = samePlaneFans[i].fanPhysicalObject.dimensions.height/2;
-								var checkFanHalfWidth = samePlaneFans[i].fanPhysicalObject.dimensions.width/2;
-								var checkFanCenterX = samePlaneFans[i].fanPhysicalObject.position.x;
-								var checkFanCenterY = samePlaneFans[i].fanPhysicalObject.position.y;
-
-								var checkFanArea = new Object();
-
-								checkFanArea.X1 = checkFanCenterX + checkFanHalfWidth;		//X1 left
-								checkFanArea.Y1 = checkFanCenterY + checkFanHalfHeight;		//Y1 top
-								checkFanArea.X2 = checkFanCenterX - checkFanHalfWidth;		//X2 right
-								checkFanArea.Y2 = checkFanCenterY - checkFanHalfHeight;		//Y2 bottom
-
-								if (!(editFanArea.X1 < checkFanArea.X2) && !(editFanArea.X2 > checkFanArea.X1) && !(editFanArea.Y1 < checkFanArea.Y2) && !(editFanArea.Y2 > checkFanArea.Y1)) {
-									valid = false;
-									break;
-								}
-							}
-
-							//Now check if fan "hangs" off the case
-							var casePlane = null;
-							var casePlanes = [];
-							for (var key in scope.caseGroup) {
-							    casePlanes.push(scope.caseGroup[key]);
-							}
-
-							for (var i = 0; i < casePlanes.length; i++) {
-								if (casePlanes[i].positionCode === currentPos) {
-									casePlane = casePlanes[i];
-								}
-							}
-
-							if (casePlane !== null) {
-								//Should never be null but its safer to check
-
-								var casePlaneHalfHeight = casePlane.dimensions.height/2;
-								var casePlaneHalfWidth = casePlane.dimensions.width/2;
-								var casePlaneCenterX = casePlane.position.x;
-								var casePlaneCenterY = casePlane.position.y;
-
-								var checkCaseArea = new Object();
-
-								checkCaseArea.X1 = (casePlaneCenterX + casePlaneHalfWidth);		//X1 left
-								checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
-								checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
-								checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
-
-								if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
-									valid = false;
-								}
-							}
+							axisX = "X";
+							axisY = "Y";
 							break;
 						case positionsEnum.TOP:
-							//Get the area that the edit fan is inhabiting
-							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
-								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
-								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
-								var editFanCenterX = fan.position.x;
-								var editFanCenterY = fan.position.z;
-							} else {
-								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
-								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
-								var editFanCenterX = fan.fanPhysicalObject.position.x;
-								var editFanCenterY = fan.fanPhysicalObject.position.z;
-							}
-
-
-							var editFanArea = new Object();
-							
-							editFanArea.X1 = editFanCenterX + editFanHalfWidth;		//X1 left
-							editFanArea.Y1 = editFanCenterY + editFanHalfHeight;	//Y1 top
-							editFanArea.X2 = editFanCenterX - editFanHalfWidth;		//X2 right
-							editFanArea.Y2 = editFanCenterY - editFanHalfHeight;	//Y2 bottom
-							
-
-							//Get the area other fans on the same plane inhabit
-							for (var i = 0; i < samePlaneFans.length; i++) {
-								var checkFanHalfHeight = samePlaneFans[i].fanPhysicalObject.dimensions.height/2;
-								var checkFanHalfWidth = samePlaneFans[i].fanPhysicalObject.dimensions.width/2;
-								var checkFanCenterX = samePlaneFans[i].fanPhysicalObject.position.x;
-								var checkFanCenterY = samePlaneFans[i].fanPhysicalObject.position.z;
-
-								var checkFanArea = new Object();
-
-								checkFanArea.X1 = checkFanCenterX + checkFanHalfWidth;		//X1 left
-								checkFanArea.Y1 = checkFanCenterY + checkFanHalfHeight;		//Y1 top
-								checkFanArea.X2 = checkFanCenterX - checkFanHalfWidth;		//X2 right
-								checkFanArea.Y2 = checkFanCenterY - checkFanHalfHeight;		//Y2 bottom
-
-								if (!(editFanArea.X1 < checkFanArea.X2) && !(editFanArea.X2 > checkFanArea.X1) && !(editFanArea.Y1 < checkFanArea.Y2) && !(editFanArea.Y2 > checkFanArea.Y1)) {
-									valid = false;
-									break;
-								}
-							}
-
-							//Now check if fan "hangs" off the case
-							var casePlane = null;
-							var casePlanes = [];
-							for (var key in scope.caseGroup) {
-							    casePlanes.push(scope.caseGroup[key]);
-							}
-
-							for (var i = 0; i < casePlanes.length; i++) {
-								if (casePlanes[i].positionCode === currentPos) {
-									casePlane = casePlanes[i];
-								}
-							}
-
-							if (casePlane !== null) {
-								//Should never be null but its safer to check
-
-								var casePlaneHalfHeight = casePlane.dimensions.height/2;
-								var casePlaneHalfWidth = casePlane.dimensions.width/2;
-								var casePlaneCenterX = casePlane.position.x;
-								var casePlaneCenterY = casePlane.position.z;
-
-								var checkCaseArea = new Object();
-
-								checkCaseArea.X1 = (casePlaneCenterX + casePlaneHalfWidth);		//X1 left
-								checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
-								checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
-								checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
-
-								if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
-									valid = false;
-								}
-							}
+							axisX = "X";
+							axisY = "Z";
 							break;
-						case positionsEnum.BOTTOM:
-							//Get the area that the edit fan is inhabiting
-							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
-								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
-								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
-								var editFanCenterX = fan.position.x;
-								var editFanCenterY = fan.position.z;
-							} else {
-								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
-								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
-								var editFanCenterX = fan.fanPhysicalObject.position.x;
-								var editFanCenterY = fan.fanPhysicalObject.position.z;
-							}
-
-							var editFanArea = new Object();
-							
-							editFanArea.X1 = editFanCenterX + editFanHalfWidth;		//X1 left
-							editFanArea.Y1 = editFanCenterY + editFanHalfHeight;	//Y1 top
-							editFanArea.X2 = editFanCenterX - editFanHalfWidth;		//X2 right
-							editFanArea.Y2 = editFanCenterY - editFanHalfHeight;	//Y2 bottom
-							
-
-							//Get the area other fans on the same plane inhabit
-							for (var i = 0; i < samePlaneFans.length; i++) {
-								var checkFanHalfHeight = samePlaneFans[i].fanPhysicalObject.dimensions.height/2;
-								var checkFanHalfWidth = samePlaneFans[i].fanPhysicalObject.dimensions.width/2;
-								var checkFanCenterX = samePlaneFans[i].fanPhysicalObject.position.x;
-								var checkFanCenterY = samePlaneFans[i].fanPhysicalObject.position.z;
-
-								var checkFanArea = new Object();
-
-								checkFanArea.X1 = checkFanCenterX + checkFanHalfWidth;		//X1 left
-								checkFanArea.Y1 = checkFanCenterY + checkFanHalfHeight;		//Y1 top
-								checkFanArea.X2 = checkFanCenterX - checkFanHalfWidth;		//X2 right
-								checkFanArea.Y2 = checkFanCenterY - checkFanHalfHeight;		//Y2 bottom
-
-								if (!(editFanArea.X1 < checkFanArea.X2) && !(editFanArea.X2 > checkFanArea.X1) && !(editFanArea.Y1 < checkFanArea.Y2) && !(editFanArea.Y2 > checkFanArea.Y1)) {
-									valid = false;
-									break;
-								}
-							}
-
-							//Now check if fan "hangs" off the case
-							var casePlane = null;
-							var casePlanes = [];
-							for (var key in scope.caseGroup) {
-							    casePlanes.push(scope.caseGroup[key]);
-							}
-
-							for (var i = 0; i < casePlanes.length; i++) {
-								if (casePlanes[i].positionCode === currentPos) {
-									casePlane = casePlanes[i];
-								}
-							}
-
-							if (casePlane !== null) {
-								//Should never be null but its safer to check
-
-								var casePlaneHalfHeight = casePlane.dimensions.height/2;
-								var casePlaneHalfWidth = casePlane.dimensions.width/2;
-								var casePlaneCenterX = casePlane.position.x;
-								var casePlaneCenterY = casePlane.position.z;
-
-								var checkCaseArea = new Object();
-
-								checkCaseArea.X1 = (casePlaneCenterX + casePlaneHalfWidth);		//X1 left
-								checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
-								checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
-								checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
-
-								if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
-									valid = false;
-								}
-							}
+						case positionsEnum.BOTTOM:							
+							axisX = "X";
+							axisY = "Z";
 							break;
-						case positionsEnum.VISIBLE_SIDE:
-							//Get the area that the edit fan is inhabiting
-							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
-								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
-								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
-								var editFanCenterX = fan.position.z;
-								var editFanCenterY = fan.position.y;
-							} else {
-								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
-								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
-								var editFanCenterX = fan.fanPhysicalObject.position.z;
-								var editFanCenterY = fan.fanPhysicalObject.position.y;
-							}
-
-							var editFanArea = new Object();
-							
-							editFanArea.X1 = editFanCenterX + editFanHalfWidth;		//X1 left
-							editFanArea.Y1 = editFanCenterY + editFanHalfHeight;	//Y1 top
-							editFanArea.X2 = editFanCenterX - editFanHalfWidth;		//X2 right
-							editFanArea.Y2 = editFanCenterY - editFanHalfHeight;	//Y2 bottom
-							
-
-							//Get the area other fans on the same plane inhabit
-							for (var i = 0; i < samePlaneFans.length; i++) {
-								var checkFanHalfHeight = samePlaneFans[i].fanPhysicalObject.dimensions.height/2;
-								var checkFanHalfWidth = samePlaneFans[i].fanPhysicalObject.dimensions.width/2;
-								var checkFanCenterX = samePlaneFans[i].fanPhysicalObject.position.z;
-								var checkFanCenterY = samePlaneFans[i].fanPhysicalObject.position.y;
-
-								var checkFanArea = new Object();
-
-								checkFanArea.X1 = checkFanCenterX + checkFanHalfWidth;		//X1 left
-								checkFanArea.Y1 = checkFanCenterY + checkFanHalfHeight;		//Y1 top
-								checkFanArea.X2 = checkFanCenterX - checkFanHalfWidth;		//X2 right
-								checkFanArea.Y2 = checkFanCenterY - checkFanHalfHeight;		//Y2 bottom
-
-								if (!(editFanArea.X1 < checkFanArea.X2) && !(editFanArea.X2 > checkFanArea.X1) && !(editFanArea.Y1 < checkFanArea.Y2) && !(editFanArea.Y2 > checkFanArea.Y1)) {
-									valid = false;
-									break;
-								}
-							}
-
-							//Now check if fan "hangs" off the case
-							var casePlane = null;
-							var casePlanes = [];
-							for (var key in scope.caseGroup) {
-							    casePlanes.push(scope.caseGroup[key]);
-							}
-
-							for (var i = 0; i < casePlanes.length; i++) {
-								if (casePlanes[i].positionCode === currentPos) {
-									casePlane = casePlanes[i];
-								}
-							}
-
-							if (casePlane !== null) {
-								//Should never be null but its safer to check
-
-								var casePlaneHalfHeight = casePlane.dimensions.height/2;
-								var casePlaneHalfWidth = casePlane.dimensions.width/2;
-								var casePlaneCenterX = casePlane.position.z;
-								var casePlaneCenterY = casePlane.position.y;
-
-								var checkCaseArea = new Object();
-
-								checkCaseArea.X1 = (casePlaneCenterX + casePlaneHalfWidth);		//X1 left
-								checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
-								checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
-								checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
-
-								if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
-									valid = false;
-								}
-							}
+						case positionsEnum.VISIBLE_SIDE:							
+							axisX = "Z";
+							axisY = "Y";
 							break;
 						case positionsEnum.INVISIBLE_SIDE:
-							//Get the area that the edit fan is inhabiting
-							if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
-								var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
-								var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
-								var editFanCenterX = fan.position.z;
-								var editFanCenterY = fan.position.y;
-							} else {
-								var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
-								var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;
-								var editFanCenterX = fan.fanPhysicalObject.position.z;
-								var editFanCenterY = fan.fanPhysicalObject.position.y;
-							}
-
-							var editFanArea = new Object();
-							
-							editFanArea.X1 = editFanCenterX + editFanHalfWidth;		//X1 left
-							editFanArea.Y1 = editFanCenterY + editFanHalfHeight;	//Y1 top
-							editFanArea.X2 = editFanCenterX - editFanHalfWidth;		//X2 right
-							editFanArea.Y2 = editFanCenterY - editFanHalfHeight;	//Y2 bottom
-							
-
-							//Get the area other fans on the same plane inhabit
-							for (var i = 0; i < samePlaneFans.length; i++) {
-								var checkFanHalfHeight = samePlaneFans[i].fanPhysicalObject.dimensions.height/2;
-								var checkFanHalfWidth = samePlaneFans[i].fanPhysicalObject.dimensions.width/2;
-								var checkFanCenterX = samePlaneFans[i].fanPhysicalObject.position.z;
-								var checkFanCenterY = samePlaneFans[i].fanPhysicalObject.position.y;
-
-								var checkFanArea = new Object();
-
-								checkFanArea.X1 = checkFanCenterX + checkFanHalfWidth;		//X1 left
-								checkFanArea.Y1 = checkFanCenterY + checkFanHalfHeight;		//Y1 top
-								checkFanArea.X2 = checkFanCenterX - checkFanHalfWidth;		//X2 right
-								checkFanArea.Y2 = checkFanCenterY - checkFanHalfHeight;		//Y2 bottom
-
-								if (!(editFanArea.X1 < checkFanArea.X2) && !(editFanArea.X2 > checkFanArea.X1) && !(editFanArea.Y1 < checkFanArea.Y2) && !(editFanArea.Y2 > checkFanArea.Y1)) {
-									valid = false;
-									break;
-								}
-							}
-
-							//Now check if fan "hangs" off the case
-							var casePlane = null;
-							var casePlanes = [];
-							for (var key in scope.caseGroup) {
-							    casePlanes.push(scope.caseGroup[key]);
-							}
-
-							for (var i = 0; i < casePlanes.length; i++) {
-								if (casePlanes[i].positionCode === currentPos) {
-									casePlane = casePlanes[i];
-								}
-							}
-
-							if (casePlane !== null) {
-								//Should never be null but its safer to check
-
-								var casePlaneHalfHeight = casePlane.dimensions.height/2;
-								var casePlaneHalfWidth = casePlane.dimensions.width/2;
-								var casePlaneCenterX = casePlane.position.z;
-								var casePlaneCenterY = casePlane.position.y;
-
-								var checkCaseArea = new Object();
-
-								checkCaseArea.X1 = (casePlaneCenterX + casePlaneHalfWidth);		//X1 left
-								checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
-								checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
-								checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
-
-								if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
-									valid = false;
-								}
-							}
+							axisX = "Z";
+							axisY = "Y";
+							break;
 					//}
 			}
+
+			//Get the area that the edit fan is inhabiting
+			if (fan.fanPhysicalObject == null || fan.fanPhysicalObject == undefined) {
+				var editFanHalfHeight = scope.defaultNewFan.fanObject.dimensions.height/2;
+				var editFanHalfWidth = scope.defaultNewFan.fanObject.dimensions.width/2;
+				if (axisX === "X") {
+					var editFanCenterX = fan.position.x;
+				} else if (axisX === "Z") {
+					var editFanCenterX = fan.position.z;
+				}
+				if (axisY === "Y") {
+					var editFanCenterY = fan.position.y;
+				} else if (axisY === "Z") {
+					var editFanCenterY = fan.position.z;
+				}				
+			} else {
+				var editFanHalfHeight = fan.fanPhysicalObject.dimensions.height/2;
+				var editFanHalfWidth = fan.fanPhysicalObject.dimensions.width/2;			
+				if (axisX === "X") {
+					var editFanCenterX = fan.fanPhysicalObject.position.x;
+				} else if (axisX === "Z") {
+					var editFanCenterX = fan.fanPhysicalObject.position.z;
+				}
+				if (axisY === "Y") {
+					var editFanCenterY = fan.fanPhysicalObject.position.y;
+				} else if (axisY === "Z") {
+					var editFanCenterY = fan.fanPhysicalObject.position.z;
+				}
+			}
+
+			var editFanArea = new Object();
+			
+			editFanArea.X1 = editFanCenterX + editFanHalfWidth;		//X1 left
+			editFanArea.Y1 = editFanCenterY + editFanHalfHeight;	//Y1 top
+			editFanArea.X2 = editFanCenterX - editFanHalfWidth;		//X2 right
+			editFanArea.Y2 = editFanCenterY - editFanHalfHeight;	//Y2 bottom
+			
+
+			//Get the area other fans on the same plane inhabit
+			for (var i = 0; i < samePlaneFans.length; i++) {
+				var checkFanHalfHeight = samePlaneFans[i].fanPhysicalObject.dimensions.height/2;
+				var checkFanHalfWidth = samePlaneFans[i].fanPhysicalObject.dimensions.width/2;				
+				if (axisX === "X") {
+					var checkFanCenterX = samePlaneFans[i].fanPhysicalObject.position.x;
+				} else if (axisX === "Z") {
+					var checkFanCenterX = samePlaneFans[i].fanPhysicalObject.position.z;
+				}
+				if (axisY === "Y") {
+					var checkFanCenterY = samePlaneFans[i].fanPhysicalObject.position.y;
+				} else if (axisY === "Z") {
+					var checkFanCenterY = samePlaneFans[i].fanPhysicalObject.position.z;
+				}
+
+				var checkFanArea = new Object();
+
+				checkFanArea.X1 = checkFanCenterX + checkFanHalfWidth;		//X1 left
+				checkFanArea.Y1 = checkFanCenterY + checkFanHalfHeight;		//Y1 top
+				checkFanArea.X2 = checkFanCenterX - checkFanHalfWidth;		//X2 right
+				checkFanArea.Y2 = checkFanCenterY - checkFanHalfHeight;		//Y2 bottom
+
+				if (!(editFanArea.X1 < checkFanArea.X2) && !(editFanArea.X2 > checkFanArea.X1) && !(editFanArea.Y1 < checkFanArea.Y2) && !(editFanArea.Y2 > checkFanArea.Y1)) {
+					valid = false;
+				}
+			}
+
+			//Now check if fan "hangs" off the case
+			var casePlane = null;
+			var casePlanes = [];
+			for (var key in scope.caseGroup) {
+			    casePlanes.push(scope.caseGroup[key]);
+			}
+
+			for (var i = 0; i < casePlanes.length; i++) {
+				if (casePlanes[i].positionCode === currentPos) {
+					casePlane = casePlanes[i];
+				}
+			}
+
+			if (casePlane !== null) {
+				//Should never be null but its safer to check
+
+				var casePlaneHalfHeight = casePlane.dimensions.height/2;
+				var casePlaneHalfWidth = casePlane.dimensions.width/2;				
+				if (axisX === "X") {
+					var casePlaneCenterX = casePlane.position.x;
+				} else if (axisX === "Z") {
+					var casePlaneCenterX = casePlane.position.z;
+				}
+				if (axisY === "Y") {
+					var casePlaneCenterY = casePlane.position.y;
+				} else if (axisY === "Z") {
+					var casePlaneCenterY = casePlane.position.z;
+				}
+
+				var checkCaseArea = new Object();
+
+				checkCaseArea.X1 = (casePlaneCenterX + casePlaneHalfWidth);		//X1 left
+				checkCaseArea.Y1 = (casePlaneCenterY + casePlaneHalfHeight);	//Y1 top
+				checkCaseArea.X2 = (casePlaneCenterX - casePlaneHalfWidth);		//X2 right
+				checkCaseArea.Y2 = (casePlaneCenterY - casePlaneHalfHeight);	//Y2 bottom
+
+				if (editFanArea.X1 > checkCaseArea.X1 || editFanArea.X2 < checkCaseArea.X2 || editFanArea.Y2 < checkCaseArea.Y2 || editFanArea.Y1 > checkCaseArea.Y1) {
+					valid = false;
+				}
+			}
+
 
 			if (valid === true) {
 				//Change to valid pos color
@@ -2209,7 +1892,6 @@ var simulation = function($http, defaultsService) {
 					scope.addingFanValidPos = false;
 				}
 			}
-
 		} 
 
 		function onWindowResize(){
