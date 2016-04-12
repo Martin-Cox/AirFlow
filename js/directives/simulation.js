@@ -470,25 +470,35 @@ var simulation = function($http, defaultsService) {
 
 			if (availableParticles.length > 0 && scope.intakeFans.length > 0) {
 
-				//Set spawn position as the particle is created
-				setParticleStartingPosition(availableParticles[0]);
+				var activeIntakeFans = [];
 
-				//Record the unix time ms that the particle spawned
-				availableParticles[0].spawnTime = (new Date).getTime();
-				
-				//Reset the colour to blue again
-				availableParticles[0].material.color.setHex(0x18ABDB);
+				for (var i = 0; i < scope.intakeFans.length; i++) {
+					if (scope.intakeFans[i].properties.active === true) {
+						activeIntakeFans.push(scope.intakeFans[i]);
+					}
+				}
+
+				if (activeIntakeFans.length > 0) {
+					//Set spawn position as the particle is created
+					setParticleStartingPosition(availableParticles[0], activeIntakeFans);
+
+					//Record the unix time ms that the particle spawned
+					availableParticles[0].spawnTime = (new Date).getTime();
+					
+					//Reset the colour to blue again
+					availableParticles[0].material.color.setHex(0x18ABDB);
 
 
-				//Add first available particle to scene
-				scene.add(availableParticles[0]);
+					//Add first available particle to scene
+					scene.add(availableParticles[0]);
 
-				//Remove from pool of available particles
-				availableParticles.splice(0, 1);
+					//Remove from pool of available particles
+					availableParticles.splice(0, 1);
 
-				//Add to total no. spawned particles
-				scope.stats.spawnedParticles += 1;
-				scope.stats.activeParticles += 1;
+					//Add to total no. spawned particles
+					scope.stats.spawnedParticles += 1;
+					scope.stats.activeParticles += 1;
+				}
 
 				setTimeout(function() {
 		        	scope.spawnParticles();
@@ -502,9 +512,9 @@ var simulation = function($http, defaultsService) {
 
 		/*Chooses a random intake fan to act as a spawning point, then chooses a random 3D coordinate inside the fanAOEObject for that intake fan
 		  particle = The particle to spawn*/
-		function setParticleStartingPosition(particle) {
+		function setParticleStartingPosition(particle, activeIntakeFans) {
 			//Randomly select one of the intake fans to act as a spawn point for this particle
-			var fanObject = scope.intakeFans[Math.floor(Math.random()*scope.intakeFans.length)];
+			var fanObject = activeIntakeFans[Math.floor(Math.random()*activeIntakeFans.length)];
 
 			var spawnPosition = new THREE.Vector3();
 
@@ -703,9 +713,18 @@ var simulation = function($http, defaultsService) {
  			var fanAOEObject = createFanAOEObject(fan, true);
 
 			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
+
+			var fColor;
+
+			if (fan.properties.active === true) {
+				fColor = parseInt(scope.fanColors.normal)
+			} else {
+				fColor = parseInt(scope.fanColors.inactive)
+			}
+
 			var fanPhysicalMaterial = Physijs.createMaterial(
 				new THREE.MeshLambertMaterial({
-					color: parseInt(scope.fanColors.normal),
+					color: fColor,
 					side: fan.fanObject.material.side
 				}),
 				0.3,
@@ -765,6 +784,7 @@ var simulation = function($http, defaultsService) {
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 			fanObject.properties.dateCreated = scope.getCurrentDate();
 			fanObject.properties.dateModified = scope.getCurrentDate();
+			fanObject.properties.active = fan.properties.active;
 			fanObject.properties.isValidPos = true;
 
 			determineFanAOEPosition(fanObject);
@@ -800,9 +820,17 @@ var simulation = function($http, defaultsService) {
  			var fanAOEObject = createFanAOEObject(fan, false);
 
 			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
+			var fColor;
+
+			if (fan.properties.active === true) {
+				fColor = parseInt(scope.fanColors.normal)
+			} else {
+				fColor = parseInt(scope.fanColors.inactive)
+			}
+
 			var fanPhysicalMaterial = Physijs.createMaterial(
 				new THREE.MeshLambertMaterial({
-					color: parseInt(scope.fanColors.normal),
+					color: fColor,
 					side: THREE.DoubleSide
 				}),
 				0.3,
@@ -862,6 +890,7 @@ var simulation = function($http, defaultsService) {
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 			fanObject.properties.dateCreated = fan.properties.dateCreated;
 			fanObject.properties.dateModified = fan.properties.dateModified;
+			fanObject.properties.active = fan.properties.active;
 			fanObject.properties.isValidPos = true;
 
 			determineFanAOEPosition(fanObject);
@@ -953,6 +982,7 @@ var simulation = function($http, defaultsService) {
 			fanObject.properties.position = scope.newFanPlaceholderObjectPosition;
 			fanObject.AOEWireframe = new THREE.EdgesHelper(fanAOEObject, parseInt(scope.fanColors.wireframe));
 			fanObject.properties.dateCreated = scope.getCurrentDate();
+			fanObject.properties.active = true;
 			fanObject.properties.dateModified = scope.getCurrentDate();
 
 			determineFanAOEPosition(fanObject);
@@ -1015,11 +1045,16 @@ var simulation = function($http, defaultsService) {
 		/*Calculates the force vector in terms of (x,y,z) values for a given fan
 		  fan = The fan to calculate the force vector for*/
 		scope.calculateForceVector = function(fan) {
-			var maxForce = ((fan.properties.size * 5000) + (fan.properties.maxRPM * 100));
 
-			var realForce = (fan.properties.percentageRPM/1000)*maxForce;
+			if (fan.properties.active === true) {
+				var maxForce = ((fan.properties.size * 5000) + (fan.properties.maxRPM * 100));
 
-			if (realForce > 300000) { realForce = 300000 }; //Max value is a magic number, will be explained why in documentation
+				var realForce = (fan.properties.percentageRPM/1000)*maxForce;
+
+				if (realForce > 300000) { realForce = 300000 }; //Max value is a magic number, will be explained why in documentation
+			} else {
+				var realForce = 0;
+			}
 
 			//determine which axis to apply force depending on fan.properties.mode and fan.properties.position
 			//What about fans which aren't intake/exhaust?
@@ -1122,8 +1157,8 @@ var simulation = function($http, defaultsService) {
 			//Event gets called when physics objects (spheres) collide with another object
 
 			for (var i = 0; i < scope.fans.length; i++) {
-				if (collided_with.id === scope.fans[i].fanPhysicalObject.id && scope.fans[i].properties.mode === "exhaust") {
-					//Collided with exhuast fanPhysicalObject, delete the particle
+				if (collided_with.id === scope.fans[i].fanPhysicalObject.id && scope.fans[i].properties.mode === "exhaust" && scope.fans[i].properties.active === true) {
+					//Collided with active exhuast fanPhysicalObject, delete the particle
 					for (var j = 0; j < particles.length; j++) {
 						if (particles[j].id === this.id) {
 							recycleParticle(particles[j]);
@@ -1325,7 +1360,11 @@ var simulation = function($http, defaultsService) {
 				//For peace of mind, reset all fans not being edited to normal fan color
 				for (var i = 0; i < scope.fans.length; i++) {
 					if (scope.fans[i].editing == false) {
-						scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
+						if (scope.fans[i].properties.active === true) {
+							scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
+						} else {
+							scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.inactive));
+						}
 					}
 				}
 
@@ -1368,7 +1407,11 @@ var simulation = function($http, defaultsService) {
 			//For peace of mind, reset all fans to not editing when we click
 			for (var i = 0; i < scope.fans.length; i++) {
 				scope.fans[i].editing = false;
-				scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
+				if (scope.fans[i].properties.active === true) {
+					scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
+				} else {
+					scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.inactive));
+				}
 				scene.remove(scope.fans[i].AOEWireframe);
 				document.getElementById("componentForm").setAttribute("aria-disabled", true); 
 			}
@@ -1470,7 +1513,11 @@ var simulation = function($http, defaultsService) {
 					scope.$digest();
 					for (var i = 0; i < scope.fans.length; i++) {
 						scope.fans[i].editing = false;
-						scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
+						if (scope.fans[i].properties.active === true) {
+							scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.normal));
+						} else {
+							scope.fans[i].fanPhysicalObject.material.color.setHex(parseInt(scope.fanColors.inactive));
+						}
 						scene.remove(scope.fans[i].AOEWireframe); 
 					}
 					determineFanAOEPosition();

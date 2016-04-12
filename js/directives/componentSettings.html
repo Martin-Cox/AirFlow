@@ -22,24 +22,16 @@
         <input type="number" ng-model="editFan.properties.percentageRPM" ng-change="fanPropertiesChange(editFan.properties.percentageRPM)" min="0" max="100" role="textbox"/>
       </div>
       <div class="editorProperty">
-        <p>FORCE X: </p>
-        <input type="number" ng-model="editFan.properties.forceVector.x" role="textbox"/>
-      </div>
-      <div class="editorProperty">
-        <p>FORCE Y: </p>
-        <input type="number" ng-model="editFan.properties.forceVector.y" role="textbox"/>
-      </div>
-      <div class="editorProperty">
-        <p>FORCE Z: </p>
-        <input type="number" ng-model="editFan.properties.forceVector.z" role="textbox"/>
-      </div>
-      <div class="editorProperty">
         <p>Date created: </p>
         <input type="text" ng-readonly="true" ng-model="editFan.properties.dateCreated" role="textbox" aria-readonly="true"/>
       </div>
       <div class="editorProperty">
         <p>Date modified: </p>
         <input type="text" ng-readonly="true" ng-model="editFan.properties.dateModified" role="textbox" aria-readonly="true"/>
+      </div>
+      <div class="editorProperty">
+        <p>Active: </p>
+        <input type="checkbox" ng-readonly="false" ng-model="editFan.properties.active" ng-change="fanPropertiesChange(editFan.properties.active)" role="checkbox"/>
       </div>
     </fieldset>
 </div>
