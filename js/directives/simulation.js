@@ -185,12 +185,13 @@ var simulation = function($http, defaultsService) {
 			//Clone the default fans, otherwise the default fan properties will get overriden if we attempt to modify them
 			var defaultFansCopy = (JSON.parse(JSON.stringify(scope.defaultFans)));
 
-			scope.createFan(defaultFansCopy.fanOne);
-			scope.createFan(defaultFansCopy.fanTwo);
-			scope.createFan(defaultFansCopy.fanThree);
-			scope.createFan(defaultFansCopy.fanFour);
-			scope.createFan(defaultFansCopy.fanFive);
-			scope.createFan(defaultFansCopy.fanSix);
+            var fans = [];
+
+            var fans = Object.keys(defaultFansCopy).map(function(k) { return defaultFansCopy[k] });
+
+            for (var i = 0; i < fans.length-1; i++) {     
+                scope.createFan(fans[i]);
+            }
 
 			var skyboxGeometry = new THREE.CubeGeometry(9000, 9000, 9000);
 			var skyboxMaterial = new THREE.MeshBasicMaterial({ color: 0x262B30, side: THREE.BackSide });
@@ -1923,10 +1924,11 @@ var simulation = function($http, defaultsService) {
 		}
 
 		//TODO (IN ORDER):
+		// - Active checkbox in component settings to disable a fan without havng to remove it
+		// - Input validation on ALL user enterable data (using Angular) 							- AND UNIT TESTS
 		// - Add components to defaultCase.json e.g. GPU, Hard drives, CPU etc.
 		// - User configurable project settings 													- AND UNIT TESTS
-		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS
-		// - Input validation on ALL user enterable data (using Angular) 							- AND UNIT TESTS
+		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS		
 		// - Recheck WEB-ARIA roles and properties
 		// - Change rate of spawning in particles dependant on the number of intake fans
 		// - Reqrite how to use/about popup
