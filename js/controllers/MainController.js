@@ -1,4 +1,4 @@
-var MainController = function($scope, $http) {
+var MainController = function($scope, $timeout) {
 
     var THREE = require('three');
 
@@ -46,7 +46,7 @@ var MainController = function($scope, $http) {
             //Have to remove the element from the DOM, otherwise it would still be there but be invisible, meaning we can't interact with anything else
             //Only wait 800ms, 1000ms is the time it takes for opacity transition, but user can see sim before that and may want to interact before opacity has finished
 
-            setTimeout(function() {
+             $timeout(function() {
                 //Show Help and Settings buttons
                 document.getElementById("helpBoxButtonWrapper").style.visibility = "visible";
 
@@ -55,7 +55,7 @@ var MainController = function($scope, $http) {
             }, 300);
 
 
-            setTimeout(function() {
+            $timeout(function() {
             	document.getElementsByClassName("main")[0].removeChild(splashElement);
             }, 800);
 
@@ -66,7 +66,7 @@ var MainController = function($scope, $http) {
     /*Draws the charts on the results tab*/
     $scope.drawCharts = function() {     
         if ($scope.charts.drewCharts === false) {   
-            setTimeout(function() {
+            $timeout(function() {
                 $scope.drawParticleSuccessRatioChart();
                 $scope.drawFanRatioChart();
                 $scope.charts.drewCharts = true;

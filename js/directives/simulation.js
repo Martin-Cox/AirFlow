@@ -1,4 +1,4 @@
-var simulation = function($http, defaultsService) {
+var simulation = function($http, defaultsService, $timeout) {
   return { 
     restrict: 'E', 
     scope: false,
@@ -329,7 +329,7 @@ var simulation = function($http, defaultsService) {
 				scope.charts.fanRatioChart.update();
 				
 			}
-			setTimeout(function() {
+			$timeout(function() {
 	        	scope.updateStats();
 	        }, 1000);
 		}
@@ -501,11 +501,11 @@ var simulation = function($http, defaultsService) {
 					scope.stats.activeParticles += 1;
 				}
 
-				setTimeout(function() {
+				$timeout(function() {
 		        	scope.spawnParticles();
 		        }, spawnRate);
 			} else {
-				setTimeout(function() {
+				$timeout(function() {
 		        	scope.spawnParticles();
 		        }, spawnRate);
 			}
@@ -583,11 +583,11 @@ var simulation = function($http, defaultsService) {
 					}
 				}
 
-				setTimeout(function() {
+				$timeout(function() {
 		        	cullParticles();
 		        }, recheckTime);
 			} else {
-				setTimeout(function() {
+				$timeout(function() {
 		        	cullParticles();
 		        }, recheckTime);
 			}

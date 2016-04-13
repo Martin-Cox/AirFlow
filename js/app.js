@@ -26,7 +26,7 @@ var app = angular.module("AirFlowApp", []);
 
 app.controller('ComponentController', ['$scope', ComponentController]);
 app.controller('EnvironmentController', ['$scope', EnvironmentController]);
-app.controller('MainController', ['$scope', MainController]);
+app.controller('MainController', ['$scope', '$timeout', MainController]);
 app.controller('ProjectDetailsController', ['$scope', ProjectDetailsController]);
 app.controller('ResultsController', ['$scope', ResultsController]);
 app.controller('HelpBoxController', ['$scope', HelpBoxController]);
@@ -39,4 +39,4 @@ app.directive('projectDetails', [projectDetails]);
 app.directive('resultsPanel', [resultsPanel]);
 app.directive('helpBox', [helpBox]);
 app.service('defaultsService', ['$http', defaultsService]);
-app.directive('simulation', ['$http', 'defaultsService', simulation]);
+app.directive('simulation', ['$http', 'defaultsService', '$timeout', simulation]);
