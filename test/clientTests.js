@@ -316,17 +316,18 @@ beforeEach(module('AirFlowApp'));
 		beforeEach(inject(function($controller, $rootScope){
 			scope = $rootScope.$new();
 			MainController = $controller('MainController', {$scope: scope});
-			scope.ajaxComplete = true;
-			scope.defaultProjectDetails = projectDefault;
-			scope.defaultCase = caseDefault;
-			scope.fanColors = fansDefault.colors;
-			scope.defaultFans = fansDefault;
-			scope.defaultNewFanAOE = fansDefault.fanOne.fanAOEObject;
-			scope.defaultNewFan = newFanDefault;
-			scope.statsAnalysis = stats;
-			scope.$digest();
 		}));
 		describe('newProject() should reset values', function() {
+			beforeEach(inject(function(){
+				scope.defaultProjectDetails = projectDefault;
+				scope.defaultCase = caseDefault;
+				scope.fanColors = fansDefault.colors;
+				scope.defaultFans = fansDefault;
+				scope.defaultNewFanAOE = fansDefault.fanOne.fanAOEObject;
+				scope.defaultNewFan = newFanDefault;
+				scope.statsAnalysis = stats;
+				scope.$digest();
+			}));
 			it('projectDetails should be default values', function() {
 
 				//Stub out any method calls, we don't care about them in the context of this test
@@ -367,6 +368,26 @@ beforeEach(module('AirFlowApp'));
 				expect(scope.dragFan).to.be.null;
 				expect(scope.editFan).to.be.null;
 			});
+		});
+		describe('drawCharts() should draw charts', function() {
+			beforeEach(inject(function(){
+				scope.charts.drewCharts = false;
+			}));
+			it('drewCharts should be true', inject(function($timeout) {
+
+				//Stub out any method calls, we don't care about them in the context of this test
+				scope.drawParticleSuccessRatioChart = sinon.stub();
+				scope.drawFanRatioChart = sinon.stub();
+				scope.drawCharts();
+
+				//Flush timouts for code beign tested
+				$timeout.flush();
+
+				//Verify there are no pending timouts
+				$timeout.verifyNoPendingTasks();
+
+				expect(scope.charts.drewCharts).to.be.true;
+			}));
 		});
 	});
 });
