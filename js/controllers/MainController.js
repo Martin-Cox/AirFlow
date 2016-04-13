@@ -37,8 +37,6 @@ var MainController = function($scope, $http) {
 
     $scope.displayingPopup = false;
 
-    $scope.unitTestValue = 554;
-
     /*Hides the splash screen on user click if AJAX calls have completed*/
     $scope.hideSplash = function() {
         if ($scope.ajaxComplete === true) {
