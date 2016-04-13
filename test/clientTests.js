@@ -380,7 +380,7 @@ beforeEach(module('AirFlowApp'));
 				scope.drawFanRatioChart = sinon.stub();
 				scope.drawCharts();
 
-				//Flush timouts for code beign tested
+				//Flush timouts for code being tested
 				$timeout.flush();
 
 				//Verify there are no pending timouts
