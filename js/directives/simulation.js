@@ -51,6 +51,7 @@ var simulation = function($http, defaultsService) {
 							statsAnalysisPromise.then(function(result) {
 								scope.statsAnalysis = result;
 								//Need to change this value after all AJAX calls have completed to notify controller that loading has completed
+								document.getElementById("loadingSplashLoadingText").innerHTML = "Click anywhere to begin";
 								scope.ajaxComplete = true;
 							});
 						});

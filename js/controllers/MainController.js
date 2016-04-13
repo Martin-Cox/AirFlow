@@ -37,9 +37,7 @@ var MainController = function($scope, $http) {
 
     $scope.displayingPopup = false;
 
-	angular.element(document).ready(function() {
-        document.getElementById("loadingSplashLoadingText").innerHTML = "Click anywhere to begin";
-    });
+    $scope.unitTestValue = 554;
 
     /*Hides the splash screen on user click if AJAX calls have completed*/
     $scope.hideSplash = function() {
