@@ -10,7 +10,7 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['browserify', 'mocha', 'chai'],
+    frameworks: ['browserify', 'mocha', 'chai', 'sinon'],
 
 
     // list of files / patterns to load in the browser
@@ -18,12 +18,13 @@ module.exports = function(config) {
       'node_modules/angular/angular.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'js/build.js',
-      //{pattern: 'js/directives/*.html', included: true},
+      {pattern: 'js/directives/*.html', included: true},
       //{pattern: 'js/external/*.js', included: true},
       //{pattern: 'json/*', included: true},
       //{pattern: 'images/*', included: true},
-      //{pattern: 'css/*', included: true},
-      //'index.html',
+      {pattern: 'css/*', included: true},
+      'index.html',
+      'js/directives/*.html',
       {pattern: 'test/clientTests.js', included: true}
     ],
 
@@ -37,7 +38,9 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/tests.js': [ 'browserify' ]
+      'test/tests.js': [ 'browserify' ],
+      'index.html': ['ng-html2js'],
+      'js/directives/*.html': ['ng-html2js']
     },
 
 
