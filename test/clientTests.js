@@ -115,7 +115,7 @@ beforeEach(module('AirFlowApp'));
 		});
 	});
 	describe('Main Controller', function() {
-		var scope, MainController;
+		var scope, MainController, http;
 
 		var projectDefault = 
 			{
@@ -312,10 +312,100 @@ beforeEach(module('AirFlowApp'));
 			  }
 			}
 
+			var sampleProject = 
+				{
+					"projectDetails": {
+						"projectName": "Test Project",
+						"author": "Joe Bloggs",
+						"version": 2,
+						"dateCreated": "29/03/2016",
+						"dateModified": "29/03/2016"
+					},
+					"stats": {
+						"particleRatio": 100,
+						"numFans": 2,
+						"numIntakeFans": 1,
+						"numExhaustFans": 1,
+						"particleSuccessPercentage": "40.00%",
+						"particleFailurePercentage": "20.00%",
+						"particleLivePercentage": "40.00%",
+						"particleSuccessRatioVal": "Nearly all particles are successful",
+						"particleSuccessRatioMod": 3,
+						"spawnedParticles": 50,
+						"activeParticles": 20,
+						"culledParticles": 10,
+						"removedParticles": 20
+					},
+					"fans": {
+						"0": {
+							"properties": {
+								"mode": "intake",
+								"size": 120,
+								"maxRPM": 1800,
+								"percentageRPM": 80,
+								"position": 0,
+								"dateCreated": "29/03/2016",
+								"dateModified": "29/03/2016",
+								"isValidPos": true,
+								"forceVector": {
+									"x": 0,
+									"y": 0,
+									"z": 62400
+								}
+							},
+							"dimensions": {
+								"width": 120,
+								"height": 120,
+								"depth": 40
+							},
+							"x": 0,
+							"y": 100,
+							"z": -248
+						},
+						"1": {
+							"properties": {
+								"mode": "exhaust",
+								"size": 120,
+								"maxRPM": 1000,
+								"percentageRPM": 100,
+								"position": 1,
+								"dateCreated": "29/03/2016",
+								"dateModified": "29/03/2016",
+								"isValidPos": true,
+								"forceVector": {
+									"x": 0,
+									"y": 0,
+									"z": 70000
+								}
+							},
+							"dimensions": {
+								"width": 120,
+								"height": 120,
+								"depth": 40
+							},
+							"x": 0,
+							"y": 420,
+							"z": 248
+						}
+					}
+				}
+
 		beforeEach(module('js/directives/simulation.html'));
-		beforeEach(inject(function($controller, $rootScope){
+		beforeEach(inject(function($controller, $rootScope, $compile, $httpBackend){
+			http = $httpBackend;
+
+			http.whenGET("/json/defaultCase.json").respond({
+				data: {
+					prop: "val",
+				}
+		    });
+
 			scope = $rootScope.$new();
 			MainController = $controller('MainController', {$scope: scope});
+			var element = '<simulation></simulation>';
+	        element = $compile(element)(scope);
+	        scope.$digest();
+	        scope.getDefaults = sinon.stub();
 		}));
 		describe('newProject() should reset values', function() {
 			beforeEach(inject(function(){
@@ -327,27 +417,19 @@ beforeEach(module('AirFlowApp'));
 				scope.defaultNewFan = newFanDefault;
 				scope.statsAnalysis = stats;
 				scope.$digest();
-			}));
-			it('projectDetails should be default values', function() {
 
 				//Stub out any method calls, we don't care about them in the context of this test
 				scope.emptyScene = sinon.stub();
 				scope.init = sinon.stub();
 				scope.animate = sinon.stub();
 				scope.newProject();
-
+			}));
+			it('projectDetails should be default values', function() {
 				expect(scope.projectDetails.projectName).to.equal(projectDefault.projectName);
 			 	expect(scope.projectDetails.author).to.equal(projectDefault.author);
 			 	expect(scope.projectDetails.version).to.equal(projectDefault.version);
 			});
 			it('projectDetails date fields should be todays date', function() {
-
-				//Stub out any method calls, we don't care about them in the context of this test
-				scope.emptyScene = sinon.stub();
-				scope.init = sinon.stub();
-				scope.animate = sinon.stub();
-				scope.newProject();
-
 				var currentFormattedDate = scope.getCurrentDate();
 
 				expect(scope.projectDetails.dateCreated).to.equal(currentFormattedDate);
@@ -355,13 +437,6 @@ beforeEach(module('AirFlowApp'));
 
 			});
 			it('scope fan variables should be empty', function() {
-
-				//Stub out any method calls, we don't care about them in the context of this test
-				scope.emptyScene = sinon.stub();
-				scope.init = sinon.stub();
-				scope.animate = sinon.stub();
-				scope.newProject();
-
 				expect(scope.fans).to.be.empty;
 				expect(scope.exhaustFans).to.be.empty;
 				expect(scope.intakeFans).to.be.empty;
@@ -388,6 +463,66 @@ beforeEach(module('AirFlowApp'));
 
 				expect(scope.charts.drewCharts).to.be.true;
 			}));
+		});
+		describe('loadProject should load a project file', function() {
+			beforeEach(inject(function(){				
+
+				//Stub out any method calls, we don't care about them in the context of this test			
+				loadFanStub = sinon.stub(scope, 'loadFan', function loadFanCustom(fan) {
+					//Simple stub for load fan
+				    scope.fans.push(fan);
+				    if (fan.properties.mode === "intake") {
+				    	scope.intakeFans.push(fan);
+				    } else if (fan.properties.mode === "exhaust") {
+				    	scope.exhaustFans.push(fan);
+				    }
+				});
+
+				scope.removeFansAndParticles = sinon.stub();
+
+				scope.loadProject(sampleProject);
+
+			}));
+			it('project details should load', function() {
+				expect(scope.projectDetails.projectName).to.equal(sampleProject.projectDetails.projectName);
+				expect(scope.projectDetails.author).to.equal(sampleProject.projectDetails.author);
+				expect(scope.projectDetails.version).to.equal(sampleProject.projectDetails.version);
+				expect(scope.projectDetails.dateCreated).to.equal(sampleProject.projectDetails.dateCreated);
+				expect(scope.projectDetails.dateModified).to.equal(sampleProject.projectDetails.dateModified);
+			});
+			it('stats should load', function() {
+				expect(scope.stats.spawnedParticles).to.equal(sampleProject.stats.spawnedParticles);
+				expect(scope.stats.activeParticles).to.equal(sampleProject.stats.activeParticles);
+				expect(scope.stats.culledParticles).to.equal(sampleProject.stats.culledParticles);
+				expect(scope.stats.removedParticles).to.equal(sampleProject.stats.removedParticles);
+				expect(scope.stats.particleSuccessPercentage).to.equal(sampleProject.stats.particleSuccessPercentage);
+				expect(scope.stats.particleFailurePercentage).to.equal(sampleProject.stats.particleFailurePercentage);
+				expect(scope.stats.particleLivePercentage).to.equal(sampleProject.stats.particleLivePercentage);
+				expect(scope.stats.particleSuccessRatioVal).to.equal(sampleProject.stats.particleSuccessRatioVal);
+				expect(scope.stats.particleSuccessRatioMod).to.equal(sampleProject.stats.particleSuccessRatioMod);
+				expect(scope.stats.numFans).to.equal(sampleProject.stats.numFans);
+				expect(scope.stats.numExhaustFans).to.equal(sampleProject.stats.numExhaustFans);
+				expect(scope.stats.numIntakeFans).to.equal(sampleProject.stats.numIntakeFans);
+			});
+			it('stats should load', function() {
+				expect(scope.stats.spawnedParticles).to.equal(sampleProject.stats.spawnedParticles);
+				expect(scope.stats.activeParticles).to.equal(sampleProject.stats.activeParticles);
+				expect(scope.stats.culledParticles).to.equal(sampleProject.stats.culledParticles);
+				expect(scope.stats.removedParticles).to.equal(sampleProject.stats.removedParticles);
+				expect(scope.stats.particleSuccessPercentage).to.equal(sampleProject.stats.particleSuccessPercentage);
+				expect(scope.stats.particleFailurePercentage).to.equal(sampleProject.stats.particleFailurePercentage);
+				expect(scope.stats.particleLivePercentage).to.equal(sampleProject.stats.particleLivePercentage);
+				expect(scope.stats.particleSuccessRatioVal).to.equal(sampleProject.stats.particleSuccessRatioVal);
+				expect(scope.stats.particleSuccessRatioMod).to.equal(sampleProject.stats.particleSuccessRatioMod);
+				expect(scope.stats.numFans).to.equal(sampleProject.stats.numFans);
+				expect(scope.stats.numExhaustFans).to.equal(sampleProject.stats.numExhaustFans);
+				expect(scope.stats.numIntakeFans).to.equal(sampleProject.stats.numIntakeFans);
+			});
+			it('fans should load', function() {
+				expect(scope.fans.length).to.equal(2);
+				expect(scope.exhaustFans.length).to.equal(1);
+				expect(scope.intakeFans.length).to.equal(1);
+			});
 		});
 	});
 });
