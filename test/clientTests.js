@@ -390,6 +390,33 @@ beforeEach(module('AirFlowApp'));
 					}
 				}
 
+				var testFan = 
+					{
+						"properties": {
+							"mode": "intake",
+							"size": 120,
+							"maxRPM": 1800,
+							"percentageRPM": 80,
+							"position": 0,
+							"dateCreated": "29/03/2016",
+							"dateModified": "29/03/2016",
+							"isValidPos": true,
+							"forceVector": {
+								"x": 0,
+								"y": 0,
+								"z": 62400
+							}
+						},
+						"dimensions": {
+							"width": 120,
+							"height": 120,
+							"depth": 40
+						},
+						"x": 0,
+						"y": 100,
+						"z": -248
+					}
+
 		beforeEach(module('js/directives/simulation.html'));
 		beforeEach(inject(function($controller, $rootScope, $compile, $httpBackend){
 			http = $httpBackend;
@@ -402,8 +429,9 @@ beforeEach(module('AirFlowApp'));
 
 			scope = $rootScope.$new();
 			MainController = $controller('MainController', {$scope: scope});
-			var element = '<simulation></simulation>';
-	        element = $compile(element)(scope);
+			var sim = '<simulation></simulation>';
+	        sim = $compile(sim)(scope);
+
 	        scope.$digest();
 	        scope.getDefaults = sinon.stub();
 		}));
@@ -524,5 +552,82 @@ beforeEach(module('AirFlowApp'));
 				expect(scope.intakeFans.length).to.equal(1);
 			});
 		});
+		describe('getCurrentDate should return a nicely formatted date', function() {
+			it.skip('should return a correct date when day and month are 2 digits long', function() {
+
+			});
+			it.skip('should return a correct date when day and month are 1 digit long', function() {
+				
+			});
+			it.skip('should return a date 20 years from now', function() {
+				
+			});
+			it.skip('should work on a leap year', function() {
+				
+			});
+		});
+		describe('showing/closing of help box', function() {
+			it('should show the help box', function() {
+				var stubElement = document.createElement('div');
+				sinon.stub(document, 'getElementById').returns(stubElement);
+
+				scope.displayingPopup = false;
+				scope.showHelpBox();
+				expect(scope.displayingPopup).to.equal(true);
+			});
+			it('should close the help box', function() {
+				scope.displayingPopup = true;
+				scope.closeHelpBox();
+				expect(scope.displayingPopup).to.equal(false);
+			});
+		});
+		describe('project details change watcher', function() {
+
+			var testDate = "01/01/2016";
+
+			beforeEach(inject(function(){				
+				//Stub out any method calls, we don't care about them in the context of this test			
+				getDateStub = sinon.stub(scope, 'getCurrentDate', function getCurrentDateCustom() {
+					return testDate;
+				});
+			}));
+			it('should update project modified date', function() {
+				scope.projectDetailsChange();
+				expect(scope.projectDetails.dateModified).to.equal(testDate);
+			});
+		});
+		describe('fan details change watcher', function() {
+
+			var testDate = "01/01/2016";
+			var testVector = (0, 0, 50000);
+
+			beforeEach(inject(function(){				
+				//Stub out any method calls, we don't care about them in the context of this test			
+				getDateStub = sinon.stub(scope, 'getCurrentDate', function getCurrentDateCustom() {
+					return testDate;
+				});
+				calcForceStub = sinon.stub(scope, 'calculateForceVector', function calculateForceVectorCustom() {
+					return testVector;
+				});
+				scope.resizeFan = sinon.stub();
+
+				scope.editFan = testFan;
+				scope.fans.push(testFan);
+			}));
+			it('should update project modified date', function() {
+				scope.fanPropertiesChange();
+				expect(scope.projectDetails.dateModified).to.equal(testDate);
+			});
+			it('should update fan details', function() {
+				scope.fanPropertiesChange();
+				expect(scope.editFan.properties.dateModified).to.equal(testDate);
+				expect(scope.editFan.properties.forceVector).to.equal(testVector);
+			});
+			it('should update fan lists', function() {
+				scope.fanPropertiesChange();
+				expect(scope.intakeFans.length).to.equal(1);
+			});
+		});
 	});
 });
+
