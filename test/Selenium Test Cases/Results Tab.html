@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:4000/" />
+<title>Results Tab</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Results Tab</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=loadingSplash</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Results</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=overallRatingTitle</td>
+	<td>Good setup 5/5</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='resultsPanel']/form/div[2]/p</td>
+	<td>Total Spawned Particles:</td>
+</tr>
+<tr>
+	<td>assertNotEditable</td>
+	<td>xpath=(//input[@type='text'])[7]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='resultsPanel']/form/div[3]/p</td>
+	<td>Total Fans:</td>
+</tr>
+<tr>
+	<td>assertNotEditable</td>
+	<td>xpath=(//input[@type='text'])[8]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>xpath=(//input[@type='text'])[8]</td>
+	<td>6</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=p.chartHeader</td>
+	<td>Particle Success Ratio</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='resultsPanel']/form/div[5]/p</td>
+	<td>Successful Particles:</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='resultsPanel']/form/div[6]/p</td>
+	<td>Culled Particles:</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>xpath=(//input[@type='text'])[9]</td>
+	<td>100.00%</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>xpath=(//input[@type='text'])[10]</td>
+	<td>0.00%</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='resultsPanel']/form/div[8]/p</td>
+	<td>Fan Ratio</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='resultsPanel']/form/div[9]/p</td>
+	<td>Total Fans:</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='resultsPanel']/form/div[10]/p</td>
+	<td>Intake Fans:</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='resultsPanel']/form/div[11]/p</td>
+	<td>Exhaust Fans:</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>xpath=(//input[@type='text'])[11]</td>
+	<td>6</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>xpath=(//input[@type='text'])[12]</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>xpath=(//input[@type='text'])[13]</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>assertNotEditable</td>
+	<td>xpath=(//input[@type='text'])[11]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertNotEditable</td>
+	<td>xpath=(//input[@type='text'])[12]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertNotEditable</td>
+	<td>xpath=(//input[@type='text'])[13]</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
