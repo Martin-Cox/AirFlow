@@ -175,13 +175,13 @@ var simulation = function($http, defaultsService, $timeout) {
 				orbitControl.constraint.maxDistance = 2200;
 				clock = new THREE.Clock();
 				scope.spawnParticles();
-				cullParticles();
+				scope.cullParticles();
 				scope.updateStats();
 			}
 
-			createParticles(100);
+			scope.createParticles(100);
 
-			createDefaultCase(scope.defaultCase);
+			scope.createDefaultCase(scope.defaultCase);
 
 			//Clone the default fans, otherwise the default fan properties will get overriden if we attempt to modify them
 			var defaultFansCopy = (JSON.parse(JSON.stringify(scope.defaultFans)));
@@ -235,11 +235,11 @@ var simulation = function($http, defaultsService, $timeout) {
 			renderer.domElement.addEventListener('mousedown', handleMouseClick, false);
 			renderer.domElement.addEventListener('mouseup', handleMouseRelease, false);
 
-			document.addEventListener("visibilitychange", handleVisibilityChange, false);
+			document.addEventListener("visibilitychange", scope.handleVisibilityChange, false);
 		}
 
 		/*Pauses the simulation when the browser tab focus is lost (e.g. user clicks on a different browser tab)*/
-		function handleVisibilityChange() {
+		scope.handleVisibilityChange = function() {
 			if (document.hidden) {
 				simPaused = true;				
 			} else  {
@@ -313,9 +313,9 @@ var simulation = function($http, defaultsService, $timeout) {
 			scope.stats.particleLivePercentage = liveRatio + "%";
 
 			//Update explanations
-			updateFanRatioExplanation();
-			updateParticleSuccessRatioExplanation();
-			updateOverallRating();
+			scope.updateFanRatioExplanation();
+			scope.updateParticleSuccessRatioExplanation();
+			scope.updateOverallRating();
 
 			if (scope.charts.particleSuccessRatioChart != null || scope.charts.particleSuccessRatioChart != undefined) {
 				scope.charts.particleSuccessRatioChart.segments[0].value = ratioSegSuccess;
@@ -337,7 +337,7 @@ var simulation = function($http, defaultsService, $timeout) {
 		/*Determines the final rating given to a project. Factors that affect the final rating include:
 		  The Number of fans (too few, good amount, too many)
 		  The ratio of successful particles to culled particles (too many culled particles etc.)*/
-		function updateOverallRating() {
+		scope.updateOverallRating = function() {
 				//Update final rating
 
 				var breakdownTitle = document.getElementById("overallRatingTitle");
@@ -389,7 +389,7 @@ var simulation = function($http, defaultsService, $timeout) {
 		}
 
 		/*Updates textual explanations for the fan ratio chart*/
-		function updateFanRatioExplanation() {
+		scope.updateFanRatioExplanation = function() {
 				//Update explanations
 
 				var explanationTitle = document.getElementById("fanRatioExplanationTitle");
@@ -408,7 +408,7 @@ var simulation = function($http, defaultsService, $timeout) {
 		}
 
 		/*Updates textual explanations for the particle success ratio chart*/
-		function updateParticleSuccessRatioExplanation() {
+		scope.updateParticleSuccessRatioExplanation = function() {
 				var explanationTitle = document.getElementById("particleSuccessRatioExplanationTitle");
 				var explanationDesc = document.getElementById("particleSuccessRatioExplanationDesc");
 
@@ -437,7 +437,7 @@ var simulation = function($http, defaultsService, $timeout) {
 
 		/*Creates the pool of particles that will be added to the scene
 		  numToCreate = The size of the pool of particles*/
-		function createParticles(numToCreate) { 
+		scope.createParticles = function(numToCreate) { 
 			particles = [];
 			availableParticles = [];
 
@@ -481,7 +481,7 @@ var simulation = function($http, defaultsService, $timeout) {
 
 				if (activeIntakeFans.length > 0) {
 					//Set spawn position as the particle is created
-					setParticleStartingPosition(availableParticles[0], activeIntakeFans);
+					scope.setParticleStartingPosition(availableParticles[0], activeIntakeFans);
 
 					//Record the unix time ms that the particle spawned
 					availableParticles[0].spawnTime = (new Date).getTime();
@@ -513,7 +513,7 @@ var simulation = function($http, defaultsService, $timeout) {
 
 		/*Chooses a random intake fan to act as a spawning point, then chooses a random 3D coordinate inside the fanAOEObject for that intake fan
 		  particle = The particle to spawn*/
-		function setParticleStartingPosition(particle, activeIntakeFans) {
+		scope.setParticleStartingPosition = function(particle, activeIntakeFans) {
 			//Randomly select one of the intake fans to act as a spawn point for this particle
 			var fanObject = activeIntakeFans[Math.floor(Math.random()*activeIntakeFans.length)];
 
@@ -544,7 +544,7 @@ var simulation = function($http, defaultsService, $timeout) {
 		}
 
 		/*Removes a particle from the scene and adds it back to the pool of available particles*/
-		function recycleParticle(particle) {
+		scope.recycleParticle = function(particle) {
 			scene.remove(particle);
 
 			particle.spawnTime = null;
@@ -553,7 +553,7 @@ var simulation = function($http, defaultsService, $timeout) {
 		}
 
 		/*Removes and recycles a particle from the 3D scene if it has existed for too long*/
-		function cullParticles() {	
+		scope.cullParticles = function() {	
 			var recheckTime = 500; //0.5 second, debug value
 
 			if (particles.length > 0) {
@@ -568,7 +568,7 @@ var simulation = function($http, defaultsService, $timeout) {
 
 				for (var i = 0; i < particles.length; i++) {
 					if (particles[i].spawnTime != null && unixTime - particles[i].spawnTime >= cullTime) {
-						recycleParticle(particles[i]);
+						scope.recycleParticle(particles[i]);
 						scope.stats.culledParticles += 1;
 						scope.stats.activeParticles -= 1;
 						scope.$digest();
@@ -584,11 +584,11 @@ var simulation = function($http, defaultsService, $timeout) {
 				}
 
 				$timeout(function() {
-		        	cullParticles();
+		        	scope.cullParticles();
 		        }, recheckTime);
 			} else {
 				$timeout(function() {
-		        	cullParticles();
+		        	scope.cullParticles();
 		        }, recheckTime);
 			}
 		}
@@ -596,7 +596,7 @@ var simulation = function($http, defaultsService, $timeout) {
 		/*Creates a 3D model of a computer case using Box meshes. This function should only be used to create a case
 		  by using the default case values
 		  caseDefaults = The object containing the default case values (size, material colour etc.)*/
-		function createDefaultCase(caseDefaults) {
+		scope.createDefaultCase = function(caseDefaults) {
 			//Creates a 3D model of a computer case
 
 			var caseMaterial = Physijs.createMaterial(
@@ -711,7 +711,7 @@ var simulation = function($http, defaultsService, $timeout) {
 			/*A fan is made up a of a fanObject with two sub-objects, a fanAOEObject representing the area of effect for a fan
 			and the fanPhysicalObject, which is the physical fan the user sees*/
 
- 			var fanAOEObject = createFanAOEObject(fan, true);
+ 			var fanAOEObject = scope.createFanAOEObject(fan, true);
 
 			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
 
@@ -788,7 +788,7 @@ var simulation = function($http, defaultsService, $timeout) {
 			fanObject.properties.active = fan.properties.active;
 			fanObject.properties.isValidPos = true;
 
-			determineFanAOEPosition(fanObject);
+			scope.determineFanAOEPosition(fanObject);
 
 			scene.add(fanPhysicalObject);
 
@@ -818,7 +818,7 @@ var simulation = function($http, defaultsService, $timeout) {
 
 			fan.fanAOEObject = scope.defaultNewFanAOE;
 
- 			var fanAOEObject = createFanAOEObject(fan, false);
+ 			var fanAOEObject = scope.createFanAOEObject(fan, false);
 
 			//------------------------CREATE FAN PHYSICAL OBJECT-----------------------//
 			var fColor;
@@ -894,7 +894,7 @@ var simulation = function($http, defaultsService, $timeout) {
 			fanObject.properties.active = fan.properties.active;
 			fanObject.properties.isValidPos = true;
 
-			determineFanAOEPosition(fanObject);
+			scope.determineFanAOEPosition(fanObject);
 
 			scene.add(fanPhysicalObject);
 
@@ -916,7 +916,7 @@ var simulation = function($http, defaultsService, $timeout) {
 		}
 
 		/*Creates a new composite fan object consisting of a fanPhysicalObject, a fanAOEObject, and properties*/
-		function createNewFan() {
+		scope.createNewFan = function() {
 			//Create a new fan using default properties from newFanDefaults.json
 			//Much the same as scope.createFan
 
@@ -932,7 +932,7 @@ var simulation = function($http, defaultsService, $timeout) {
 
 			var fanPhysicalObject = new Physijs.BoxMesh(new THREE.CubeGeometry(scope.defaultNewFan.fanObject.dimensions.width, scope.defaultNewFan.fanObject.dimensions.height, scope.defaultNewFan.fanObject.dimensions.depth), fanPhysicalMaterial, 0); //Gravity, 0 = weightless
 
-			var fanAOEObject = createFanAOEObject(scope.defaultNewFan, true);
+			var fanAOEObject = scope.createFanAOEObject(scope.defaultNewFan, true);
 
 			//We need to rotate the fanAOEObject (and possibly fanPhysicalObject) in order for them to "point" inside the case
 			switch(scope.newFanPlaceholderObjectPosition) {
@@ -986,7 +986,7 @@ var simulation = function($http, defaultsService, $timeout) {
 			fanObject.properties.active = true;
 			fanObject.properties.dateModified = scope.getCurrentDate();
 
-			determineFanAOEPosition(fanObject);
+			scope.determineFanAOEPosition(fanObject);
 
 			scene.add(fanPhysicalObject);
 
@@ -1011,7 +1011,7 @@ var simulation = function($http, defaultsService, $timeout) {
 		/*Creates a new fanAOEObject for a given fan
 		  fan = The fan composite object which the fanAOEObject will be a part of
 		  defaultCreation = If the fan we are creating a fanAOEObject for uses default fan property values, set this to true to create a fanAOEObject using default values*/
-		function createFanAOEObject(fan, defaultCreation) { 
+		scope.createFanAOEObject = function(fan, defaultCreation) {
 			var fanAOEMaterial = Physijs.createMaterial(
 				new THREE.MeshLambertMaterial({
 					opacity: fan.fanAOEObject.material.opacity,
@@ -1162,7 +1162,7 @@ var simulation = function($http, defaultsService, $timeout) {
 					//Collided with active exhuast fanPhysicalObject, delete the particle
 					for (var j = 0; j < particles.length; j++) {
 						if (particles[j].id === this.id) {
-							recycleParticle(particles[j]);
+							scope.recycleParticle(particles[j]);
 							scope.stats.removedParticles += 1;
 							scope.stats.activeParticles -= 1;
 							scope.$digest();
@@ -1266,12 +1266,12 @@ var simulation = function($http, defaultsService, $timeout) {
 					}
 
 					if (scope.dragFan.properties.position != null) {
-						var dragSide = chooseSide(event, scope.dragFan.properties.position);
+						var dragSide = scope.chooseSide(event, scope.dragFan.properties.position);
 
 						if (dragSide.intersects.length > 0) {
 							scope.dragFan.fanPhysicalObject.position.copy(dragSide.intersects[0].point);							
 							scope.isValidFanPosition(scope.dragFan, position);							
-							determineFanAOEPosition(scope.dragFan);
+							scope.determineFanAOEPosition(scope.dragFan);
 							scope.dragFan.fanAOEObject.__dirtyPosition = true;
 							scope.dragFan.fanPhysicalObject.__dirtyPosition = true;
 							scope.dragFan.properties.forceVector = scope.calculateForceVector(scope.dragFan);
@@ -1337,7 +1337,7 @@ var simulation = function($http, defaultsService, $timeout) {
 				}
 
 				if (scope.newFanPlaceholderObjectPosition != null) {
-					var dragSide = chooseSide(event, scope.newFanPlaceholderObjectPosition);
+					var dragSide = scope.chooseSide(event, scope.newFanPlaceholderObjectPosition);
 
 					if (dragSide.intersects != undefined) {
 							if (dragSide.intersects.length > 0) {
@@ -1385,7 +1385,7 @@ var simulation = function($http, defaultsService, $timeout) {
 			if (scope.addingFan === true) {
 				orbitControl.enableRotate = false;
 				if (scope.addingFanValidPos === true) {
-					createNewFan();
+					scope.createNewFan();
 					scene.remove(scope.newFanPlaceholderObject);
 					scene.remove(scope.newFanPlaceholderWireframe);
 					scope.addingFan = false;
@@ -1435,7 +1435,7 @@ var simulation = function($http, defaultsService, $timeout) {
 
 			//If we are dragging a fan, do stuff here
 			if (scope.dragFan != null && scope.addingFan != true) {				
-				var dragSide = chooseSide(event, scope.dragFan.properties.position);
+				var dragSide = scope.chooseSide(event, scope.dragFan.properties.position);
 
 				if (dragSide.intersects.length > 0) {
 					offset.copy(dragSide.intersects[0].point).sub(dragSide.tempPlane.position);
@@ -1521,7 +1521,7 @@ var simulation = function($http, defaultsService, $timeout) {
 						}
 						scene.remove(scope.fans[i].AOEWireframe); 
 					}
-					determineFanAOEPosition();
+					scope.determineFanAOEPosition();
 					scope.dragFan.fanAOEObject.__dirtyPosition = true;
 					scope.dragFan.properties.isValidPos = true;
 					scope.dragFan.properties.forceVector = scope.calculateForceVector(scope.dragFan);
@@ -1612,7 +1612,7 @@ var simulation = function($http, defaultsService, $timeout) {
 		}
 
 		/**Determines what side of the case a fan is being dragged on*/
-		function chooseSide(event, position) {			
+		scope.chooseSide = function(event, position) {			
 
 			//Have to normalise these coords so that they are between -1 and 1
 			var mouseX = (((event.clientX - document.getElementById('tabbedPaneContainer').offsetWidth) / width) * 2 - 1); //Have to minus the tabbedPaneContainer width because otherwise it would be included in the normalising to get X in terms of the canvas
@@ -1661,7 +1661,7 @@ var simulation = function($http, defaultsService, $timeout) {
 
 		/*Updates the position of the fanAOEObject for a given fan, used when moving a fan
 		  fan = The fan being moved*/
-		function determineFanAOEPosition(fan) {
+		scope.determineFanAOEPosition = function(fan) {
 			if (fan == null) {
 				var fan = scope.dragFan;
 			}		
@@ -1972,13 +1972,10 @@ var simulation = function($http, defaultsService, $timeout) {
 		}
 
 		//TODO (IN ORDER):
-		// - Active checkbox in component settings to disable a fan without havng to remove it
 		// - Input validation on ALL user enterable data (using Angular) 							- AND UNIT TESTS
-		// - Add components to defaultCase.json e.g. GPU, Hard drives, CPU etc.
 		// - User configurable project settings 													- AND UNIT TESTS
 		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS		
 		// - Recheck WEB-ARIA roles and properties
-		// - Change rate of spawning in particles dependant on the number of intake fans
 		// - Reqrite how to use/about popup
 		// - Standardised error messages
 		// - Clean up code, optimisation, proper documentation etc. SEE quality standards in interim report
