@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:4000/" />
+<title>Delete Intake Fan</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Delete Intake Fan</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=loadingSplash</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDownAt</td>
+	<td>css=#simulationContainer &gt; canvas</td>
+	<td>750, 500</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=deleteFanBtn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Results</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>xpath=(//input[@type='text'])[11]</td>
+	<td>5</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>xpath=(//input[@type='text'])[12]</td>
+	<td>2</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>xpath=(//input[@type='text'])[13]</td>
+	<td>3</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
