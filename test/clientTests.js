@@ -811,5 +811,51 @@ beforeEach(module('AirFlowApp'));
 				});
 			});
 		});
+		describe('recycleParticle', function() {			
+			beforeEach(inject(function(){
+				scope.particles = [];
+				scope.availableParticles = [];
+				scope.createParticles(1);
+				scope.availableParticles = [];
+				//scope.recycleParticle(scope.particles[0]);
+			}));
+			it.skip('scope.particles length should be 1', function() {					
+				expect(scope.particles.length).to.equal(1);
+			});
+			it.skip('scope.availableParticles length should be 1', function() {					
+				expect(scope.availableParticles.length).to.equal(1);
+			});
+		});
+		describe('cullParticles', function() {		
+			describe('with 1 particle to be culled and 1 to remain', function() {		
+				beforeEach(inject(function(){
+					scope.particles = [];
+					scope.availableParticles = [];
+					scope.stats = new Object();
+					scope.stats.activeParticles = 2;
+					scope.stats.culledParticles = 0;
+					scope.createParticles(2);
+					scope.particles[0].spawnTime = (new Date).getTime();
+					scope.particles[1].spawnTime = (new Date).getTime() - 500000;
+					scope.availableParticles = [];
+
+					recycleParticleStub = sinon.stub(scope, 'recycleParticle', function recycleParticleCustom() {
+						scope.availableParticles.push('a');
+					});
+
+					scope.cullParticles();
+				}));
+				it('particle stats should update', function() {	
+					expect(scope.stats.activeParticles).to.equal(1);
+					expect(scope.stats.culledParticles).to.equal(1);
+				});
+				it('scope.particles length should be 2', function() {					
+					expect(scope.particles.length).to.equal(2);
+				});
+				it('scope.availableParticles length should be 1', function() {					
+					expect(scope.availableParticles.length).to.equal(1);
+				});
+			});
+		});
 	});
 });
