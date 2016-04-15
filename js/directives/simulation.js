@@ -8,8 +8,6 @@ var simulation = function($http, defaultsService, $timeout) {
     	var camera, scene, width, height, clock, orbitControl, fpsStats, intersectedObject;
     	var simPaused = false;
     	var renderer = null;
-		var particles = [];
-		var availableParticles = [];
 		var THREE = require('three');
 		var OrbitControls = require('three-orbit-controls')(THREE);
 		var Physijs = require('physijs-browserify')(THREE);
@@ -122,8 +120,8 @@ var simulation = function($http, defaultsService, $timeout) {
 						scene.remove(obj);
 	            	}
 	            }
-	            for (var j = 0; j < particles.length; j++) {
-	            	if (obj.id == particles[j].id) {
+	            for (var j = 0; j < scope.particles.length; j++) {
+	            	if (obj.id == scope.particles[j].id) {
 						scene.remove(obj);
 	            	}
 	            }
@@ -438,9 +436,6 @@ var simulation = function($http, defaultsService, $timeout) {
 		/*Creates the pool of particles that will be added to the scene
 		  numToCreate = The size of the pool of particles*/
 		scope.createParticles = function(numToCreate) { 
-			particles = [];
-			availableParticles = [];
-
 			for (var i = 0; i < numToCreate; i++) {
 				var particle;
 
@@ -460,8 +455,8 @@ var simulation = function($http, defaultsService, $timeout) {
 
 				particle.addEventListener('collision', handleParticleToFanCollision);
 
-				particles.push(particle);
-				availableParticles.push(particle);
+				scope.particles.push(particle);
+				scope.availableParticles.push(particle);
 			}
 		}
 
@@ -469,7 +464,7 @@ var simulation = function($http, defaultsService, $timeout) {
 		scope.spawnParticles = function() {
 			var spawnRate = 300;
 
-			if (availableParticles.length > 0 && scope.intakeFans.length > 0) {
+			if (scope.availableParticles.length > 0 && scope.intakeFans.length > 0) {
 
 				var activeIntakeFans = [];
 
@@ -481,20 +476,20 @@ var simulation = function($http, defaultsService, $timeout) {
 
 				if (activeIntakeFans.length > 0) {
 					//Set spawn position as the particle is created
-					scope.setParticleStartingPosition(availableParticles[0], activeIntakeFans);
+					scope.setParticleStartingPosition(scope.availableParticles[0], activeIntakeFans);
 
 					//Record the unix time ms that the particle spawned
-					availableParticles[0].spawnTime = (new Date).getTime();
+					scope.availableParticles[0].spawnTime = (new Date).getTime();
 					
 					//Reset the colour to blue again
-					availableParticles[0].material.color.setHex(0x18ABDB);
+					scope.availableParticles[0].material.color.setHex(0x18ABDB);
 
 
 					//Add first available particle to scene
-					scene.add(availableParticles[0]);
+					scene.add(scope.availableParticles[0]);
 
 					//Remove from pool of available particles
-					availableParticles.splice(0, 1);
+					scope.availableParticles.splice(0, 1);
 
 					//Add to total no. spawned particles
 					scope.stats.spawnedParticles += 1;
@@ -549,14 +544,14 @@ var simulation = function($http, defaultsService, $timeout) {
 
 			particle.spawnTime = null;
 
-			availableParticles.push(particle);
+			scope.availableParticles.push(particle);
 		}
 
 		/*Removes and recycles a particle from the 3D scene if it has existed for too long*/
 		scope.cullParticles = function() {	
 			var recheckTime = 500; //0.5 second, debug value
 
-			if (particles.length > 0) {
+			if (scope.particles.length > 0) {
 
 				var cullTime = 30000; //30 seconds, debug value
 				
@@ -566,20 +561,20 @@ var simulation = function($http, defaultsService, $timeout) {
 
 				var unixTime = (new Date).getTime();
 
-				for (var i = 0; i < particles.length; i++) {
-					if (particles[i].spawnTime != null && unixTime - particles[i].spawnTime >= cullTime) {
-						scope.recycleParticle(particles[i]);
+				for (var i = 0; i < scope.particles.length; i++) {
+					if (scope.particles[i].spawnTime != null && unixTime - scope.particles[i].spawnTime >= cullTime) {
+						scope.recycleParticle(scope.particles[i]);
 						scope.stats.culledParticles += 1;
 						scope.stats.activeParticles -= 1;
 						scope.$digest();
 					}
-					if (particles[i].spawnTime != null && unixTime - particles[i].spawnTime >= medTime) {
+					if (scope.particles[i].spawnTime != null && unixTime - scope.particles[i].spawnTime >= medTime) {
 						//Particle has been around for a medium amount of time, turn orange
-						particles[i].material.color.setHex(0xFDBD5C);
+						scope.particles[i].material.color.setHex(0xFDBD5C);
 					} 
-					if (particles[i].spawnTime != null && unixTime - particles[i].spawnTime >= longTime) {
+					if (scope.particles[i].spawnTime != null && unixTime - scope.particles[i].spawnTime >= longTime) {
 						//Particle has been around for a long amount of time, turn red
-						particles[i].material.color.setHex(0xD9216A);
+						scope.particles[i].material.color.setHex(0xD9216A);
 					}
 				}
 
@@ -1160,9 +1155,9 @@ var simulation = function($http, defaultsService, $timeout) {
 			for (var i = 0; i < scope.fans.length; i++) {
 				if (collided_with.id === scope.fans[i].fanPhysicalObject.id && scope.fans[i].properties.mode === "exhaust" && scope.fans[i].properties.active === true) {
 					//Collided with active exhuast fanPhysicalObject, delete the particle
-					for (var j = 0; j < particles.length; j++) {
-						if (particles[j].id === this.id) {
-							scope.recycleParticle(particles[j]);
+					for (var j = 0; j < scope.particles.length; j++) {
+						if (scope.particles[j].id === this.id) {
+							scope.recycleParticle(scope.particles[j]);
 							scope.stats.removedParticles += 1;
 							scope.stats.activeParticles -= 1;
 							scope.$digest();

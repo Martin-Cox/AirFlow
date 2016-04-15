@@ -13,6 +13,9 @@ var MainController = function($scope, $timeout) {
     $scope.defaultNewFanAOE = null;
     $scope.fanColors = null;
 
+    $scope.particles = [];
+    $scope.availableParticles = [];
+
     $scope.fans = [];
     $scope.exhaustFans = [];
     $scope.intakeFans = [];
