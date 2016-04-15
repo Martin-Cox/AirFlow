@@ -629,5 +629,145 @@ beforeEach(module('AirFlowApp'));
 			});
 		});
 	});
-});
+	describe('Simulation Directive', function() {
+		beforeEach(module('js/directives/simulation.html'));
+		beforeEach(inject(function($rootScope, $compile, $httpBackend){
+			http = $httpBackend;
 
+			http.whenGET("/json/defaultCase.json").respond({
+				data: {
+					prop: "val",
+				}
+		    });
+
+			scope = $rootScope.$new();
+			var sim = '<simulation></simulation>';
+	        sim = $compile(sim)(scope);
+
+	        scope.$digest();
+	        scope.getDefaults = sinon.stub();
+		}));
+		describe('updateStats', function() {		
+			describe('with a positive amount of particles', function() {		
+				beforeEach(inject(function(){
+					//Stub out any method calls, we don't care about them in the context of this test	
+					scope.updateFanRatioExplanation = sinon.stub();
+					scope.updateParticleSuccessRatioExplanation = sinon.stub();
+					scope.updateOverallRating = sinon.stub();
+				
+					scope.stats = new Object();
+					scope.stats.removedParticles = 10;
+					scope.stats.spawnedParticles = 20;
+					scope.stats.activeParticles = 5;
+					scope.stats.culledParticles = 5;
+
+					scope.fans = ['a', 'b', 'c'];
+					scope.intakeFans = ['a', 'b'];
+					scope.exhaustFans = ['c'];
+
+					scope.charts = new Object();
+
+					scope.updateStats();
+
+					//scope.charts.particleSuccessRatioChart.update = sinon.stub();
+					//scope.charts.fanRatioChart.update = sinon.stub();
+
+
+					/*successRatio = ((scope.stats.removedParticles/(scope.stats.spawnedParticles - scope.stats.activeParticles))*100).toFixed(2);
+					failureRatio = ((scope.stats.culledParticles/(scope.stats.spawnedParticles - scope.stats.activeParticles))*100).toFixed(2);
+					liveRatio = ((scope.stats.activeParticles/scope.stats.spawnedParticles)*100).toFixed(2);
+
+					scope.stats.particleSuccessPercentage = successRatio + "%";
+					scope.stats.particleFailurePercentage = failureRatio + "%";
+					scope.stats.particleLivePercentage = liveRatio + "%";*/
+				}));
+				it('number of fans should be correct', function() {					
+					expect(scope.stats.numFans).to.equal(3);
+					expect(scope.stats.numIntakeFans).to.equal(2);
+					expect(scope.stats.numExhaustFans).to.equal(1);
+				});
+				it('particle success % should be 66.67%', function() {					
+					expect(scope.stats.particleSuccessPercentage).to.equal("66.67%");
+				});
+				it('particle failure % should be 33.33%', function() {					
+					expect(scope.stats.particleFailurePercentage).to.equal("33.33%");
+				});
+				it('particle live % should be 25.00%', function() {					
+					expect(scope.stats.particleLivePercentage).to.equal("25.00%");
+				});
+			});
+			describe('with no particles', function() {		
+				beforeEach(inject(function(){
+					//Stub out any method calls, we don't care about them in the context of this test	
+					scope.updateFanRatioExplanation = sinon.stub();
+					scope.updateParticleSuccessRatioExplanation = sinon.stub();
+					scope.updateOverallRating = sinon.stub();
+				
+					scope.stats = new Object();
+					scope.stats.removedParticles = 0;
+					scope.stats.spawnedParticles = 0;
+					scope.stats.activeParticles = 0;
+					scope.stats.culledParticles = 0;
+
+					scope.fans = ['a', 'b', 'c'];
+					scope.intakeFans = ['a', 'b'];
+					scope.exhaustFans = ['c'];
+
+					scope.charts = new Object();
+
+					scope.updateStats();
+				}));
+				it('number of fans should be correct', function() {					
+					expect(scope.stats.numFans).to.equal(3);
+					expect(scope.stats.numIntakeFans).to.equal(2);
+					expect(scope.stats.numExhaustFans).to.equal(1);
+				});
+				it('particle success % should be 0%', function() {					
+					expect(scope.stats.particleSuccessPercentage).to.equal("0%");
+				});
+				it('particle failure % should be 0%', function() {					
+					expect(scope.stats.particleFailurePercentage).to.equal("0%");
+				});
+				it('particle live % should be 0%', function() {					
+					expect(scope.stats.particleLivePercentage).to.equal("0%");
+				});
+			});
+			describe('with non number amount of particles', function() {		
+				beforeEach(inject(function(){
+					//Stub out any method calls, we don't care about them in the context of this test	
+					scope.updateFanRatioExplanation = sinon.stub();
+					scope.updateParticleSuccessRatioExplanation = sinon.stub();
+					scope.updateOverallRating = sinon.stub();
+				
+					scope.stats = new Object();
+					scope.stats.removedParticles = "a";
+					scope.stats.spawnedParticles = "a";
+					scope.stats.activeParticles = "a";
+					scope.stats.culledParticles = "a";
+
+					scope.fans = ['a', 'b', 'c'];
+					scope.intakeFans = ['a', 'b'];
+					scope.exhaustFans = ['c'];
+
+					scope.charts = new Object();
+
+					scope.updateStats();
+				}));
+				it('number of fans should be correct', function() {					
+					expect(scope.stats.numFans).to.equal(3);
+					expect(scope.stats.numIntakeFans).to.equal(2);
+					expect(scope.stats.numExhaustFans).to.equal(1);
+				});
+				it('particle success % should be 0%', function() {					
+					expect(scope.stats.particleSuccessPercentage).to.equal("0%");
+				});
+				it('particle failure % should be 0%', function() {					
+					expect(scope.stats.particleFailurePercentage).to.equal("0%");
+				});
+				it('particle live % should be 0%', function() {					
+					expect(scope.stats.particleLivePercentage).to.equal("0%");
+				});
+			});
+		});
+	});
+});
