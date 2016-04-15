@@ -668,18 +668,6 @@ beforeEach(module('AirFlowApp'));
 					scope.charts = new Object();
 
 					scope.updateStats();
-
-					//scope.charts.particleSuccessRatioChart.update = sinon.stub();
-					//scope.charts.fanRatioChart.update = sinon.stub();
-
-
-					/*successRatio = ((scope.stats.removedParticles/(scope.stats.spawnedParticles - scope.stats.activeParticles))*100).toFixed(2);
-					failureRatio = ((scope.stats.culledParticles/(scope.stats.spawnedParticles - scope.stats.activeParticles))*100).toFixed(2);
-					liveRatio = ((scope.stats.activeParticles/scope.stats.spawnedParticles)*100).toFixed(2);
-
-					scope.stats.particleSuccessPercentage = successRatio + "%";
-					scope.stats.particleFailurePercentage = failureRatio + "%";
-					scope.stats.particleLivePercentage = liveRatio + "%";*/
 				}));
 				it('number of fans should be correct', function() {					
 					expect(scope.stats.numFans).to.equal(3);
@@ -766,6 +754,60 @@ beforeEach(module('AirFlowApp'));
 				});
 				it('particle live % should be 0%', function() {					
 					expect(scope.stats.particleLivePercentage).to.equal("0%");
+				});
+			});
+		});
+		describe('createParticles', function() {
+			describe('with 1 particle', function() {			
+				beforeEach(inject(function(){
+					scope.particles = [];
+					scope.availableParticles = [];
+					scope.createParticles(1);
+				}));
+				it('scope.particles length should be 1', function() {					
+					expect(scope.particles.length).to.equal(1);
+				});
+				it('scope.availableParticles length should be 1', function() {					
+					expect(scope.availableParticles.length).to.equal(1);
+				});
+			});
+			describe('with 1000 particles', function() {			
+				beforeEach(inject(function(){
+					scope.particles = [];
+					scope.availableParticles = [];
+					scope.createParticles(1000);
+				}));
+				it('scope.particles length should be 1000', function() {					
+					expect(scope.particles.length).to.equal(1000);
+				});
+				it('scope.availableParticles length should be 1000', function() {					
+					expect(scope.availableParticles.length).to.equal(1000);
+				});
+			});
+			describe('with -1 particle', function() {			
+				beforeEach(inject(function(){
+					scope.particles = [];
+					scope.availableParticles = [];
+					scope.createParticles(-1);
+				}));
+				it('scope.particles length should be 0', function() {					
+					expect(scope.particles.length).to.equal(0);
+				});
+				it('scope.availableParticles length should be 0', function() {					
+					expect(scope.availableParticles.length).to.equal(0);
+				});
+			});
+			describe('with -1000 particles', function() {			
+				beforeEach(inject(function(){
+					scope.particles = [];
+					scope.availableParticles = [];
+					scope.createParticles(-1000);
+				}));
+				it('scope.particles length should be 0', function() {					
+					expect(scope.particles.length).to.equal(0);
+				});
+				it('scope.availableParticles length should be 0', function() {					
+					expect(scope.availableParticles.length).to.equal(0);
 				});
 			});
 		});
