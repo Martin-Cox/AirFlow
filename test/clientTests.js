@@ -856,6 +856,41 @@ beforeEach(module('AirFlowApp'));
 					expect(scope.availableParticles.length).to.equal(1);
 				});
 			});
+			describe('with 50 particles to be culled and 75 to remain', function() {		
+				beforeEach(inject(function(){
+					scope.particles = [];
+					scope.availableParticles = [];
+					scope.stats = new Object();
+					scope.stats.activeParticles = 125;
+					scope.stats.culledParticles = 0;
+					scope.createParticles(125);
+
+					for (var i = 0; i < scope.particles.length; i++) {
+						scope.particles[i].spawnTime = (new Date).getTime();
+						if (i > 74) {
+							scope.particles[i].spawnTime = scope.particles[i].spawnTime - 500000;
+						}
+					}
+
+					scope.availableParticles = [];
+
+					recycleParticleStub = sinon.stub(scope, 'recycleParticle', function recycleParticleCustom() {
+						scope.availableParticles.push('a');
+					});
+
+					scope.cullParticles();
+				}));
+				it('particle stats should update', function() {	
+					expect(scope.stats.activeParticles).to.equal(75);
+					expect(scope.stats.culledParticles).to.equal(50);
+				});
+				it('scope.particles length should be 125', function() {					
+					expect(scope.particles.length).to.equal(125);
+				});
+				it('scope.availableParticles length should be 50', function() {					
+					expect(scope.availableParticles.length).to.equal(50);
+				});
+			});
 		});
 	});
 });
