@@ -1157,6 +1157,21 @@ beforeEach(module('AirFlowApp'));
 						  }
 						}
 				}));
+			describe('using default fan', function() {		
+				it('forceVector should be (0, 0, 70000) for an active fan', function() {		
+					var forceVector = scope.calculateForceVector(scope.fan);	
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(70000);
+				});
+				it('forceVector should be (0, 0, 0) for an inactive fan', function() {	
+					scope.fan.properties.active = false;		
+					var forceVector = scope.calculateForceVector(scope.fan);	
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(0);
+				});
+			});
 			describe('different fan sizes (maxRPM 1000, 100% RPM)', function() {		
 				it('forceVector should be (0, 0, 50000) for a small fan (80mm)', function() {	
 					scope.fan.properties.size = 80;		
@@ -1247,37 +1262,101 @@ beforeEach(module('AirFlowApp'));
 					expect(forceVector.z).to.equal(70000);
 				});
 			});
+			describe('intake fan in different fan positions', function() {		
+				it('front side should be (0, 0, 70000)', function() {
+					scope.fan.properties.position = 0;			
+					var forceVector = scope.calculateForceVector(scope.fan);
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(70000);
+				});
+				it('back side should be (0, 0, -70000)', function() {
+					scope.fan.properties.position = 1;		
+					var forceVector = scope.calculateForceVector(scope.fan);	
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(-70000);
+				});
+				it('top side should be (0, -70000, 0)', function() {	
+					scope.fan.properties.position = 2;		
+					var forceVector = scope.calculateForceVector(scope.fan);
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(-70000);
+					expect(forceVector.z).to.equal(0);
+				});
+				it('bottom side should be (0, 70000, 0)', function() {
+					scope.fan.properties.position = 3;		
+					var forceVector = scope.calculateForceVector(scope.fan);
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(70000);
+					expect(forceVector.z).to.equal(0);
+				});
+				it('visible side should be (70000, 0, 0)', function() {
+					scope.fan.properties.position = 4;		
+					var forceVector = scope.calculateForceVector(scope.fan);						
+					expect(forceVector.x).to.equal(70000);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(0);
+				});
+				it('invisible side should be (-70000, 0, 0)', function() {
+					scope.fan.properties.position = 5;		
+					var forceVector = scope.calculateForceVector(scope.fan);						
+					expect(forceVector.x).to.equal(-70000);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(0);
+				});
+			});
+			describe('exhaust fan in different fan positions', function() {		
+				it('front side should be (0, 0, -70000)', function() {
+					scope.fan.properties.position = 0;			
+					scope.fan.properties.mode = "exhaust";	
+					var forceVector = scope.calculateForceVector(scope.fan);
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(-70000);
+				});
+				it('back side should be (0, 0, 70000)', function() {
+					scope.fan.properties.position = 1;		
+					scope.fan.properties.mode = "exhaust";	
+					var forceVector = scope.calculateForceVector(scope.fan);	
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(70000);
+				});
+				it('top side should be (0, 70000, 0)', function() {	
+					scope.fan.properties.position = 2;	
+					scope.fan.properties.mode = "exhaust";		
+					var forceVector = scope.calculateForceVector(scope.fan);
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(70000);
+					expect(forceVector.z).to.equal(0);
+				});
+				it('bottom side should be (0, -70000, 0)', function() {
+					scope.fan.properties.position = 3;	
+					scope.fan.properties.mode = "exhaust";		
+					var forceVector = scope.calculateForceVector(scope.fan);
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(-70000);
+					expect(forceVector.z).to.equal(0);
+				});
+				it('visible side should be (-70000, 0, 0)', function() {
+					scope.fan.properties.position = 4;	
+					scope.fan.properties.mode = "exhaust";		
+					var forceVector = scope.calculateForceVector(scope.fan);						
+					expect(forceVector.x).to.equal(-70000);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(0);
+				});
+				it('invisible side should be (70000, 0, 0)', function() {
+					scope.fan.properties.position = 5;
+					scope.fan.properties.mode = "exhaust";			
+					var forceVector = scope.calculateForceVector(scope.fan);						
+					expect(forceVector.x).to.equal(70000);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(0);
+				});
+			});
 		});
 	});
 });
 
-
-/*			FRONT: 0,
-			BACK: 1,
-			TOP: 2,
-			BOTTOM: 3,
-			VISIBLE_SIDE: 4,
-			INVISIBLE_SIDE: 5*/
-
-/*
-	small fan = 0, 0, 50000
-	med fan =  0, 0, 70000
-	big fan = 0, 0, 80000
-
-	fan size 120
-	min RPM
-	med RPM
-	max RPM
-
-	% RPM
-	0
-	1
-	50
-	99
-	100
-
-	active = false, so RPM should be 0
-
-	Then different positions
-
-*/
