@@ -1118,5 +1118,166 @@ beforeEach(module('AirFlowApp'));
 				});
 			});
 		});
+		describe('calculateForceVector', function() {	
+			beforeEach(inject(function(){	
+					scope.fan = 	
+						{
+						  "fanObject": {
+						    "material": {
+						      "color": "0x333333",
+						      "side": "THREE.DoubleSide"
+						    },
+						    "dimensions": {
+						      "width": 120,
+						      "height": 120,
+						      "depth": 40
+						    }
+						  },
+						  "fanAOEObject": {
+						    "material": {
+						      "color": "0x333333",
+						      "transparent": true,
+						      "opacity": 0,
+						      "side": "THREE.DoubleSide"
+						    },
+						    "dimensions": {
+						      "radiusTop": 60,
+						      "radiusBottom": 60,
+						      "radiusSegments": 25,
+						      "heightSegments": 25
+						    }
+						  },
+						  "properties": {
+						    "size": 120,
+						    "maxRPM": 1000,
+						    "percentageRPM": 100,
+						    "mode": "intake",
+						    "active": true,
+						    "position": 0
+						  }
+						}
+				}));
+			describe('different fan sizes (maxRPM 1000, 100% RPM)', function() {		
+				it('forceVector should be (0, 0, 50000) for a small fan (80mm)', function() {	
+					scope.fan.properties.size = 80;		
+					var forceVector = scope.calculateForceVector(scope.fan);	
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(50000);
+				});
+				it('forceVector should be (0, 0, 70000) for a medium sized fan (120mm)', function() {	
+					scope.fan.properties.size = 120;		
+					var forceVector = scope.calculateForceVector(scope.fan);	
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(70000);
+				});
+				it('forceVector should be (0, 0, 80000) for a large fan (140mm)', function() {	
+					scope.fan.properties.size = 140;		
+					var forceVector = scope.calculateForceVector(scope.fan);	
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(80000);
+				});
+			});
+			describe('different RPM (fan size 120mm, 100% RPM)', function() {		
+				it('forceVector should be (0, 0, 60010) for RPM 1', function() {
+					scope.fan.properties.maxRPM = 1;			
+					var forceVector = scope.calculateForceVector(scope.fan);
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(60010);
+				});
+				it('forceVector should be (0, 0, 75000) for RPM 1500', function() {
+					scope.fan.properties.maxRPM = 1500;		
+					var forceVector = scope.calculateForceVector(scope.fan);	
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(75000);
+				});
+				it('forceVector should be (0, 0, 89990) for RPM 2999', function() {	
+					scope.fan.properties.maxRPM = 2999;		
+					var forceVector = scope.calculateForceVector(scope.fan);	
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(89990);
+				});
+				it('forceVector should be (0, 0, 90000) for RPM 3000', function() {
+					scope.fan.properties.maxRPM = 3000;		
+					var forceVector = scope.calculateForceVector(scope.fan);	
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(90000);
+				});
+			});
+			describe('different RPM% (fan size 120mm, maxRPM 1000)', function() {		
+				it('forceVector should be (0, 0, 0) for 0% RPM', function() {
+					scope.fan.properties.percentageRPM = 0;			
+					var forceVector = scope.calculateForceVector(scope.fan);
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(0);
+				});
+				it('forceVector should be (0, 0, 700) for 1% RPM', function() {
+					scope.fan.properties.percentageRPM = 1;		
+					var forceVector = scope.calculateForceVector(scope.fan);	
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(700);
+				});
+				it('forceVector should be (0, 0, 35000) for 50% RPM', function() {	
+					scope.fan.properties.percentageRPM = 50;		
+					var forceVector = scope.calculateForceVector(scope.fan);
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(35000);
+				});
+				it('forceVector should be (0, 0, 69300) for 99% RPM', function() {
+					scope.fan.properties.percentageRPM = 99;		
+					var forceVector = scope.calculateForceVector(scope.fan);
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(69300);
+				});
+				it('forceVector should be (0, 0, 70000) for 100% RPM', function() {
+					scope.fan.properties.percentageRPM = 100;		
+					var forceVector = scope.calculateForceVector(scope.fan);						
+					expect(forceVector.x).to.equal(0);
+					expect(forceVector.y).to.equal(0);
+					expect(forceVector.z).to.equal(70000);
+				});
+			});
+		});
 	});
 });
+
+
+/*			FRONT: 0,
+			BACK: 1,
+			TOP: 2,
+			BOTTOM: 3,
+			VISIBLE_SIDE: 4,
+			INVISIBLE_SIDE: 5*/
+
+/*
+	small fan = 0, 0, 50000
+	med fan =  0, 0, 70000
+	big fan = 0, 0, 80000
+
+	fan size 120
+	min RPM
+	med RPM
+	max RPM
+
+	% RPM
+	0
+	1
+	50
+	99
+	100
+
+	active = false, so RPM should be 0
+
+	Then different positions
+
+*/
