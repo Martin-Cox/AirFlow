@@ -1,11 +1,13 @@
 var gulp = require('gulp');
 var connect = require('gulp-connect');
 var browserify = require('browserify');
+var uglify = require('gulp-uglify');
 var source = require('vinyl-source-stream');
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var mochaPhantomJS = require('gulp-mocha-phantomjs');
 var Server = require('karma').Server;
+var rename = require("gulp-rename");
 
 gulp.task('connect', function () {
     connect.server({
@@ -17,10 +19,20 @@ gulp.task('connect', function () {
 gulp.task('build', function() {
     // Grabs the app.js file
     return browserify('./js/app.js')
-        // bundles it and creates a file called build.js
+        //Bundles it and creates a file called build.js
         .bundle()
         .pipe(source('build.js'))
-        // saves it the js/ directory
+        //Saves it the js/ directory
+        .pipe(gulp.dest('./js/'));
+})
+
+gulp.task('minify', function() {
+    //Minifies an existing build.js file
+    gulp.src('./js/build.js')
+        .pipe(uglify())
+        .pipe(rename({
+          suffix: '.min'
+        }))
         .pipe(gulp.dest('./js/'));
 })
 

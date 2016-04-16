@@ -45,3 +45,4 @@ Temporary Items
 # NPM Modules
 /node_modules/*
 js/build.js
+js/build.min.js
