@@ -630,6 +630,97 @@ beforeEach(module('AirFlowApp'));
 		});
 	});
 	describe('Simulation Directive', function() {
+
+				var fansDefault = 
+			{
+			  "fanOne" : {
+			    "fanObject": {
+			      "material": {
+			        "side": "THREE.DoubleSide"
+			      },
+			      "dimensions": {
+			        "width": 120,
+			        "height": 120,
+			        "depth": 40
+			      }
+			    },
+			    "fanAOEObject": {
+			      "material": {
+			        "transparent": true,
+			        "opacity": 0,
+			        "side": "THREE.DoubleSide"
+			      },
+			      "dimensions": {
+			        "radiusTop": 60,
+			        "radiusBottom": 60,
+			        "radiusSegments": 25,
+			        "heightSegments": 25
+			      }
+			    },
+			    "properties": {
+			      "size": 120,
+			      "maxRPM": 1800,
+			      "percentageRPM": 80,
+			      "mode": "intake",
+			      "position": 0,
+			      "forceVector" : {
+			        "x": 0,
+			        "y": 5000,
+			        "z": 30000
+			      },
+			      "active": true
+			    },
+			    "position" : {
+			      "x": 0,
+			      "y": 100,
+			      "z": -248
+			    }
+			  },
+			  "colors" : {
+			    "normal": "0x003566",
+			    "inactive": "0x99AEC1",
+			    "highlight": "0x4D82B3",
+			    "validEdit": "0x519C52",
+			    "invalidEdit": "0xCF5157",
+			    "wireframe": "0x90DAFF"
+			  }
+			}
+
+		var newFanDefault =
+			{
+			  "fanObject": {
+			    "material": {
+			      "color": "0x333333",
+			      "side": "THREE.DoubleSide"
+			    },
+			    "dimensions": {
+			      "width": 120,
+			      "height": 120,
+			      "depth": 40
+			    }
+			  },
+			  "fanAOEObject": {
+			    "material": {
+			      "color": "0x333333",
+			      "transparent": true,
+			      "opacity": 0,
+			      "side": "THREE.DoubleSide"
+			    },
+			    "dimensions": {
+			      "radiusTop": 60,
+			      "radiusBottom": 60,
+			      "radiusSegments": 25,
+			      "heightSegments": 25
+			    }
+			  },
+			  "properties": {
+			    "size": 120,
+			    "maxRPM": 1000,
+			    "percentageRPM": 100,
+			    "mode": "intake"
+			  }
+			}
+
 		beforeEach(module('js/directives/simulation.html'));
 		beforeEach(inject(function($rootScope, $compile, $httpBackend){
 			http = $httpBackend;
@@ -771,17 +862,17 @@ beforeEach(module('AirFlowApp'));
 					expect(scope.availableParticles.length).to.equal(1);
 				});
 			});
-			describe('with 1000 particles', function() {			
+			describe('with 500 particles', function() {			
 				beforeEach(inject(function(){
 					scope.particles = [];
 					scope.availableParticles = [];
-					scope.createParticles(1000);
+					scope.createParticles(500);
 				}));
 				it('scope.particles length should be 1000', function() {					
-					expect(scope.particles.length).to.equal(1000);
+					expect(scope.particles.length).to.equal(500);
 				});
 				it('scope.availableParticles length should be 1000', function() {					
-					expect(scope.availableParticles.length).to.equal(1000);
+					expect(scope.availableParticles.length).to.equal(500);
 				});
 			});
 			describe('with -1 particle', function() {			
@@ -797,11 +888,11 @@ beforeEach(module('AirFlowApp'));
 					expect(scope.availableParticles.length).to.equal(0);
 				});
 			});
-			describe('with -1000 particles', function() {			
+			describe('with -500 particles', function() {			
 				beforeEach(inject(function(){
 					scope.particles = [];
 					scope.availableParticles = [];
-					scope.createParticles(-1000);
+					scope.createParticles(-500);
 				}));
 				it('scope.particles length should be 0', function() {					
 					expect(scope.particles.length).to.equal(0);
