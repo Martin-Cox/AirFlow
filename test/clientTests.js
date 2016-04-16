@@ -983,5 +983,140 @@ beforeEach(module('AirFlowApp'));
 				});
 			});
 		});
+		describe('createFanAOEObject', function() {	
+			describe('with defaultCreation set to true', function() {		
+				beforeEach(inject(function(){	
+					scope.fanColors = 			 
+						{
+					    	"normal": "0x003566",
+						    "inactive": "0x99AEC1",
+						    "highlight": "0x4D82B3",
+						    "validEdit": "0x519C52",
+						    "invalidEdit": "0xCF5157",
+						    "wireframe": "0x90DAFF"
+					  	}
+
+					scope.fan = 	
+						{
+						  "fanObject": {
+						    "material": {
+						      "color": "0x333333",
+						      "side": "THREE.DoubleSide"
+						    },
+						    "dimensions": {
+						      "width": 120,
+						      "height": 120,
+						      "depth": 40
+						    }
+						  },
+						  "fanAOEObject": {
+						    "material": {
+						      "color": "0x333333",
+						      "transparent": true,
+						      "opacity": 0,
+						      "side": "THREE.DoubleSide"
+						    },
+						    "dimensions": {
+						      "radiusTop": 60,
+						      "radiusBottom": 60,
+						      "radiusSegments": 25,
+						      "heightSegments": 25
+						    }
+						  },
+						  "properties": {
+						    "size": 120,
+						    "maxRPM": 1000,
+						    "percentageRPM": 100,
+						    "mode": "intake"
+						  }
+						}
+				}));
+				it('fanAOEObject geometry should be of type CylinderGeometry', function() {			
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, true);	
+					expect(fanAOEObject.geometry.type).to.equal("CylinderGeometry");
+				});
+				it('fanAOEObject height should be 60', function() {			
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, true);	
+					expect(fanAOEObject.geometry.parameters.height).to.equal(60);
+				});
+				it('fanAOEObject radius should be 60', function() {			
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, true);	
+					expect(fanAOEObject.geometry.parameters.radiusTop).to.equal(60);
+					expect(fanAOEObject.geometry.parameters.radiusBottom).to.equal(60);
+				});
+				it('fanAOEObject segments should be 25', function() {			
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, true);	
+					expect(fanAOEObject.geometry.parameters.heightSegments).to.equal(25);
+					expect(fanAOEObject.geometry.parameters.radialSegments).to.equal(25);
+				});
+			});
+			describe('with defaultCreation set to false', function() {		
+				beforeEach(inject(function(){	
+					scope.fanColors = 			 
+						{
+					    	"normal": "0x003566",
+						    "inactive": "0x99AEC1",
+						    "highlight": "0x4D82B3",
+						    "validEdit": "0x519C52",
+						    "invalidEdit": "0xCF5157",
+						    "wireframe": "0x90DAFF"
+					  	}
+
+					scope.fan = 	
+						{
+						  "fanObject": {
+						    "material": {
+						      "color": "0x333333",
+						      "side": "THREE.DoubleSide"
+						    },
+						    "dimensions": {
+						      "width": 120,
+						      "height": 120,
+						      "depth": 40
+						    }
+						  },
+						  "fanAOEObject": {
+						    "material": {
+						      "color": "0x333333",
+						      "transparent": true,
+						      "opacity": 0,
+						      "side": "THREE.DoubleSide"
+						    },
+						    "dimensions": {
+						      "radiusTop": 60,
+						      "radiusBottom": 60,
+						      "radiusSegments": 25,
+						      "heightSegments": 25,
+						      "height" : 60
+						    }
+						  },
+						  "properties": {
+						    "size": 120,
+						    "maxRPM": 1000,
+						    "percentageRPM": 100,
+						    "mode": "intake"
+						  }
+						}
+				}));
+				it('fanAOEObject geometry should be of type CylinderGeometry', function() {			
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, false);	
+					expect(fanAOEObject.geometry.type).to.equal("CylinderGeometry");
+				});
+				it('fanAOEObject height should be 60', function() {			
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, false);	
+					expect(fanAOEObject.geometry.parameters.height).to.equal(60);
+				});
+				it('fanAOEObject radius should be 60', function() {			
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, false);	
+					expect(fanAOEObject.geometry.parameters.radiusTop).to.equal(60);
+					expect(fanAOEObject.geometry.parameters.radiusBottom).to.equal(60);
+				});
+				it('fanAOEObject segments should be 25', function() {			
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, false);	
+					expect(fanAOEObject.geometry.parameters.heightSegments).to.equal(25);
+					expect(fanAOEObject.geometry.parameters.radialSegments).to.equal(25);
+				});
+			});
+		});
 	});
 });
