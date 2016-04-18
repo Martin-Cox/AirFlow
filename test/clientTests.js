@@ -496,7 +496,7 @@ beforeEach(module('AirFlowApp'));
 			beforeEach(inject(function(){				
 
 				//Stub out any method calls, we don't care about them in the context of this test			
-				loadFanStub = sinon.stub(scope, 'loadFan', function loadFanCustom(fan) {
+				loadFanStub = sinon.stub(scope, 'createFan', function loadFanCustom(fan) {
 					//Simple stub for load fan
 				    scope.fans.push(fan);
 				    if (fan.properties.mode === "intake") {
@@ -1032,20 +1032,20 @@ beforeEach(module('AirFlowApp'));
 						}
 				}));
 				it('fanAOEObject geometry should be of type CylinderGeometry', function() {			
-					var fanAOEObject = scope.createFanAOEObject(scope.fan, true);	
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, false, true);	
 					expect(fanAOEObject.geometry.type).to.equal("CylinderGeometry");
 				});
 				it('fanAOEObject height should be 60', function() {			
-					var fanAOEObject = scope.createFanAOEObject(scope.fan, true);	
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, false, true);	
 					expect(fanAOEObject.geometry.parameters.height).to.equal(60);
 				});
 				it('fanAOEObject radius should be 60', function() {			
-					var fanAOEObject = scope.createFanAOEObject(scope.fan, true);	
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, false, true);	
 					expect(fanAOEObject.geometry.parameters.radiusTop).to.equal(60);
 					expect(fanAOEObject.geometry.parameters.radiusBottom).to.equal(60);
 				});
 				it('fanAOEObject segments should be 25', function() {			
-					var fanAOEObject = scope.createFanAOEObject(scope.fan, true);	
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, false, true);	
 					expect(fanAOEObject.geometry.parameters.heightSegments).to.equal(25);
 					expect(fanAOEObject.geometry.parameters.radialSegments).to.equal(25);
 				});
@@ -1099,20 +1099,20 @@ beforeEach(module('AirFlowApp'));
 						}
 				}));
 				it('fanAOEObject geometry should be of type CylinderGeometry', function() {			
-					var fanAOEObject = scope.createFanAOEObject(scope.fan, false);	
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, false, false);	
 					expect(fanAOEObject.geometry.type).to.equal("CylinderGeometry");
 				});
 				it('fanAOEObject height should be 60', function() {			
-					var fanAOEObject = scope.createFanAOEObject(scope.fan, false);	
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, false, false);	
 					expect(fanAOEObject.geometry.parameters.height).to.equal(60);
 				});
 				it('fanAOEObject radius should be 60', function() {			
-					var fanAOEObject = scope.createFanAOEObject(scope.fan, false);	
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, false, false);	
 					expect(fanAOEObject.geometry.parameters.radiusTop).to.equal(60);
 					expect(fanAOEObject.geometry.parameters.radiusBottom).to.equal(60);
 				});
 				it('fanAOEObject segments should be 25', function() {			
-					var fanAOEObject = scope.createFanAOEObject(scope.fan, false);	
+					var fanAOEObject = scope.createFanAOEObject(scope.fan, false, false);	
 					expect(fanAOEObject.geometry.parameters.heightSegments).to.equal(25);
 					expect(fanAOEObject.geometry.parameters.radialSegments).to.equal(25);
 				});

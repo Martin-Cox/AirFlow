@@ -179,7 +179,7 @@ var MainController = function($scope, $timeout) {
             }
 
             for (var i = 0; i < size; i++) {       
-                $scope.loadFan(fans[i]);
+                $scope.createFan(fans[i], true, false);
             }
 
             $scope.$digest();
