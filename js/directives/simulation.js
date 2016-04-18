@@ -1967,11 +1967,14 @@ var simulation = function($http, defaultsService, $timeout) {
 		}
 
 		//TODO (IN ORDER):
+		// - Unit tests project settings directive, component settings directive, results panel directive, tabs directive. E.g. does updating the project name correctly update project modified date as well?
+		// - More, better detailed Selenium tests
+		// - A few e2e tests?
 		// - Input validation on ALL user enterable data (using Angular) 							- AND UNIT TESTS
 		// - User configurable project settings 													- AND UNIT TESTS
 		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS		
 		// - Recheck WEB-ARIA roles and properties
-		// - Reqrite how to use/about popup
+		// - Rewrite how to use/about popup
 		// - Standardised error messages
 		// - Clean up code, optimisation, proper documentation etc. SEE quality standards in interim report
 		// - Testing on multiple devices
