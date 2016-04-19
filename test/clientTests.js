@@ -631,7 +631,7 @@ beforeEach(module('AirFlowApp'));
 	});
 	describe('Simulation Directive', function() {
 
-				var fansDefault = 
+			var fansDefault = 
 			{
 			  "fanOne" : {
 			    "fanObject": {
@@ -1519,6 +1519,120 @@ beforeEach(module('AirFlowApp'));
 				});
 			});
 		});
+		describe('createDefaultCase', function() {	
+			beforeEach(inject(function(){	
+					scope.caseGroup = new Object();
+
+					scope.caseDefault = 
+						{
+						  "materials": {
+						    "caseMaterial": {
+						      "color": "0x5F6E7D",
+						      "friction": 0.3,
+						      "restitution": 0.1
+						    },
+						    "transparentMaterial": {
+						      "color": "0x5F6E7D",
+						      "friction": 0.3,
+						      "restitution": 0.1,
+						      "transparent": true,
+						      "opacity": 0.2,
+						      "side": "THREE.DoubleSide"
+						    },
+						    "componentMaterial": {
+						      "color": "0xD5D3D0",
+						      "friction": 0.3,
+						      "restitution": 0.1
+						    }
+						  },
+						  "dimensions": {
+						    "width": 210,
+						    "height": 486,
+						    "depth": 495,
+						    "thickness": 4,
+						    "fanHoleSize": 120
+						  }
+						}
+
+					scope.positionsEnum = Object.freeze({
+						FRONT: 0,
+						BACK: 1,
+						TOP: 2,
+						BOTTOM: 3,
+						VISIBLE_SIDE: 4,
+						INVISIBLE_SIDE: 5
+					});
+
+			}));	
+			it('caseGroup should contain case planes', function() {		
+				scope._createDefaultCase(scope.caseDefault);	
+				expect(scope.caseGroup).to.have.property('bottomPlane');
+				expect(scope.caseGroup).to.have.property('topPlane');
+				expect(scope.caseGroup).to.have.property('visibleSidePlane');
+				expect(scope.caseGroup).to.have.property('invisibleSidePlane');
+				expect(scope.caseGroup).to.have.property('backPlane');
+				expect(scope.caseGroup).to.have.property('frontPlane');
+			});
+			it('invisibleSidePlane should be the only invisible plane', function() {
+				scope._createDefaultCase(scope.caseDefault);		
+				expect(scope.caseGroup.invisibleSidePlane.isInvisible).to.equal(true);
+				expect(scope.caseGroup.bottomPlane.isInvisible).to.equal(false);
+				expect(scope.caseGroup.topPlane.isInvisible).to.equal(false);
+				expect(scope.caseGroup.visibleSidePlane.isInvisible).to.equal(false);
+				expect(scope.caseGroup.backPlane.isInvisible).to.equal(false);
+				expect(scope.caseGroup.frontPlane.isInvisible).to.equal(false);
+			});
+			it('case plane should have position codes', function() {
+				scope._createDefaultCase(scope.caseDefault);		
+				expect(scope.caseGroup.bottomPlane.positionCode).to.equal(scope.positionsEnum.BOTTOM);
+				expect(scope.caseGroup.topPlane.positionCode).to.equal(scope.positionsEnum.TOP);
+				expect(scope.caseGroup.invisibleSidePlane.positionCode).to.equal(scope.positionsEnum.INVISIBLE_SIDE);
+				expect(scope.caseGroup.visibleSidePlane.positionCode).to.equal(scope.positionsEnum.VISIBLE_SIDE);
+				expect(scope.caseGroup.backPlane.positionCode).to.equal(scope.positionsEnum.BACK);
+				expect(scope.caseGroup.frontPlane.positionCode).to.equal(scope.positionsEnum.FRONT);
+			});
+			it('bottom plane properties should be correct', function() {
+				scope._createDefaultCase(scope.caseDefault);		
+				expect(scope.caseGroup.bottomPlane.dimensions.width).to.equal(scope.caseDefault.dimensions.width);
+				expect(scope.caseGroup.bottomPlane.dimensions.height).to.equal(scope.caseDefault.dimensions.depth);
+				expect(scope.caseGroup.bottomPlane.material._physijs.friction).to.equal(scope.caseDefault.materials.caseMaterial.friction);
+				expect(scope.caseGroup.bottomPlane.material._physijs.restitution).to.equal(scope.caseDefault.materials.caseMaterial.restitution);
+			});
+			it('top plane properties should be correct', function() {
+				scope._createDefaultCase(scope.caseDefault);		
+				expect(scope.caseGroup.topPlane.dimensions.width).to.equal(scope.caseDefault.dimensions.width);
+				expect(scope.caseGroup.topPlane.dimensions.height).to.equal(scope.caseDefault.dimensions.depth);
+				expect(scope.caseGroup.topPlane.material._physijs.friction).to.equal(scope.caseDefault.materials.caseMaterial.friction);
+				expect(scope.caseGroup.topPlane.material._physijs.restitution).to.equal(scope.caseDefault.materials.caseMaterial.restitution);
+			});
+			it('invisible side properties should be correct', function() {
+				scope._createDefaultCase(scope.caseDefault);
+				expect(scope.caseGroup.invisibleSidePlane.dimensions.width).to.equal(scope.caseDefault.dimensions.depth);
+				expect(scope.caseGroup.invisibleSidePlane.dimensions.height).to.equal(scope.caseDefault.dimensions.height);
+				expect(scope.caseGroup.invisibleSidePlane.material._physijs.friction).to.equal(scope.caseDefault.materials.transparentMaterial.friction);
+				expect(scope.caseGroup.invisibleSidePlane.material._physijs.restitution).to.equal(scope.caseDefault.materials.transparentMaterial.restitution);
+			});
+			it('visible side properties should be correct', function() {
+				scope._createDefaultCase(scope.caseDefault);		
+				expect(scope.caseGroup.visibleSidePlane.dimensions.width).to.equal(scope.caseDefault.dimensions.depth);
+				expect(scope.caseGroup.visibleSidePlane.dimensions.height).to.equal(scope.caseDefault.dimensions.height);
+				expect(scope.caseGroup.visibleSidePlane.material._physijs.friction).to.equal(scope.caseDefault.materials.caseMaterial.friction);
+				expect(scope.caseGroup.visibleSidePlane.material._physijs.restitution).to.equal(scope.caseDefault.materials.caseMaterial.restitution);
+			});
+			it('back plane properties should be correct', function() {
+				scope._createDefaultCase(scope.caseDefault);		
+				expect(scope.caseGroup.backPlane.dimensions.width).to.equal(scope.caseDefault.dimensions.width);
+				expect(scope.caseGroup.backPlane.dimensions.height).to.equal(scope.caseDefault.dimensions.height);
+				expect(scope.caseGroup.backPlane.material._physijs.friction).to.equal(scope.caseDefault.materials.caseMaterial.friction);
+				expect(scope.caseGroup.backPlane.material._physijs.restitution).to.equal(scope.caseDefault.materials.caseMaterial.restitution);
+			});
+			it('front plane properties should be correct', function() {
+				scope._createDefaultCase(scope.caseDefault);		
+				expect(scope.caseGroup.frontPlane.dimensions.width).to.equal(scope.caseDefault.dimensions.width);
+				expect(scope.caseGroup.frontPlane.dimensions.height).to.equal(scope.caseDefault.dimensions.height);
+				expect(scope.caseGroup.frontPlane.material._physijs.friction).to.equal(scope.caseDefault.materials.caseMaterial.friction);
+				expect(scope.caseGroup.frontPlane.material._physijs.restitution).to.equal(scope.caseDefault.materials.caseMaterial.restitution);
+			});
+		});
 	});
 });
-
