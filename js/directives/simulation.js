@@ -586,7 +586,7 @@ var simulation = function($http, defaultsService, $timeout) {
 			}
 		}
 
-		/*Private scene manipulating method. Creates a 3D model of a computer case using Box meshes. 
+		/*Public accessor for creating a case. Creates a 3D model of a computer case using Box meshes. 
 		This function should only be used to create a case by using the default case values
 		caseDefaults = The object containing the default case values (size, material colour etc.)*/
 		scope.createDefaultCase = function(caseDefaults) {
@@ -600,7 +600,7 @@ var simulation = function($http, defaultsService, $timeout) {
 		}
 
 
-		/*Public accessor for creating a case. Creates a 3D model of a computer case using Box meshes. 
+		/*Private method. Creates a 3D model of a computer case using Box meshes. 
 		This function should only be used to create a case by using the default case values
 		caseDefaults = The object containing the default case values (size, material colour etc.)*/
 		scope._createDefaultCase = function(caseDefaults) {
@@ -715,7 +715,7 @@ var simulation = function($http, defaultsService, $timeout) {
 			scene.add(fanObjects[1]);
 		}
 
-		/*Private scene manipulating method. Creates a composite fan object consisting of a fanPhysicalObject, a fanAOEObject, and properties 
+		/*Private method. Creates a composite fan object consisting of a fanPhysicalObject, a fanAOEObject, and properties 
 		fan = The object containing the properties that will be used to create a new fan e.g. size, RPM etc.
 		loadingFan = Boolean set TRUE if the fan is being loaded from an airflow project file
 		defaultCreation = Boolean set TRUE if the fan is being created with default properties*/
@@ -853,12 +853,6 @@ var simulation = function($http, defaultsService, $timeout) {
 
 			scope.determineFanAOEPosition(fanObject);
 
-			scene.add(fanPhysicalObject);
-			scene.add(fanAOEObject);
-
-	
-
-			//Checking param mode here to offset positions
 			if (fan !== null || fan != undefined) {
 				if (compFanObj.properties.mode === "exhaust") {
 					scope.exhaustFans.push(fanObject);
@@ -1856,8 +1850,7 @@ var simulation = function($http, defaultsService, $timeout) {
 		}
 
 		//TODO (IN ORDER):
-		// - TUE: Refactor all code which adds to/removes from scene (e.g. create case) SEE createFan _createFan
-		// - TUE: Rewrite unit tests for 		describe('createFanAOEObject', function() {	describe('with defaultCreation set to true', function() {		so loading Fan is sometimes true
+		// - Unit tests for: _createFan(...)
 		// - Integration tests (testing multiple modules e.g. sim and main controller together e.g. doesn't stub out $scope.createFan in scope loadProject(fucntion) and see if they work together)
 		// - Karma code coverage
 		// - JSON Lint
