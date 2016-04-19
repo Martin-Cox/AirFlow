@@ -905,7 +905,7 @@ var simulation = function($http, defaultsService, $timeout) {
 				maxHeight = 180;
 			}
 
-			if (loadingFan === true) {
+			if (loadingFan === true & defaultCreation === false) {
 				fan.fanAOEObject = new Object();
 				fan.fanAOEObject.dimensions = new Object();
 			}
