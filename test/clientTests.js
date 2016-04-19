@@ -1634,5 +1634,441 @@ beforeEach(module('AirFlowApp'));
 				expect(scope.caseGroup.frontPlane.material._physijs.restitution).to.equal(scope.caseDefault.materials.caseMaterial.restitution);
 			});
 		});
+		describe('createFan', function() {	
+			describe('creating a default fan (e.g. on new project)', function() {	
+				beforeEach(inject(function(){	
+
+					scope.getCurrentDate = function() {
+					}
+
+					getCurrentDateStub = sinon.stub(scope, 'getCurrentDate', function getCurrentDateCustom() {
+						return "01/01/2015";
+					});
+
+					calculateForceVectorStub = sinon.stub(scope, 'calculateForceVector', function calculateForceVectorCustom() {
+						var testVector = (0, 0, 50000);
+						return testVector;
+					});
+
+					scope.determineFanAOEPosition = sinon.stub();
+
+					scope.fanColors =
+						{
+							"normal": "0x003566",
+						    "inactive": "0x99AEC1",
+						    "highlight": "0x4D82B3",
+						    "validEdit": "0x519C52",
+						    "invalidEdit": "0xCF5157",
+						    "wireframe": "0x90DAFF"
+						}
+
+					scope.fans = [];
+					scope.intakeFans = [];
+					scope.exhaustFans = [];
+					scope.projectDetails = new Object();
+
+					scope.defaultNewFan = 
+						{
+							"fanObject": {
+								"material": {
+									"color": "0x333333",
+									"side": "THREE.DoubleSide"
+								},
+								"dimensions": {
+									"width": 120,
+									"height": 120,
+									"depth": 40
+								}
+							},
+							"fanAOEObject": {
+								"material": {
+									"color": "0x333333",
+									"transparent": true,
+									"opacity": 0,
+									"side": "THREE.DoubleSide"
+								},
+								"dimensions": {
+									"radiusTop": 60,
+									"radiusBottom": 60,
+									"radiusSegments": 25,
+									"heightSegments": 25
+								}
+							},
+							"properties": {
+								"size": 120,
+								"maxRPM": 1000,
+								"percentageRPM": 100,
+								"mode": "intake",
+								"active": true,
+								"position": 0,
+								"forceVector" : {
+									"x": 0,
+									"y": 5000,
+									"z": 30000
+							    },
+							},
+							"position" : {
+								"x": 0,
+								"y": 100,
+								"z": -248
+						    }
+						}
+
+					scope.defaultNewFanAOE = 
+						{
+							"material": {
+								"color": "0x333333",
+								"transparent": true,
+								"opacity": 0,
+								"side": "THREE.DoubleSide"
+							},
+							"dimensions": {
+								"radiusTop": 60,
+								"radiusBottom": 60,
+								"radiusSegments": 25,
+								"heightSegments": 25
+							}
+						}
+
+					scope.fanObjects = scope._createFan(scope.defaultNewFan, false, true);
+				}));	
+				it('should be 2 fan objects returned', function() {		
+					expect(scope.fanObjects.length).to.equal(2);
+				});
+
+				it('first object should be the fan physical object', function() {		
+					expect(scope.fanObjects[0].dimensions.width).to.equal(scope.defaultNewFan.fanObject.dimensions.width);
+					expect(scope.fanObjects[0].dimensions.height).to.equal(scope.defaultNewFan.fanObject.dimensions.height);
+					expect(scope.fanObjects[0].dimensions.depth).to.equal(scope.defaultNewFan.fanObject.dimensions.depth);
+					expect(scope.fanObjects[0].geometry.type).to.equal('BoxGeometry');
+				});
+				it('first object should be the fan AOE object', function() {	
+					expect(scope.fanObjects[1].dimensions.radiusTop).to.equal(scope.defaultNewFan.fanAOEObject.dimensions.radiusTop);
+					expect(scope.fanObjects[1].dimensions.radiusBottom).to.equal(scope.defaultNewFan.fanAOEObject.dimensions.radiusBottom);
+					expect(scope.fanObjects[1].dimensions.radiusSegments).to.equal(scope.defaultNewFan.fanAOEObject.dimensions.radiusSegments);
+					expect(scope.fanObjects[1].dimensions.heightSegments).to.equal(scope.defaultNewFan.fanAOEObject.dimensions.heightSegments);
+					expect(scope.fanObjects[1].dimensions.height).to.equal(60);
+					expect(scope.fanObjects[1].geometry.type).to.equal('CylinderGeometry');
+				});
+				it('should have created 1 intake fan', function() {		
+					expect(scope.fans.length).to.equal(1);
+					expect(scope.intakeFans.length).to.equal(1);
+					expect(scope.exhaustFans.length).to.equal(0);
+				});
+				it('fan object should have properties', function() {		
+					expect(scope.fans[0].fanAOEObject).to.equal(scope.fanObjects[1]);
+					expect(scope.fans[0].fanPhysicalObject).to.equal(scope.fanObjects[0]);
+					expect(scope.fans[0].properties.mode).to.equal(scope.defaultNewFan.properties.mode);
+					expect(scope.fans[0].properties.maxRPM).to.equal(scope.defaultNewFan.properties.maxRPM);
+					expect(scope.fans[0].properties.percentageRPM).to.equal(scope.defaultNewFan.properties.percentageRPM);
+					expect(scope.fans[0].properties.isValidPos).to.equal(true);
+				});
+			});
+			describe('creating a new fan', function() {	
+				beforeEach(inject(function(){	
+
+					scope.getCurrentDate = function() {
+					}
+
+					getCurrentDateStub = sinon.stub(scope, 'getCurrentDate', function getCurrentDateCustom() {
+						return "01/01/2015";
+					});
+
+					calculateForceVectorStub = sinon.stub(scope, 'calculateForceVector', function calculateForceVectorCustom() {
+						var testVector = (0, 0, 50000);
+						return testVector;
+					});
+
+					scope.determineFanAOEPosition = sinon.stub();
+
+					scope.fanColors =
+						{
+							"normal": "0x003566",
+						    "inactive": "0x99AEC1",
+						    "highlight": "0x4D82B3",
+						    "validEdit": "0x519C52",
+						    "invalidEdit": "0xCF5157",
+						    "wireframe": "0x90DAFF"
+						}
+
+					scope.fans = [];
+					scope.intakeFans = [];
+					scope.exhaustFans = [];
+					scope.projectDetails = new Object();
+
+					scope.defaultNewFan = 
+						{
+							"fanObject": {
+								"material": {
+									"color": "0x333333",
+									"side": "THREE.DoubleSide"
+								},
+								"dimensions": {
+									"width": 120,
+									"height": 120,
+									"depth": 40
+								}
+							},
+							"fanAOEObject": {
+								"material": {
+									"color": "0x333333",
+									"transparent": true,
+									"opacity": 0,
+									"side": "THREE.DoubleSide"
+								},
+								"dimensions": {
+									"radiusTop": 60,
+									"radiusBottom": 60,
+									"radiusSegments": 25,
+									"heightSegments": 25
+								}
+							},
+							"properties": {
+								"size": 120,
+								"maxRPM": 1000,
+								"percentageRPM": 100,
+								"mode": "intake",
+								"active": true,
+								"position": 0,
+								"forceVector" : {
+									"x": 0,
+									"y": 5000,
+									"z": 30000
+							    },
+							},
+							"position" : {
+								"x": 0,
+								"y": 100,
+								"z": -248
+						    }
+						}
+
+					scope.defaultNewFanAOE = 
+						{
+							"material": {
+								"color": "0x333333",
+								"transparent": true,
+								"opacity": 0,
+								"side": "THREE.DoubleSide"
+							},
+							"dimensions": {
+								"radiusTop": 60,
+								"radiusBottom": 60,
+								"radiusSegments": 25,
+								"heightSegments": 25
+							}
+						}
+
+					scope.newFanPlaceholderObjectPosition = 0;
+
+					scope.newFanPlaceholderObject = 
+						{
+							"position": {
+								"x": 100,
+								"y": 100,
+								"z": 100
+							}
+						}
+
+					scope.fanObjects = scope._createFan(null, false, true);
+				}));	
+				it('should be 2 fan objects returned', function() {		
+					expect(scope.fanObjects.length).to.equal(2);
+				});
+
+				it('first object should be the fan physical object', function() {		
+					expect(scope.fanObjects[0].dimensions.width).to.equal(scope.defaultNewFan.fanObject.dimensions.width);
+					expect(scope.fanObjects[0].dimensions.height).to.equal(scope.defaultNewFan.fanObject.dimensions.height);
+					expect(scope.fanObjects[0].dimensions.depth).to.equal(scope.defaultNewFan.fanObject.dimensions.depth);
+					expect(scope.fanObjects[0].geometry.type).to.equal('BoxGeometry');
+				});
+				it('first object should be the fan AOE object', function() {	
+					expect(scope.fanObjects[1].dimensions.radiusTop).to.equal(scope.defaultNewFan.fanAOEObject.dimensions.radiusTop);
+					expect(scope.fanObjects[1].dimensions.radiusBottom).to.equal(scope.defaultNewFan.fanAOEObject.dimensions.radiusBottom);
+					expect(scope.fanObjects[1].dimensions.radiusSegments).to.equal(scope.defaultNewFan.fanAOEObject.dimensions.radiusSegments);
+					expect(scope.fanObjects[1].dimensions.heightSegments).to.equal(scope.defaultNewFan.fanAOEObject.dimensions.heightSegments);
+					expect(scope.fanObjects[1].dimensions.height).to.equal(60);
+					expect(scope.fanObjects[1].geometry.type).to.equal('CylinderGeometry');
+				});
+				it('should have created 1 intake fan', function() {		
+					expect(scope.fans.length).to.equal(1);
+					expect(scope.intakeFans.length).to.equal(1);
+					expect(scope.exhaustFans.length).to.equal(0);
+				});
+				it('fan object should have properties', function() {		
+					expect(scope.fans[0].fanAOEObject).to.equal(scope.fanObjects[1]);
+					expect(scope.fans[0].fanPhysicalObject).to.equal(scope.fanObjects[0]);
+					expect(scope.fans[0].properties.mode).to.equal(scope.defaultNewFan.properties.mode);
+					expect(scope.fans[0].properties.maxRPM).to.equal(scope.defaultNewFan.properties.maxRPM);
+					expect(scope.fans[0].properties.percentageRPM).to.equal(scope.defaultNewFan.properties.percentageRPM);
+					expect(scope.fans[0].properties.isValidPos).to.equal(true);
+				});
+			});
+			describe('loading a fan from a project file', function() {	
+				beforeEach(inject(function(){	
+
+					scope.getCurrentDate = function() {
+					}
+
+					getCurrentDateStub = sinon.stub(scope, 'getCurrentDate', function getCurrentDateCustom() {
+						return "01/01/2015";
+					});
+
+					calculateForceVectorStub = sinon.stub(scope, 'calculateForceVector', function calculateForceVectorCustom() {
+						var testVector = (0, 0, 50000);
+						return testVector;
+					});
+
+					scope.determineFanAOEPosition = sinon.stub();
+
+					scope.fanColors =
+						{
+							"normal": "0x003566",
+						    "inactive": "0x99AEC1",
+						    "highlight": "0x4D82B3",
+						    "validEdit": "0x519C52",
+						    "invalidEdit": "0xCF5157",
+						    "wireframe": "0x90DAFF"
+						}
+
+					scope.fans = [];
+					scope.intakeFans = [];
+					scope.exhaustFans = [];
+					scope.projectDetails = new Object();
+
+					scope.defaultNewFan = 
+						{
+							"fanObject": {
+								"material": {
+									"color": "0x333333",
+									"side": "THREE.DoubleSide"
+								},
+								"dimensions": {
+									"width": 120,
+									"height": 120,
+									"depth": 40
+								}
+							},
+							"fanAOEObject": {
+								"material": {
+									"color": "0x333333",
+									"transparent": true,
+									"opacity": 0,
+									"side": "THREE.DoubleSide"
+								},
+								"dimensions": {
+									"radiusTop": 60,
+									"radiusBottom": 60,
+									"radiusSegments": 25,
+									"heightSegments": 25
+								}
+							},
+							"properties": {
+								"size": 120,
+								"maxRPM": 1000,
+								"percentageRPM": 100,
+								"mode": "intake",
+								"active": true,
+								"position": 0,
+								"forceVector" : {
+									"x": 0,
+									"y": 5000,
+									"z": 30000
+							    },
+							},
+							"position" : {
+								"x": 0,
+								"y": 100,
+								"z": -248
+						    }
+						}
+
+					scope.defaultNewFanAOE = 
+						{
+							"material": {
+								"color": "0x333333",
+								"transparent": true,
+								"opacity": 0,
+								"side": "THREE.DoubleSide"
+							},
+							"dimensions": {
+								"radiusTop": 60,
+								"radiusBottom": 60,
+								"radiusSegments": 25,
+								"heightSegments": 25
+							}
+						}
+
+					scope.newFanPlaceholderObjectPosition = 0;
+
+					scope.newFanPlaceholderObject = 
+						{
+							"position": {
+								"x": 100,
+								"y": 100,
+								"z": 100
+							}
+						}
+
+				    scope.loadFan = 
+							{
+								"properties": {
+									"mode": "intake",
+									"size": 120,
+									"maxRPM": 1000,
+									"percentageRPM": 100,
+									"position": 0,
+									"dateCreated": "29/03/2016",
+									"dateModified": "29/03/2016",
+									"isValidPos": true,
+									"forceVector": {
+										"x": 0,
+										"y": 0,
+										"z": 62400
+									}
+								},
+								"dimensions": {
+									"width": 120,
+									"height": 120,
+									"depth": 40
+								},
+								"x": 0,
+								"y": 100,
+								"z": -248
+							}
+
+					scope.fanObjects = scope._createFan(scope.loadFan, true, false);
+				}));	
+				it('should be 2 fan objects returned', function() {		
+					expect(scope.fanObjects.length).to.equal(2);
+				});
+
+				it('first object should be the fan physical object', function() {		
+					expect(scope.fanObjects[0].dimensions.width).to.equal(scope.defaultNewFan.fanObject.dimensions.width);
+					expect(scope.fanObjects[0].dimensions.height).to.equal(scope.defaultNewFan.fanObject.dimensions.height);
+					expect(scope.fanObjects[0].dimensions.depth).to.equal(scope.defaultNewFan.fanObject.dimensions.depth);
+					expect(scope.fanObjects[0].geometry.type).to.equal('BoxGeometry');
+				});
+				it('first object should be the fan AOE object', function() {	
+					expect(scope.fanObjects[1].dimensions.radiusSegments).to.equal(scope.defaultNewFan.fanAOEObject.dimensions.radiusSegments);
+					expect(scope.fanObjects[1].dimensions.heightSegments).to.equal(scope.defaultNewFan.fanAOEObject.dimensions.heightSegments);
+					expect(scope.fanObjects[1].dimensions.height).to.equal(60);
+					expect(scope.fanObjects[1].geometry.type).to.equal('CylinderGeometry');
+				});
+				it('should have created 1 intake fan', function() {		
+					expect(scope.fans.length).to.equal(1);
+					expect(scope.intakeFans.length).to.equal(1);
+					expect(scope.exhaustFans.length).to.equal(0);
+				});
+				it('fan object should have properties', function() {		
+					expect(scope.fans[0].fanAOEObject).to.equal(scope.fanObjects[1]);
+					expect(scope.fans[0].fanPhysicalObject).to.equal(scope.fanObjects[0]);
+					expect(scope.fans[0].properties.mode).to.equal(scope.defaultNewFan.properties.mode);
+					expect(scope.fans[0].properties.maxRPM).to.equal(scope.defaultNewFan.properties.maxRPM);
+					expect(scope.fans[0].properties.percentageRPM).to.equal(scope.defaultNewFan.properties.percentageRPM);
+					expect(scope.fans[0].properties.isValidPos).to.equal(true);
+				});	
+			});
+		});
 	});
-});
+});	
