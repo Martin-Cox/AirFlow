@@ -291,7 +291,7 @@ var simulation = function($http, defaultsService, $timeout) {
 				liveRatio = 0;
 			}
 
-			if(successRatio === 0 && failureRatio === 0) {
+			if (successRatio === 0 && failureRatio === 0) {
 				//This should only be called at the initialisation of a new project
 				//Need to override 0, 0 values with something otherwise no chart will be drawn
 				//By doing this we fake the chart data so that it looks like 100% of particles are successful
@@ -586,10 +586,24 @@ var simulation = function($http, defaultsService, $timeout) {
 			}
 		}
 
-		/*Creates a 3D model of a computer case using Box meshes. This function should only be used to create a case
-		  by using the default case values
-		  caseDefaults = The object containing the default case values (size, material colour etc.)*/
+		/*Private scene manipulating method. Creates a 3D model of a computer case using Box meshes. 
+		This function should only be used to create a case by using the default case values
+		caseDefaults = The object containing the default case values (size, material colour etc.)*/
 		scope.createDefaultCase = function(caseDefaults) {
+			scope._createDefaultCase(caseDefaults);
+			scene.add(scope.caseGroup.bottomPlane);
+			scene.add(scope.caseGroup.topPlane);
+			scene.add(scope.caseGroup.visibleSidePlane);
+			scene.add(scope.caseGroup.invisibleSidePlane);
+			scene.add(scope.caseGroup.backPlane);
+			scene.add(scope.caseGroup.frontPlane);
+		}
+
+
+		/*Public accessor for creating a case. Creates a 3D model of a computer case using Box meshes. 
+		This function should only be used to create a case by using the default case values
+		caseDefaults = The object containing the default case values (size, material colour etc.)*/
+		scope._createDefaultCase = function(caseDefaults) {
 			//Creates a 3D model of a computer case
 
 			var caseMaterial = Physijs.createMaterial(
@@ -651,13 +665,6 @@ var simulation = function($http, defaultsService, $timeout) {
 			caseBackPlane.isInvisible = false;
 			caseFrontPlane.isInvisible = false;
 
-			scene.add(caseBottomPlane);
-			scene.add(caseTopPlane);
-			scene.add(caseVisibleSidePlane);
-			scene.add(caseInvisibleSidePlane);
-			scene.add(caseBackPlane);
-			scene.add(caseFrontPlane);
-
 			scope.caseGroup.bottomPlane = caseBottomPlane;
 			scope.caseGroup.topPlane = caseTopPlane;
 			scope.caseGroup.visibleSidePlane = caseVisibleSidePlane;
@@ -698,7 +705,10 @@ var simulation = function($http, defaultsService, $timeout) {
 			scope.caseGroup.frontPlane.dimensions.height = caseHeight;
 		}
 
-		/*Public accessor for creating a fan*/
+		/*Public accessor for creating a fan. Creates a composite fan object consisting of a fanPhysicalObject, a fanAOEObject, and properties 
+		fan = The object containing the properties that will be used to create a new fan e.g. size, RPM etc.
+		loadingFan = Boolean set TRUE if the fan is being loaded from an airflow project file
+		defaultCreation = Boolean set TRUE if the fan is being created with default properties*/
 		scope.createFan = function(fan, loadingFan, defaultCreation) {
 			var fanObjects = scope._createFan(fan, loadingFan, defaultCreation);
 			scene.add(fanObjects[0]);
