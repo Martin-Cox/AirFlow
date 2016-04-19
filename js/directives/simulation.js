@@ -226,8 +226,6 @@ var simulation = function($http, defaultsService, $timeout) {
 			scene.add(pointLightA);	
 			scene.add(pointLightB);	
 
-			scene.add(new THREE.AxisHelper(200));
-
 			renderer.domElement.addEventListener('touchmove', handleMouseMove, false);
 			renderer.domElement.addEventListener('mousemove', handleMouseMove, false);
 			renderer.domElement.addEventListener('mousedown', handleMouseClick, false);
@@ -908,6 +906,8 @@ var simulation = function($http, defaultsService, $timeout) {
 			if (defaultCreation === true) {
 				var fanAOEObject = new Physijs.CylinderMesh(new THREE.CylinderGeometry(fan.fanAOEObject.dimensions.radiusTop, fan.fanAOEObject.dimensions.radiusBottom, fan.fanAOEObject.dimensions.height, fan.fanAOEObject.dimensions.radiusSegments, fan.fanAOEObject.dimensions.heightSegments), fanAOEMaterial, 0); //Gravity, 0 = weightless
 			} else  if (loadingFan === true) {
+				fan.fanAOEObject.dimensions.radiusSegments = scope.defaultNewFanAOE.dimensions.radiusSegments;
+				fan.fanAOEObject.dimensions.heightSegments = scope.defaultNewFanAOE.dimensions.heightSegments;
 				var fanAOEObject = new Physijs.CylinderMesh(new THREE.CylinderGeometry((fan.properties.size/2), (fan.properties.size/2), fan.fanAOEObject.dimensions.height, scope.defaultNewFanAOE.dimensions.radiusSegments, scope.defaultNewFanAOE.dimensions.heightSegments), fanAOEMaterial, 0); //Gravity, 0 = weightless
 			} else {
 				var fanAOEObject = new Physijs.CylinderMesh(new THREE.CylinderGeometry((fan.properties.size/2), (fan.properties.size/2), fan.fanAOEObject.dimensions.height, fan.fanAOEObject.dimensions.radiusSegments, fan.fanAOEObject.dimensions.heightSegments), fanAOEMaterial, 0); //Gravity, 0 = weightless
@@ -998,7 +998,7 @@ var simulation = function($http, defaultsService, $timeout) {
 			resizedFan.fanAOEObject.dimensions.radiusBottom = resizedFan.properties.size/2;
 			resizedFan.position = resizedFan.fanPhysicalObject.position;
 
-			scope.createFan(resizedFan);
+			scope.createFan(resizedFan, false, false);
 
 			var length = scope.fans.length;
 
@@ -1846,20 +1846,16 @@ var simulation = function($http, defaultsService, $timeout) {
 		}
 
 		//TODO (IN ORDER):
-		// - Unit tests project settings directive, component settings directive, results panel directive, tabs directive. E.g. does updating the project name correctly update project modified date as well?
-		// - More, better detailed Selenium tests
-		// - A few e2e tests?
+		// - TUE: Refactor all code which adds to/removes from scene (e.g. create case) SEE createFan _createFan
+		// - TUE: Rewrite unit tests for 		describe('createFanAOEObject', function() {	describe('with defaultCreation set to true', function() {		so loading Fan is sometimes true
+		// - Integration tests (testing multiple modules e.g. sim and main controller together e.g. doesn't stub out $scope.createFan in scope loadProject(fucntion) and see if they work together)
+		// - Karma code coverage
+		// - JSON Lint
+		// - More, better detailed Selenium e2e tests
 		// - Input validation on ALL user enterable data (using Angular) 							- AND UNIT TESTS
-		// - User configurable project settings 													- AND UNIT TESTS
-		// - Results tab (Optimisation %, % of particles that had to be culled, dust buildup etc.)	- AND UNIT TESTS		
 		// - Recheck WEB-ARIA roles and properties
 		// - Rewrite how to use/about popup
-		// - Standardised error messages
 		// - Clean up code, optimisation, proper documentation etc. SEE quality standards in interim report
-		// - Testing on multiple devices
-		// - Be able to import a computer case 3D model and smartly generate physics planes based off 3D geometry (OPTIONAL)
-		// - Fan model and animations (OPTIONAL)
-		// - User defined case settings (OPTIONAL)
     }
   }; 
 };
