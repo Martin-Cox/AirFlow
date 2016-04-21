@@ -4,7 +4,7 @@ var MainController = function($scope, $timeout) {
 
     $scope.ajaxComplete = false;
 
-    $scope.projectDetails = new Object();
+    $scope.projectDetails = Object.create(null);
 
     $scope.defaultProjectDetails = null;
     $scope.defaultCase = null;
@@ -21,18 +21,18 @@ var MainController = function($scope, $timeout) {
     $scope.intakeFans = [];
     $scope.dragFan = null;
     $scope.editFan = null;
-    $scope.originalFanPos = new Object();
+    $scope.originalFanPos = Object.create(null);
 
-    $scope.caseGroup = new Object();
+    $scope.caseGroup = Object.create(null);
 
-    $scope.stats = new Object();
+    $scope.stats = Object.create(null);
     $scope.statsAnalysis = null;
-    $scope.charts = new Object();
+    $scope.charts = Object.create(null);
     $scope.charts.drewCharts = false;
 
     $scope.addingFan = false;
     $scope.addingFanValidPos = false;
-    $scope.newFanPlaceholderObject = new Object();
+    $scope.newFanPlaceholderObject = Object.create(null);
     $scope.newFanPlaceholderObjectPosition = [];
     $scope.newFanPlaceholderWireframe = null;
 
@@ -43,8 +43,8 @@ var MainController = function($scope, $timeout) {
     /*Hides the splash screen on user click if AJAX calls have completed*/
     $scope.hideSplash = function() {
         if ($scope.ajaxComplete === true) {
-        	var splashElement = document.getElementById("loadingSplash");
-            splashElement.style.opacity = 0;	//Set splash element opacity to 0, triggering CSS transition
+            var splashElement = document.getElementById("loadingSplash");
+            splashElement.style.opacity = 0;    //Set splash element opacity to 0, triggering CSS transition
 
             //Have to remove the element from the DOM, otherwise it would still be there but be invisible, meaning we can't interact with anything else
             //Only wait 800ms, 1000ms is the time it takes for opacity transition, but user can see sim before that and may want to interact before opacity has finished
@@ -59,7 +59,7 @@ var MainController = function($scope, $timeout) {
 
 
             $timeout(function() {
-            	document.getElementsByClassName("main")[0].removeChild(splashElement);
+                document.getElementsByClassName("main")[0].removeChild(splashElement);
             }, 800);
 
             $scope.newProject();
@@ -67,15 +67,15 @@ var MainController = function($scope, $timeout) {
     };
 
     /*Draws the charts on the results tab*/
-    $scope.drawCharts = function() {     
-        if ($scope.charts.drewCharts === false) {   
+    $scope.drawCharts = function() {
+        if ($scope.charts.drewCharts === false) {
             $timeout(function() {
                 $scope.drawParticleSuccessRatioChart();
                 $scope.drawFanRatioChart();
                 $scope.charts.drewCharts = true;
             }, 500);    //TODO: This should really be done using a promise and not a simple timer
         }
-    }
+    };
 
     /*Starts a new project using the default project values*/
     $scope.newProject = function() {
@@ -94,11 +94,11 @@ var MainController = function($scope, $timeout) {
         $scope.dragFan = null;
         $scope.editFan = null;
 
-        $scope.stats = new Object();
+        $scope.stats = Object.create(null);
 
         //Recreate 3D scene
         $scope.emptyScene();
-        $scope.init();                    
+        $scope.init();
         $scope.animate();
     };
 
@@ -108,11 +108,11 @@ var MainController = function($scope, $timeout) {
         var projectDetailsObject = JSON.stringify($scope.projectDetails);
         var projectStatsObject = JSON.stringify($scope.stats);
 
-        var fansCompositeObj = new Object();
+        var fansCompositeObj = Object.create(null);
 
         //Put each fan into a composite object
-        for (var i = 0; i < $scope.fans.length; i++) {            
-            var fanObj = new Object();
+        for (var i = 0; i < $scope.fans.length; i++) {
+            var fanObj = Object.create(null);
             fanObj.properties = $scope.fans[i].properties;
             fanObj.dimensions = $scope.fans[i].fanPhysicalObject.dimensions;
             fanObj.x = $scope.fans[i].fanPhysicalObject.position.x;
@@ -178,7 +178,7 @@ var MainController = function($scope, $timeout) {
                 size++;
             }
 
-            for (var i = 0; i < size; i++) {       
+            for (var i = 0; i < size; i++) {
                 $scope.createFan(fans[i], true, false);
             }
 
@@ -198,7 +198,7 @@ var MainController = function($scope, $timeout) {
              };
              reader.readAsText(element.files[0]);
          });
-    };  
+    };
 
     /*Returns a nicely formatted date*/
     $scope.getCurrentDate = function() {
@@ -226,7 +226,7 @@ var MainController = function($scope, $timeout) {
     $scope.showHelpBox = function() {
         if ($scope.displayingPopup === false) {
             var helpBox = document.getElementById("helpPopupBox");
-            helpBox.style.visibility = "visible"
+            helpBox.style.visibility = "visible";
             helpBox.style.opacity = 100;
             $scope.displayingPopup = true;
         }
@@ -235,7 +235,7 @@ var MainController = function($scope, $timeout) {
     /*Hide the help popup box from the user*/
     $scope.closeHelpBox = function() {
         var helpBox = document.getElementById("helpPopupBox");
-        helpBox.style.visibility = "hidden"
+        helpBox.style.visibility = "hidden";
         helpBox.style.opacity = 0;
         $scope.displayingPopup = false;
     }
