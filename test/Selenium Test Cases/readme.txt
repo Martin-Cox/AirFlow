@@ -1,0 +1,1 @@
+AirFlow must be ran at 1280x720 for this test suite to work (use FF responsive design view to set the correct resolution)
