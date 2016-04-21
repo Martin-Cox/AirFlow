@@ -1850,17 +1850,14 @@ var simulation = function($http, defaultsService, $timeout) {
 		}
 
 		//TODO (IN ORDER):
-		// - Unit tests for: _createFan(...)
 		// - Integration tests (testing multiple modules e.g. sim and main controller together e.g. doesn't stub out $scope.createFan in scope loadProject(fucntion) and see if they work together)
 		// - Karma code coverage
 		// - JSON Lint
 		// - More, better detailed Selenium e2e tests
 		// - Input validation on ALL user enterable data (using Angular) 							- AND UNIT TESTS
-		// - Recheck WEB-ARIA roles and properties
-		// - Rewrite how to use/about popup
 		// - Clean up code, optimisation, proper documentation etc. SEE quality standards in interim report
     }
-  }; 
+  };
 };
 
 module.exports = simulation;
