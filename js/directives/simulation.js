@@ -1852,8 +1852,7 @@ var simulation = function($http, defaultsService, $timeout) {
 		//TODO (IN ORDER):
 		// - Integration tests (testing multiple modules e.g. sim and main controller together e.g. doesn't stub out $scope.createFan in scope loadProject(fucntion) and see if they work together)
 		// - Karma code coverage
-		// - JSON Lint
-		// - More, better detailed Selenium e2e tests
+		// - JS Lint
 		// - Input validation on ALL user enterable data (using Angular) 							- AND UNIT TESTS
 		// - Clean up code, optimisation, proper documentation etc. SEE quality standards in interim report
     }
