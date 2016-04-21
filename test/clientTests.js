@@ -1,7 +1,7 @@
 describe('AirFlow Client Side', function() {
 
 beforeEach(module('AirFlowApp'));
-	describe('Defaults Service', function() {	
+	describe('Defaults Service Unit Tests', function() {	
 		var http;
 		var defaultsService;
 		beforeEach(inject(function($httpBackend, _defaultsService_){
@@ -114,7 +114,7 @@ beforeEach(module('AirFlowApp'));
 			});
 		});
 	});
-	describe('Main Controller', function() {
+	describe('Main Controller Unit Tests', function() {
 		var scope, MainController, http;
 
 		var projectDefault = 
@@ -629,7 +629,7 @@ beforeEach(module('AirFlowApp'));
 			});
 		});
 	});
-	describe('Simulation Directive', function() {
+	describe('Simulation Directive Unit Tests', function() {
 
 			var fansDefault = 
 			{
@@ -868,10 +868,12 @@ beforeEach(module('AirFlowApp'));
 					scope.availableParticles = [];
 					scope.createParticles(500);
 				}));
-				it('scope.particles length should be 1000', function() {					
+				it('scope.particles length should be 1000', function() {
+					this.timeout(5000);					
 					expect(scope.particles.length).to.equal(500);
 				});
-				it('scope.availableParticles length should be 1000', function() {					
+				it('scope.availableParticles length should be 1000', function() {	
+					this.timeout(5000);						
 					expect(scope.availableParticles.length).to.equal(500);
 				});
 			});
@@ -894,10 +896,12 @@ beforeEach(module('AirFlowApp'));
 					scope.availableParticles = [];
 					scope.createParticles(-500);
 				}));
-				it('scope.particles length should be 0', function() {					
+				it('scope.particles length should be 0', function() {	
+					this.timeout(5000);						
 					expect(scope.particles.length).to.equal(0);
 				});
-				it('scope.availableParticles length should be 0', function() {					
+				it('scope.availableParticles length should be 0', function() {	
+					this.timeout(5000);						
 					expect(scope.availableParticles.length).to.equal(0);
 				});
 			});
