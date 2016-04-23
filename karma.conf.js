@@ -17,7 +17,7 @@ module.exports = function(config) {
     files: [
       'node_modules/angular/angular.js',
       'node_modules/angular-mocks/angular-mocks.js',
-      'js/build.js',
+      //'js/build.js',
       {pattern: 'js/directives/*.html', included: true},
       //{pattern: 'js/external/*.js', included: true},
       //{pattern: 'json/*', included: true},
@@ -25,6 +25,7 @@ module.exports = function(config) {
       {pattern: 'css/*', included: true},
       'index.html',
       'js/directives/*.html',
+      'js/app.js',
       'test/defaultsService.js',
       'test/mainController.js',
       'test/simulationDirective.js',
@@ -42,14 +43,18 @@ module.exports = function(config) {
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       'index.html': ['ng-html2js'],
-      'js/directives/*.html': ['ng-html2js']
+      'js/directives/*.html': ['ng-html2js'],
+      'js/app.js' : ['coverage', 'browserify'],
+      //'js/MainController.js': ['coverage', 'browserify']
+      /*'js/controllers/MainController.js': ['coverage'],
+      'js/directives/simulation.js': ['coverage']*/
     },
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['spec'],
+    reporters: ['spec', 'coverage'],
 
 
     // web server port
@@ -72,6 +77,11 @@ module.exports = function(config) {
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['PhantomJS', 'Firefox'],
+
+    browserify: {
+      debug: true,
+      transform: ['browserify-istanbul']
+    },
 
 
     // Continuous Integration mode
