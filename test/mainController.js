@@ -339,19 +339,19 @@ beforeEach(module('AirFlowApp'));
 				scope.animate = sinon.stub();
 				scope.newProject();
 			}));
-			it('projectDetails should be default values', function() {
+			it('projectDetails should be reset to default values', function() {
 				expect(scope.projectDetails.projectName).to.equal(projectDefault.projectName);
 			 	expect(scope.projectDetails.author).to.equal(projectDefault.author);
 			 	expect(scope.projectDetails.version).to.equal(projectDefault.version);
 			});
-			it('projectDetails date fields should be todays date', function() {
+			it('projectDetails date fields should be set to todays date', function() {
 				var currentFormattedDate = scope.getCurrentDate();
 
 				expect(scope.projectDetails.dateCreated).to.equal(currentFormattedDate);
 			 	expect(scope.projectDetails.dateModified).to.equal(currentFormattedDate);
 
 			});
-			it('scope fan variables should be empty', function() {
+			it('scope fan variables should be emptied', function() {
 				expect(scope.fans).to.be.empty;
 				expect(scope.exhaustFans).to.be.empty;
 				expect(scope.intakeFans).to.be.empty;
@@ -398,14 +398,14 @@ beforeEach(module('AirFlowApp'));
 				scope.loadProject(sampleProject);
 
 			}));
-			it('project details should load', function() {
+			it('project details should be read from the loaded file', function() {
 				expect(scope.projectDetails.projectName).to.equal(sampleProject.projectDetails.projectName);
 				expect(scope.projectDetails.author).to.equal(sampleProject.projectDetails.author);
 				expect(scope.projectDetails.version).to.equal(sampleProject.projectDetails.version);
 				expect(scope.projectDetails.dateCreated).to.equal(sampleProject.projectDetails.dateCreated);
 				expect(scope.projectDetails.dateModified).to.equal(sampleProject.projectDetails.dateModified);
 			});
-			it('stats should load', function() {
+			it('stats should be read from the loaded file', function() {
 				expect(scope.stats.spawnedParticles).to.equal(sampleProject.stats.spawnedParticles);
 				expect(scope.stats.activeParticles).to.equal(sampleProject.stats.activeParticles);
 				expect(scope.stats.culledParticles).to.equal(sampleProject.stats.culledParticles);
@@ -419,21 +419,7 @@ beforeEach(module('AirFlowApp'));
 				expect(scope.stats.numExhaustFans).to.equal(sampleProject.stats.numExhaustFans);
 				expect(scope.stats.numIntakeFans).to.equal(sampleProject.stats.numIntakeFans);
 			});
-			it('stats should load', function() {
-				expect(scope.stats.spawnedParticles).to.equal(sampleProject.stats.spawnedParticles);
-				expect(scope.stats.activeParticles).to.equal(sampleProject.stats.activeParticles);
-				expect(scope.stats.culledParticles).to.equal(sampleProject.stats.culledParticles);
-				expect(scope.stats.removedParticles).to.equal(sampleProject.stats.removedParticles);
-				expect(scope.stats.particleSuccessPercentage).to.equal(sampleProject.stats.particleSuccessPercentage);
-				expect(scope.stats.particleFailurePercentage).to.equal(sampleProject.stats.particleFailurePercentage);
-				expect(scope.stats.particleLivePercentage).to.equal(sampleProject.stats.particleLivePercentage);
-				expect(scope.stats.particleSuccessRatioVal).to.equal(sampleProject.stats.particleSuccessRatioVal);
-				expect(scope.stats.particleSuccessRatioMod).to.equal(sampleProject.stats.particleSuccessRatioMod);
-				expect(scope.stats.numFans).to.equal(sampleProject.stats.numFans);
-				expect(scope.stats.numExhaustFans).to.equal(sampleProject.stats.numExhaustFans);
-				expect(scope.stats.numIntakeFans).to.equal(sampleProject.stats.numIntakeFans);
-			});
-			it('fans should load', function() {
+			it('fans should be read from the loaded file', function() {
 				expect(scope.fans.length).to.equal(2);
 				expect(scope.exhaustFans.length).to.equal(1);
 				expect(scope.intakeFans.length).to.equal(1);
