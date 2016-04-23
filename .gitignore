@@ -44,6 +44,6 @@ Temporary Items
 
 # NPM Modules
 /node_modules/*
-/coverage/*
+test/coverage/*
 js/build.js
 js/build.min.js

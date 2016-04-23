@@ -83,6 +83,10 @@ module.exports = function(config) {
       transform: ['browserify-istanbul']
     },
 
+    coverageReporter: {
+      type : 'html',
+      dir : 'test/coverage/'
+    },
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
