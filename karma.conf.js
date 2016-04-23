@@ -27,7 +27,8 @@ module.exports = function(config) {
       'js/directives/*.html',
       'test/defaultsService.js',
       'test/mainController.js',
-      'test/simulationDirective.js'
+      'test/simulationDirective.js',
+      'test/integrationTests.js'
     ],
 
 
