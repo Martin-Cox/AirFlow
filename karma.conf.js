@@ -25,7 +25,12 @@ module.exports = function(config) {
       {pattern: 'css/*', included: true},
       'index.html',
       'js/directives/*.html',
-      'js/app.js',
+      
+      //UNCOMMENT FOR HTML CODE COVERAGE
+      //'js/app.js',
+      'js/build.js',
+
+
       'test/defaultsService.js',
       'test/mainController.js',
       'test/simulationDirective.js',
@@ -47,11 +52,6 @@ module.exports = function(config) {
 
       //UNCOMMENT FOR HTML CODE COVERAGE
       //'js/app.js' : ['coverage', 'browserify'],
-      'js/app.js' : ['browserify'],
-
-      //'js/MainController.js': ['coverage', 'browserify']
-      /*'js/controllers/MainController.js': ['coverage'],
-      'js/directives/simulation.js': ['coverage']*/
     },
 
 
