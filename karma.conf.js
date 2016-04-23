@@ -25,7 +25,9 @@ module.exports = function(config) {
       {pattern: 'css/*', included: true},
       'index.html',
       'js/directives/*.html',
-      {pattern: 'test/clientTests.js', included: true}
+      'test/defaultsService.js',
+      'test/mainController.js',
+      'test/simulationDirective.js'
     ],
 
 
@@ -38,7 +40,6 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/tests.js': [ 'browserify' ],
       'index.html': ['ng-html2js'],
       'js/directives/*.html': ['ng-html2js']
     },
