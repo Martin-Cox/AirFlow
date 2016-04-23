@@ -219,6 +219,393 @@ beforeEach(module('AirFlowApp'));
 				});
 			});
 		});
+		describe('updateOverallRating', function() {		
+			describe('Good particle success ratio', function() {		
+				describe('Too many fans', function() {	
+					beforeEach(inject(function(){
+
+						scope.stats = new Object();
+
+						scope.stats.numFans = 10;
+
+						scope.statsAnalysis = new Object();
+						scope.statsAnalysis.overall = new Object();
+						scope.statsAnalysis.overall.numFans = new Object();
+						scope.statsAnalysis.overall.numFans.tooMany = new Object();
+						scope.statsAnalysis.overall.numFans.tooMany.val = "Too many";
+						scope.statsAnalysis.overall.numFans.tooMany.mod = 1;
+						scope.statsAnalysis.overall.result = new Object();
+						scope.statsAnalysis.overall.result.good = 3;
+						scope.statsAnalysis.overall.result.average = 2;
+						scope.statsAnalysis.overall.result.bad = 1;
+
+						scope.statsAnalysis.particleSuccessRatioVal = "Good";
+						scope.statsAnalysis.particleSuccessRatioMod = 3;
+
+						scope.updateOverallRating();
+					}));
+					it('should update rating and explanation', function() {					
+
+					});
+				});
+				describe('Good amount of fans', function() {	
+					beforeEach(inject(function(){
+
+						scope.stats = new Object();
+
+						scope.stats.numFans = 4;
+
+						scope.statsAnalysis = new Object();
+						scope.statsAnalysis.overall = new Object();
+						scope.statsAnalysis.overall.numFans = new Object();
+						scope.statsAnalysis.overall.numFans.goodAmount = new Object();
+						scope.statsAnalysis.overall.numFans.goodAmount.val = "Good amount";
+						scope.statsAnalysis.overall.numFans.goodAmount.mod = 2;
+						scope.statsAnalysis.overall.result = new Object();
+						scope.statsAnalysis.overall.result.good = 3;
+						scope.statsAnalysis.overall.result.average = 2;
+						scope.statsAnalysis.overall.result.bad = 1;
+
+						scope.statsAnalysis.particleSuccessRatioVal = "Good";
+						scope.statsAnalysis.particleSuccessRatioMod = 3;
+
+						scope.updateOverallRating();
+					}));
+					it('should update rating and explanation', function() {					
+
+					});
+				});
+				describe('Too few fans', function() {	
+					beforeEach(inject(function(){
+
+						scope.stats = new Object();
+
+						scope.stats.numFans = 1;
+
+						scope.statsAnalysis = new Object();
+						scope.statsAnalysis.overall = new Object();
+						scope.statsAnalysis.overall.numFans = new Object();
+						scope.statsAnalysis.overall.numFans.tooFew = new Object();
+						scope.statsAnalysis.overall.numFans.tooFew.val = "Too few";
+						scope.statsAnalysis.overall.numFans.tooFew.mod = 1;
+						scope.statsAnalysis.overall.result = new Object();
+						scope.statsAnalysis.overall.result.good = 3;
+						scope.statsAnalysis.overall.result.average = 2;
+						scope.statsAnalysis.overall.result.bad = 1;
+
+						scope.statsAnalysis.particleSuccessRatioVal = "Good";
+						scope.statsAnalysis.particleSuccessRatioMod = 3;
+
+						scope.updateOverallRating();
+					}));
+					it('should update rating and explanation', function() {					
+
+					});
+				});
+			});
+			describe('Average particle success ratio', function() {		
+				describe('Too many fans', function() {	
+					beforeEach(inject(function(){
+
+						scope.stats = new Object();
+
+						scope.stats.numFans = 10;
+
+						scope.statsAnalysis = new Object();
+						scope.statsAnalysis.overall = new Object();
+						scope.statsAnalysis.overall.numFans = new Object();
+						scope.statsAnalysis.overall.numFans.tooMany = new Object();
+						scope.statsAnalysis.overall.numFans.tooMany.val = "Too many";
+						scope.statsAnalysis.overall.numFans.tooMany.mod = 1;
+						scope.statsAnalysis.overall.result = new Object();
+						scope.statsAnalysis.overall.result.good = 3;
+						scope.statsAnalysis.overall.result.average = 2;
+						scope.statsAnalysis.overall.result.bad = 1;
+
+						scope.statsAnalysis.particleSuccessRatioVal = "Average";
+						scope.statsAnalysis.particleSuccessRatioMod = 1;
+
+						scope.updateOverallRating();
+					}));
+					it('should update rating and explanation', function() {					
+
+					});
+				});
+				describe('Good amount of fans', function() {	
+					beforeEach(inject(function(){
+
+						scope.stats = new Object();
+
+						scope.stats.numFans = 4;
+
+						scope.statsAnalysis = new Object();
+						scope.statsAnalysis.overall = new Object();
+						scope.statsAnalysis.overall.numFans = new Object();
+						scope.statsAnalysis.overall.numFans.goodAmount = new Object();
+						scope.statsAnalysis.overall.numFans.goodAmount.val = "Good amount";
+						scope.statsAnalysis.overall.numFans.goodAmount.mod = 2;
+						scope.statsAnalysis.overall.result = new Object();
+						scope.statsAnalysis.overall.result.good = 3;
+						scope.statsAnalysis.overall.result.average = 2;
+						scope.statsAnalysis.overall.result.bad = 1;
+
+						scope.statsAnalysis.particleSuccessRatioVal = "Average";
+						scope.statsAnalysis.particleSuccessRatioMod = 1;
+
+						scope.updateOverallRating();
+					}));
+					it('should update rating and explanation', function() {					
+
+					});
+				});
+				describe('Too few fans', function() {	
+					beforeEach(inject(function(){
+
+						scope.stats = new Object();
+
+						scope.stats.numFans = 1;
+
+						scope.statsAnalysis = new Object();
+						scope.statsAnalysis.overall = new Object();
+						scope.statsAnalysis.overall.numFans = new Object();
+						scope.statsAnalysis.overall.numFans.tooFew = new Object();
+						scope.statsAnalysis.overall.numFans.tooFew.val = "Too few";
+						scope.statsAnalysis.overall.numFans.tooFew.mod = 1;
+						scope.statsAnalysis.overall.result = new Object();
+						scope.statsAnalysis.overall.result.good = 3;
+						scope.statsAnalysis.overall.result.average = 2;
+						scope.statsAnalysis.overall.result.bad = 1;
+
+						scope.statsAnalysis.particleSuccessRatioVal = "Average";
+						scope.statsAnalysis.particleSuccessRatioMod = 1;
+
+						scope.updateOverallRating();
+					}));
+					it('should update rating and explanation', function() {					
+
+					});
+				});
+			});
+			describe('Bad particle success ratio', function() {		
+				describe('Too many fans', function() {	
+					beforeEach(inject(function(){
+
+						scope.stats = new Object();
+
+						scope.stats.numFans = 10;
+
+						scope.statsAnalysis = new Object();
+						scope.statsAnalysis.overall = new Object();
+						scope.statsAnalysis.overall.numFans = new Object();
+						scope.statsAnalysis.overall.numFans.tooMany = new Object();
+						scope.statsAnalysis.overall.numFans.tooMany.val = "Too many";
+						scope.statsAnalysis.overall.numFans.tooMany.mod = 1;
+						scope.statsAnalysis.overall.result = new Object();
+						scope.statsAnalysis.overall.result.good = 3;
+						scope.statsAnalysis.overall.result.average = 2;
+						scope.statsAnalysis.overall.result.bad = 1;
+
+						scope.statsAnalysis.particleSuccessRatioVal = "Bad";
+						scope.statsAnalysis.particleSuccessRatioMod = 0;
+
+						scope.updateOverallRating();
+					}));
+					it('should update rating and explanation', function() {					
+
+					});
+				});
+				describe('Good amount of fans', function() {	
+					beforeEach(inject(function(){
+
+						scope.stats = new Object();
+
+						scope.stats.numFans = 4;
+
+						scope.statsAnalysis = new Object();
+						scope.statsAnalysis.overall = new Object();
+						scope.statsAnalysis.overall.numFans = new Object();
+						scope.statsAnalysis.overall.numFans.goodAmount = new Object();
+						scope.statsAnalysis.overall.numFans.goodAmount.val = "Good amount";
+						scope.statsAnalysis.overall.numFans.goodAmount.mod = 2;
+						scope.statsAnalysis.overall.result = new Object();
+						scope.statsAnalysis.overall.result.good = 3;
+						scope.statsAnalysis.overall.result.average = 2;
+						scope.statsAnalysis.overall.result.bad = 1;
+
+						scope.statsAnalysis.particleSuccessRatioVal = "Bad";
+						scope.statsAnalysis.particleSuccessRatioMod = 0;
+
+						scope.updateOverallRating();
+					}));
+					it('should update rating and explanation', function() {					
+
+					});
+				});
+				describe('Too few fans', function() {	
+					beforeEach(inject(function(){
+
+						scope.stats = new Object();
+
+						scope.stats.numFans = 1;
+
+						scope.statsAnalysis = new Object();
+						scope.statsAnalysis.overall = new Object();
+						scope.statsAnalysis.overall.numFans = new Object();
+						scope.statsAnalysis.overall.numFans.tooFew = new Object();
+						scope.statsAnalysis.overall.numFans.tooFew.val = "Too few";
+						scope.statsAnalysis.overall.numFans.tooFew.mod = 1;
+						scope.statsAnalysis.overall.result = new Object();
+						scope.statsAnalysis.overall.result.good = 3;
+						scope.statsAnalysis.overall.result.average = 2;
+						scope.statsAnalysis.overall.result.bad = 1;
+
+						scope.statsAnalysis.particleSuccessRatioVal = "Bad";
+						scope.statsAnalysis.particleSuccessRatioMod = 0;
+
+						scope.updateOverallRating();
+					}));
+					it('should update rating and explanation', function() {					
+
+					});
+				});
+			});
+		});
+		describe('updateFanRatioExplanation', function() {		
+			describe('more intake fans than exhaust fans', function() {		
+				beforeEach(inject(function(){
+
+					scope.stats = new Object();
+
+					scope.stats.numIntakeFans = 2;
+					scope.stats.numExhaustFans = 1;
+
+					scope.statsAnalysis = new Object();
+					scope.statsAnalysis.fanRatio = new Object();
+					scope.statsAnalysis.fanRatio.moreIntake = new Object();
+					scope.statsAnalysis.fanRatio.moreIntake.val = "More Intake";
+					scope.statsAnalysis.fanRatio.moreIntake.desc = "Description";
+					scope.updateFanRatioExplanation();
+				}));
+				it('should update fan ratio explanation', function() {					
+
+				});
+			});
+			describe('more exhaust fans than intake fans', function() {		
+				beforeEach(inject(function(){
+
+					scope.stats = new Object();
+
+					scope.stats.numIntakeFans = 1;
+					scope.stats.numExhaustFans = 2;
+
+					scope.statsAnalysis = new Object();
+					scope.statsAnalysis.fanRatio = new Object();
+					scope.statsAnalysis.fanRatio.moreExhaust = new Object();
+					scope.statsAnalysis.fanRatio.moreExhaust.val = "More Exhaust";
+					scope.statsAnalysis.fanRatio.moreExhaust.desc = "Description";
+					scope.updateFanRatioExplanation();
+				}));
+				it('should update fan ratio explanation', function() {					
+
+				});
+			});
+			describe('Equal amount of exhaust fans and intake fans', function() {		
+				beforeEach(inject(function(){
+
+					scope.stats = new Object();
+
+					scope.stats.numIntakeFans = 1;
+					scope.stats.numExhaustFans = 1;
+
+					scope.statsAnalysis = new Object();
+					scope.statsAnalysis.fanRatio = new Object();
+					scope.statsAnalysis.fanRatio.equal = new Object();
+					scope.statsAnalysis.fanRatio.equal.val = "Equal";
+					scope.statsAnalysis.fanRatio.equal.desc = "Description";
+					scope.updateFanRatioExplanation();
+				}));
+				it('should update fan ratio explanation', function() {					
+
+				});
+			});
+		});
+		describe('updateParticleSuccessRatioExplanation', function() {		
+			describe('particle failure percentage is low', function() {		
+				beforeEach(inject(function(){
+
+					scope.stats = new Object();
+					scope.stats.particleSuccessRatioVal = "";
+					scope.stats.particleSuccessRatioMod = "";
+					scope.stats.particleFailurePercentage = "10%";
+
+					scope.statsAnalysis = new Object();
+					scope.statsAnalysis.overall = new Object();
+					scope.statsAnalysis.overall.particleSuccessRatio = new Object();
+					scope.statsAnalysis.overall.particleSuccessRatio.good = new Object();
+					scope.statsAnalysis.overall.particleSuccessRatio.good.val = "Good";
+					scope.statsAnalysis.overall.particleSuccessRatio.good.mod = 3;
+					scope.statsAnalysis.particleSuccessRatio = new Object();
+					scope.statsAnalysis.particleSuccessRatio.good = new Object();
+					scope.statsAnalysis.particleSuccessRatio.good.val = "Good";
+					scope.statsAnalysis.particleSuccessRatio.good.mod = 3;
+					scope.updateParticleSuccessRatioExplanation();
+				}));
+				it('should be rated as good', function() {					
+					expect(scope.stats.particleSuccessRatioVal).to.equal("Good");
+					expect(scope.stats.particleSuccessRatioMod).to.equal(3);
+				});
+			});
+			describe('particle failure percentage is average', function() {		
+				beforeEach(inject(function(){
+
+					scope.stats = new Object();
+					scope.stats.particleSuccessRatioVal = "";
+					scope.stats.particleSuccessRatioMod = "";
+					scope.stats.particleFailurePercentage = "30%";
+
+					scope.statsAnalysis = new Object();
+					scope.statsAnalysis.overall = new Object();
+					scope.statsAnalysis.overall.particleSuccessRatio = new Object();
+					scope.statsAnalysis.overall.particleSuccessRatio.average = new Object();
+					scope.statsAnalysis.overall.particleSuccessRatio.average.val = "Average";
+					scope.statsAnalysis.overall.particleSuccessRatio.average.mod = 2;
+					scope.statsAnalysis.particleSuccessRatio = new Object();
+					scope.statsAnalysis.particleSuccessRatio.average = new Object();
+					scope.statsAnalysis.particleSuccessRatio.average.val = "Average";
+					scope.statsAnalysis.particleSuccessRatio.average.mod = 2;
+					scope.updateParticleSuccessRatioExplanation();
+				}));
+				it('should be rated as average', function() {					
+					expect(scope.stats.particleSuccessRatioVal).to.equal("Average");
+					expect(scope.stats.particleSuccessRatioMod).to.equal(2);
+				});
+			});
+			describe('particle failure percentage is high', function() {		
+				beforeEach(inject(function(){
+
+					scope.stats = new Object();
+					scope.stats.particleSuccessRatioVal = "";
+					scope.stats.particleSuccessRatioMod = "";
+					scope.stats.particleFailurePercentage = "70%";
+
+					scope.statsAnalysis = new Object();
+					scope.statsAnalysis.overall = new Object();
+					scope.statsAnalysis.overall.particleSuccessRatio = new Object();
+					scope.statsAnalysis.overall.particleSuccessRatio.bad = new Object();
+					scope.statsAnalysis.overall.particleSuccessRatio.bad.val = "High";
+					scope.statsAnalysis.overall.particleSuccessRatio.bad.mod = 1;
+					scope.statsAnalysis.particleSuccessRatio = new Object();
+					scope.statsAnalysis.particleSuccessRatio.bad = new Object();
+					scope.statsAnalysis.particleSuccessRatio.bad.val = "High";
+					scope.statsAnalysis.particleSuccessRatio.bad.mod = 1;
+					scope.updateParticleSuccessRatioExplanation();
+				}));
+				it('should be rated as high', function() {					
+					expect(scope.stats.particleSuccessRatioVal).to.equal("High");
+					expect(scope.stats.particleSuccessRatioMod).to.equal(1);
+				});
+			});
+		});
 		describe('createParticles', function() {
 			describe('with 1 particle', function() {			
 				beforeEach(inject(function(){

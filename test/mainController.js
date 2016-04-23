@@ -454,6 +454,15 @@ beforeEach(module('AirFlowApp'));
 				expect(scope.displayingPopup).to.equal(false);
 			});
 		});
+		describe('hide splash screen', function() {
+			it('should hide the splash screen', function() {
+				var stubElement = document.createElement('div');
+				//sinon.stub(document, 'getElementById').returns(stubElement);
+				scope.ajaxComplete = true;
+				scope.showHelpBox();
+				expect(scope.ajaxComplete).to.be.true;
+			});
+		});
 		describe('project details change watcher', function() {
 
 			var testDate = "01/01/2016";
