@@ -44,7 +44,11 @@ module.exports = function(config) {
     preprocessors: {
       'index.html': ['ng-html2js'],
       'js/directives/*.html': ['ng-html2js'],
-      'js/app.js' : ['coverage', 'browserify'],
+
+      //UNCOMMENT FOR HTML CODE COVERAGE
+      //'js/app.js' : ['coverage', 'browserify'],
+      'js/app.js' : ['browserify'],
+
       //'js/MainController.js': ['coverage', 'browserify']
       /*'js/controllers/MainController.js': ['coverage'],
       'js/directives/simulation.js': ['coverage']*/
@@ -54,8 +58,10 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['spec', 'coverage'],
-
+    
+    //UNCOMMENT FOR HTML CODE COVERAGE
+    //reporters: ['spec', 'coverage'],
+    reporters: ['spec'],
 
     // web server port
     port: 9876,
@@ -83,10 +89,11 @@ module.exports = function(config) {
       transform: ['browserify-istanbul']
     },
 
-    coverageReporter: {
-      type : 'text-summary',
+    //UNCOMMENT FOR HTML CODE COVERAGE
+    /*coverageReporter: {
+      type : 'html',
       dir : 'test/coverage/'
-    },
+    },*/
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
