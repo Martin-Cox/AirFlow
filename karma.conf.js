@@ -34,7 +34,8 @@ module.exports = function(config) {
       'test/defaultsService.js',
       'test/mainController.js',
       'test/simulationDirective.js',
-      'test/integrationTests.js'
+      'test/integrationTests.js',
+      'test/propertyTests.js'
     ],
 
 
