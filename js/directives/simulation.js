@@ -436,9 +436,6 @@ var simulation = function($http, defaultsService, $timeout) {
 		scope.createParticles = function(numToCreate) { 
 			for (var i = 0; i < numToCreate; i++) {
 				var particle;
-
-				var randNum = Math.random();
-
 				var sphereGeometry = new THREE.SphereGeometry(5, 16, 16);
 
 				var sphereMaterial = Physijs.createMaterial(
@@ -1850,9 +1847,6 @@ var simulation = function($http, defaultsService, $timeout) {
 		}
 
 		//TODO (IN ORDER):
-		// - Algebraic testing using JSVerify
-		// - Integration tests (testing multiple modules e.g. sim and main controller together e.g. doesn't stub out $scope.createFan in scope loadProject(fucntion) and see if they work together)
-		// - Karma code coverage
 		// - Clean up code, optimisation, proper documentation etc. SEE quality standards in interim report
 		// - UPDATE LOGBOOK
     }

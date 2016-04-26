@@ -36,6 +36,7 @@
     "karma-spec-reporter": "0.0.25",
     "mocha": "^2.4.5",
     "phantomjs-prebuilt": "^2.1.7",
+    "quick_check": "^0.7.0",
     "request": "^2.69.0",
     "sinon": "^1.17.3",
     "vinyl-source-stream": "^1.1.0",
