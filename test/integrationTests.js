@@ -11,299 +11,33 @@ beforeEach(module('AirFlowApp'));
 			  "version": 1
 			}  
 
-		var caseDefault = 
+		var testFan = 
 			{
-			  "materials": {
-			    "caseMaterial": {
-			      "color": "0x5F6E7D",
-			      "friction": 0.3,
-			      "restitution": 0.1
-			    },
-			    "transparentMaterial": {
-			      "color": "0x5F6E7D",
-			      "friction": 0.3,
-			      "restitution": 0.1,
-			      "transparent": true,
-			      "opacity": 0.2,
-			      "side": "THREE.DoubleSide"
-			    },
-			    "componentMaterial": {
-			      "color": "0xD5D3D0",
-			      "friction": 0.3,
-			      "restitution": 0.1
-			    }
-			  },
-			  "dimensions": {
-			    "width": 210,
-			    "height": 486,
-			    "depth": 495,
-			    "thickness": 4,
-			    "fanHoleSize": 120
-			  }
-			}
-
-		var fansDefault = 
-			{
-			  "fanOne" : {
-			    "fanObject": {
-			      "material": {
-			        "side": "THREE.DoubleSide"
-			      },
-			      "dimensions": {
-			        "width": 120,
-			        "height": 120,
-			        "depth": 40
-			      }
-			    },
-			    "fanAOEObject": {
-			      "material": {
-			        "transparent": true,
-			        "opacity": 0,
-			        "side": "THREE.DoubleSide"
-			      },
-			      "dimensions": {
-			        "radiusTop": 60,
-			        "radiusBottom": 60,
-			        "radiusSegments": 25,
-			        "heightSegments": 25
-			      }
-			    },
-			    "properties": {
-			      "size": 120,
-			      "maxRPM": 1800,
-			      "percentageRPM": 80,
-			      "mode": "intake",
-			      "position": 0,
-			      "forceVector" : {
-			        "x": 0,
-			        "y": 5000,
-			        "z": 30000
-			      },
-			      "active": true
-			    },
-			    "position" : {
-			      "x": 0,
-			      "y": 100,
-			      "z": -248
-			    }
-			  },
-			  "colors" : {
-			    "normal": "0x003566",
-			    "inactive": "0x99AEC1",
-			    "highlight": "0x4D82B3",
-			    "validEdit": "0x519C52",
-			    "invalidEdit": "0xCF5157",
-			    "wireframe": "0x90DAFF"
-			  }
-			}
-
-		var newFanDefault =
-			{
-			  "fanObject": {
-			    "material": {
-			      "color": "0x333333",
-			      "side": "THREE.DoubleSide"
-			    },
-			    "dimensions": {
-			      "width": 120,
-			      "height": 120,
-			      "depth": 40
-			    }
-			  },
-			  "fanAOEObject": {
-			    "material": {
-			      "color": "0x333333",
-			      "transparent": true,
-			      "opacity": 0,
-			      "side": "THREE.DoubleSide"
-			    },
-			    "dimensions": {
-			      "radiusTop": 60,
-			      "radiusBottom": 60,
-			      "radiusSegments": 25,
-			      "heightSegments": 25
-			    }
-			  },
-			  "properties": {
-			    "size": 120,
-			    "maxRPM": 1000,
-			    "percentageRPM": 100,
-			    "mode": "intake"
-			  }
-			}
-
-		var stats = 
-			{
-			  "overall": {
-			    "result": {
-			      "good": "Good setup",
-			      "average": "Average setup",
-			      "bad": "Bad setup"
-			    },
-			    "numFans": {
-			      "tooMany": {
-			        "val" : "Too many fans",
-			        "mod": 1
-			      },
-			      "tooFew": {
-			        "val" : "Too few fans",
-			        "mod": 1
-			      },
-			      "goodAmount": {
-			        "val" : "Good amount of fans",
-			        "mod": 2
-			      }
-			    },
-			    "particleSuccessRatio": {
-			      "good": {
-			        "val" : "Nearly all particles are successful",
-			        "mod": 3
-			      },
-			      "average": {
-			        "val" : "Most particles are successful",
-			        "mod": 1
-			      },
-			      "bad": {
-			        "val" : "Most particles are culled",
-			        "mod": 0
-			      }
-			    }
-			  },
-			  "fanRatio": {
-			    "equal": {
-			      "val": "Equal number of intake and exhaust fans",
-			      "desc": "You have an equal number of intake and exhaust fans. This setup strikes a good balance between cooling and dust buildup. Be sure to install filters on the intake fans to further reduce dust buildup."
-			    },
-			    "moreIntake": {
-			      "val": "More intake fans than exhaust fans",
-			      "desc": "You have more intake fans than exhaust fans. The intake fans will fight against each other and you could experience rapid dust buildup. This is because the intake fans will move the air from outside your case to the inside resulting in positive air pressure. To compensate for the positive air pressure created by the intake fans, air (and dust) will be blown out through the small holes and cracks in your computer case. You will need to install air filters to the intake fans to prevent large amounts of dust accumulating."
-			    },
-			    "moreExhaust": {
-			      "val": "More exhaust fans than intake fans",
-			      "desc": "You have more exhaust fans than intake fans. The exhaust fans will fight against each other and you could experience rapid dust buildup. This is because the exhaust fans will move the air from inside your case to the outside resulting in negative air pressure. To compensate for the negative air pressure created by the exhaust fans, air (and dust) will be drawn in through the small holes and cracks in your computer case."
-			    }
-			  },
-			  "particleSuccessRatio": {
-			    "good": {
-			      "val": "Nearly all particles are successful",
-			      "desc": "This setup ensures good airflow in your case and has little to no pockets of air buildup."
-			    },
-			    "average": {
-			      "val": "Most particles are successful",
-			      "desc": "This setup ensures average airflow in your case but the placement of fans could be improved to reduce pockets of air buildup."
-			    },
-			    "bad": {
-			      "val": "Most particles are culled",
-			      "desc": "This setup performs poorly as few particles are successful. Consider adding more fans, changing the placement of fans, or changing the ratio of intake:exhaust fans to eliminate pockets of air buildup."
-			    }
-			  }
-			}
-
-			var sampleProject = 
-				{
-					"projectDetails": {
-						"projectName": "Test Project",
-						"author": "Joe Bloggs",
-						"version": 2,
-						"dateCreated": "29/03/2016",
-						"dateModified": "29/03/2016"
-					},
-					"stats": {
-						"particleRatio": 100,
-						"numFans": 2,
-						"numIntakeFans": 1,
-						"numExhaustFans": 1,
-						"particleSuccessPercentage": "40.00%",
-						"particleFailurePercentage": "20.00%",
-						"particleLivePercentage": "40.00%",
-						"particleSuccessRatioVal": "Nearly all particles are successful",
-						"particleSuccessRatioMod": 3,
-						"spawnedParticles": 50,
-						"activeParticles": 20,
-						"culledParticles": 10,
-						"removedParticles": 20
-					},
-					"fans": {
-						"0": {
-							"properties": {
-								"mode": "intake",
-								"size": 120,
-								"maxRPM": 1800,
-								"percentageRPM": 80,
-								"position": 0,
-								"dateCreated": "29/03/2016",
-								"dateModified": "29/03/2016",
-								"isValidPos": true,
-								"forceVector": {
-									"x": 0,
-									"y": 0,
-									"z": 62400
-								}
-							},
-							"dimensions": {
-								"width": 120,
-								"height": 120,
-								"depth": 40
-							},
-							"x": 0,
-							"y": 100,
-							"z": -248
-						},
-						"1": {
-							"properties": {
-								"mode": "exhaust",
-								"size": 120,
-								"maxRPM": 1000,
-								"percentageRPM": 100,
-								"position": 1,
-								"dateCreated": "29/03/2016",
-								"dateModified": "29/03/2016",
-								"isValidPos": true,
-								"forceVector": {
-									"x": 0,
-									"y": 0,
-									"z": 70000
-								}
-							},
-							"dimensions": {
-								"width": 120,
-								"height": 120,
-								"depth": 40
-							},
-							"x": 0,
-							"y": 420,
-							"z": 248
-						}
-					}
-				}
-
-				var testFan = 
-					{
-						"properties": {
-							"mode": "intake",
-							"size": 120,
-							"maxRPM": 1000,
-							"percentageRPM": 100,
-							"position": 0,
-							"active": true,
-							"dateCreated": "29/03/2016",
-							"dateModified": "29/03/2016",
-							"isValidPos": true,
-							"forceVector": {
-								"x": 0,
-								"y": 0,
-								"z": 0
-							}
-						},
-						"dimensions": {
-							"width": 120,
-							"height": 120,
-							"depth": 40
-						},
+				"properties": {
+					"mode": "intake",
+					"size": 120,
+					"maxRPM": 1000,
+					"percentageRPM": 100,
+					"position": 0,
+					"active": true,
+					"dateCreated": "29/03/2016",
+					"dateModified": "29/03/2016",
+					"isValidPos": true,
+					"forceVector": {
 						"x": 0,
-						"y": 100,
-						"z": -248
+						"y": 0,
+						"z": 0
 					}
+				},
+				"dimensions": {
+					"width": 120,
+					"height": 120,
+					"depth": 40
+				},
+				"x": 0,
+				"y": 100,
+				"z": -248
+			}
 
 		beforeEach(module('js/directives/simulation.html'));
 		beforeEach(inject(function($controller, $rootScope, $compile, $httpBackend){
@@ -583,9 +317,3 @@ beforeEach(module('AirFlowApp'));
 		});
 	});
 });	
-
-
-			/*
-			
-
-			*/
