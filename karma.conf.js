@@ -17,6 +17,7 @@ module.exports = function(config) {
     files: [
       'node_modules/angular/angular.js',
       'node_modules/angular-mocks/angular-mocks.js',
+      'node_modules/quick_check/dist/quick-check.js',
       //'js/build.js',
       {pattern: 'js/directives/*.html', included: true},
       //{pattern: 'js/external/*.js', included: true},
