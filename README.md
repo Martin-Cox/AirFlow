@@ -10,7 +10,7 @@ See www.airflow.martinstephencox.com
 These setup steps should be roughly the same for Windows and Linux.
 
 1.	Install node.js from https://nodejs.org/en/download/
-2.  Open the terminal and type the following command to verify node is installed: `npm –v` You should see the node version number displayed in the terminal
+2.  Open the terminal and type the following command to verify npm is installed: `npm –v` You should see the npm version number displayed in the terminal
 3.	Using the terminal, navigate to the AirFlow project directory
 4.	In the terminal type the following command to install AirFlow dependencies: `npm install` This may take several minutes, so be patient
 5.	After the dependencies have been installed, install gulp by entering the command:`npm install –g gulp` Linux users will need to run this command as root
